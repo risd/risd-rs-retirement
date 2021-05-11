@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><%= title %></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="siteName" content="<%= siteName %>">
+  <meta name="buildLive" content="true">
+  {% if cmsSocketPort %}
+  <meta name="socketPort" content="{{ cmsSocketPort }}">
+  {% endif %}
+
+  <!-- webhook CMS app stylesheet -->
+  <link rel="stylesheet" href="//webhook-assets.risd.systems/cms/{{ cmsVersion }}/assets/app.min.css">
+  
+  <!-- optional, locally supplied stylesheet to override the above -->
+  <link rel="stylesheet" href="/static/css/cms.css">
+
+  {% include 'templates/partials/cms/head.html' %}
+
+  {% if firebase_conf.custom %}
+  <script>
+   window.ENV = {
+      dbConfig: {
+        projectId: "{{ firebase_conf.firebase }}",
+        apiKey: "{{ firebase_conf.firebaseAPIKey }}",
+        authDomain: "{{ firebase_conf.firebase }}.firebaseapp.com",
+        databaseURL: "https://{{ firebase_conf.firebase }}.firebaseio.com"
+      },
+      uploadUrl:  "{{ firebase_conf.server }}",
+      embedlyKey: "{{ firebase_conf.embedly }}",
+      selfHosted: true
+    };
+  </script>
+  {% endif %}
+
+  <script src="//webhook-assets.risd.systems/cms/{{ cmsVersion }}/assets/js/config.min.js"></script>
+  <script src="//webhook-assets.risd.systems/cms/{{ cmsVersion }}/assets/vendor.min.js"></script>
+  <script src="//webhook-assets.risd.systems/cms/{{ cmsVersion }}/assets/js/app.min.js"></script>
+
+  {% include 'templates/partials/cms/head-js.html' %}
+
+</head>
+<body>
+  <!--[if lt IE 8]>
+    <p class="browsehappy">
+      You are using an <strong>outdated</strong> browser. Please
+      <a href="https://browsehappy.com/">upgrade your browser</a>
+      to improve your experience.
+    </p>
+  <![endif]-->
+
+  <script>
+    window.App = require('appkit/app')["default"].create();
+  </script>
+
+  {% include 'templates/partials/cms/footer.html' %}
+</body>
+</html>

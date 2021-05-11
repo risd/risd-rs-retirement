@@ -1,0 +1,14 @@
+{
+  "siteKey"       : "<%= siteKey %>",
+  "siteName"      : "<%= siteName %>",
+  "firebase"      : "<%= firebase %>",
+  "firebaseAPIKey": "<%= firebaseAPIKey %>",
+  "embedly"       : "<%= embedlyKey %>",
+  "server"        : "<%= serverAddr %>",
+  "imgix_host"    : "<%= imgix_host %>",
+  "imgix_secret"  : "<%= imgix_secret %>",
+  "generator_url" : "<%= generator_url %>",
+  "custom"        : true<% if (noSearch) { %>,
+  "noSearch"      : <%= noSearch %><% } %><% if (imageproxy) { %>,
+  "imageproxy"    : "<%= imageproxy %>"<% } %>
+}
