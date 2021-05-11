@@ -1,1 +1,4 @@
-global.jQuery = require("jquery");
+const $ = require( 'jquery' )
+require( 'slick-carousel' )
+
+console.log( 'hello' )
