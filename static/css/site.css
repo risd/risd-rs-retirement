@@ -1,0 +1,13 @@
+@charset "UTF-8";
+figure[data-type=quote] cite:before {
+  content: "—"; }
+
+body {
+  width: calc( 100% - 2em);
+  max-width: 40em;
+  margin: 0 auto; }
+
+img {
+  max-width: 100%; }
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNpdGUuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLGlCQUFpQjtBQUNqQjtFQUNFLGFBQWEsRUFBRTs7QUFFakI7RUFDRSx5QkFBeUI7RUFDekIsZ0JBQWdCO0VBQ2hCLGVBQWUsRUFBRTs7QUFFbkI7RUFDRSxnQkFBZ0IsRUFBRSIsImZpbGUiOiJzaXRlLmNzcyIsInNvdXJjZXNDb250ZW50IjpbIkBjaGFyc2V0IFwiVVRGLThcIjtcbmZpZ3VyZVtkYXRhLXR5cGU9cXVvdGVdIGNpdGU6YmVmb3JlIHtcbiAgY29udGVudDogXCLigJRcIjsgfVxuXG5ib2R5IHtcbiAgd2lkdGg6IGNhbGMoIDEwMCUgLSAyZW0pO1xuICBtYXgtd2lkdGg6IDQwZW07XG4gIG1hcmdpbjogMCBhdXRvOyB9XG5cbmltZyB7XG4gIG1heC13aWR0aDogMTAwJTsgfVxuIl19 */
