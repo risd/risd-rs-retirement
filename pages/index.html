@@ -5,49 +5,68 @@
   {% set item = cms.homepage %}
 
   <main class="page">
-    <img src="{{ item.hero_image|imageSize(1200) }}" alt="">
-    <h1>Rosanne<br />Somerson</h1>
+    <section class="hero">
+      {% if item.hero_image %}
+        <div class="hero__image" style="background-image: url('{{ item.hero_image|imageSize(1200) }}');" ></div>
+      {% endif %}
+      
+      <div class="hero__footer">
+        <div class="hero__footer-container">
+          <div class="hero__footer-hat-left"></div>
+          <div class="hero__footer-hat-center"></div>
+          <div class="hero__footer-hat-right"></div>
+          <div class="hero__footer-body"></div>
+          <div class="hero__footer-button">
+            <p class="hero__footer-button-text">Play Video</p>
+          </div>
+          <div class="hero__text-container">
+            <h1 class="hero__text">Rosanne<br />Somerson</h1>
+          </div>
+          <div class="hero__timeline-marker"></div>
+        </div>
+      </div>
+    </section>
 
-    <section>
+    <section class="intro">
       {{ item.intro_description|safe }}
     </section>
 
-    <section>
+    <section class="timeline">
       {% include 'templates/partials/section-timeline.swig' with {
         title: item.timeline__1970__title,
         cards: item.timeline__1970,
       } only %}
     </section>
 
-    <section>
+    <section class="timeline">
       {% include 'templates/partials/section-timeline.swig' with {
         title: item.timeline__1980__title,
         cards: item.timeline__1980,
       } only %}
     </section>
 
-    <section>
+    <section class="timeline">
       {% include 'templates/partials/section-timeline.swig' with {
         title: item.timeline__1990__title,
         cards: item.timeline__1990,
       } only %}
     </section>
 
-    <section>
+    <section class="timeline">
       {% include 'templates/partials/section-timeline.swig' with {
         title: item.timeline__2000__title,
         cards: item.timeline__2000,
       } only %}
     </section>
 
-    <section>
+    <section class="timeline">
       {% include 'templates/partials/section-timeline.swig' with {
         title: item.timeline__2010__title,
         cards: item.timeline__2010,
       } only %}
     </section>
 
-    <section>
+    <section class="timeline">
       {% include 'templates/partials/section-timeline.swig' with {
         title: item.timeline__2020__title,
         cards: item.timeline__2020,

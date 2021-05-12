@@ -1,0 +1,145 @@
+/* --------------------------------------------------------
+
+Remove the unit of a length
+@param {Number} $number - Number to remove unit from
+@return {Number} - Unitless number
+
+-------------------------------------------------------- */
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return $number / ($number * 0 + 1);
+  }
+
+  @return $number;
+}
+
+
+/* --------------------------------------------------------
+Mixin for font-size and line-height definition
+  Usage Example: @include text-size(large);
+
+Font size can take on the following values:
+  small, regular, medium, large, xlarge, xxlarge
+
+If the mixin is called and values are not entered, it will default to regular font-size
+-------------------------------------------------------- */
+
+@mixin text-size($fs-map: $regular, $fs-breakpoints: $breakpoints) {
+  @each $fs-breakpoint, $keyNumber in $fs-map {
+
+    @if map-has-key($fs-breakpoints, $fs-breakpoint) {
+    } @else {
+      @warn "Breakpoints have not been defined correctly";
+    }
+
+    // @debug $fs-breakpoint;
+    // @debug $keyNumber;
+
+    $fontSize: nth($keyNumber, 1);
+    $leading: nth($keyNumber, 2);
+    $leading-unitless: calc(#{strip-unit($leading)} / #{strip-unit($fontSize)});
+
+    // @debug $fontSize;
+    // @debug $leading;
+    // @debug $leading-unitless;
+
+    @include respond-above($fs-breakpoint) {
+      font-size: $fontSize;
+      line-height: $leading-unitless;
+    };
+  }
+}
+
+
+/* --------------------------------------------------------
+
+Variable Map Lists for the text-size mixin
+
+A specific text-size in this mixin is defined with a font-size and a leading.
+
+For example,
+  small: (64px, 72px)
+  where small is the media query width defined in the $breakpoints map-list in _responsive.scss,
+  64px is the font-size
+  72px is the line-height (which will be converted to a unitless value for the browser in the mixin)
+
+
+The definition of each font-size/leading pair can be different for each media query width.
+This is an example of a font size with different definitions for each media query width:
+  $medium: (
+    base: (12px, 18px),
+    small: (14px, 20px),
+    medium: (16px, 24px),
+    large: (18px, 28px),
+    huge: (20px, 32px)
+  ) ;
+This is generally an unusual situation because it would involve a pretty complicated typography system.
+
+
+A more common example would be something like this:
+  $xlarge: (
+    base: (52px, 60px),
+    small: (64px, 72px),
+    medium: (64px, 72px),
+    large: (72px, 80px),
+    huge: (72px, 80px)
+  ) ;
+
+This definition includes redundant repitition of values, so it can be defined more simply like this:
+  $xlarge: (
+    base: (52px, 60px),
+    small: (64px, 72px),
+    large: (72px, 80px)
+  ) ;
+
+-------------------------------------------------------- */
+
+$base: (
+  base: (28px, 20px),
+);
+
+$site-header__text: (
+  base: (21px, 25.2px),
+);
+
+$hero__text: (
+  base: (192px, 164px),
+);
+
+$hero__footer-button-text: (
+  base: (16px, 26px),
+);
+
+%sans-serif {
+  font-family: "Gotham SSm A", "Gotham SSm B", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+%serif {
+  font-family: "Canela", "Georgia", "Times New Roman", "Times", serif;
+}
+
+%serif-hero {
+  font-family: "Canela Deck", "Georgia", "Times New Roman", "Times", serif;
+}
+
+%antialiased {
+  -webkit-font-smoothing:antialiased;
+  -moz-font-smoothing:antialiased;
+  font-smoothing:antialiased;
+}
+
+%site-header__text {
+  @include text-size($site-header__text);
+  @extend %sans-serif;
+}
+
+%hero__text {
+  @include text-size($hero__text);
+  @extend %serif-hero;
+}
+
+%hero__footer-button-text {
+  @include text-size($hero__footer-button-text);
+  @extend %sans-serif;
+  text-transform: uppercase;
+}

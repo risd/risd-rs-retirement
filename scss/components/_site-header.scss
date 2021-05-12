@@ -1,0 +1,51 @@
+.site-header {
+
+  --padding-inset: 1rem;
+
+  position: absolute;
+  top: 0;
+  width: calc( 100% - ( 2 * var(--padding-inset ) ) ) ;
+  padding: 0 var(--padding-inset);
+}
+
+.site-header__text-container {
+  width: 100%;
+  text-align: center;
+}
+
+.site-header__text {
+  @extend %site-header__text;
+  color: var(--color-lightest);
+}
+
+.site-header__text--acronym {
+  display: block;
+
+  @include respond-above(small) {
+    display: none;
+  }
+}
+
+.site-header__text--explicit {
+  display: none;
+
+  @include respond-above(small) {
+    display: block;
+  }
+}
+
+.site-header__logo-container {
+  position: absolute;
+  right: var(--padding-inset);
+  top: 0;
+}
+
+.site-header__logo {
+  width: 28px;
+  height: 28px;
+  margin-top: 12px;
+}
+
+.site-header__logo path {
+  fill: var(--color-lightest);
+}

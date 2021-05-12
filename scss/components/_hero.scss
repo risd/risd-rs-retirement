@@ -1,0 +1,121 @@
+.hero {
+  width: 100vw;
+  height: 100vh;
+
+  padding-bottom: 100px;
+  background-color: var(--color-middle);
+}
+
+.hero__image {
+  width: 100%;
+  height: 100%;
+
+  background-position: center;
+  background-size: cover;
+}
+
+.hero__footer {
+  --max-width: 1145px;
+  --padding-inset: 1rem;
+  --height: 176px;
+  --height-hat: 44px;
+  
+  width: 100%;
+  height: var(--height);
+  
+  margin: 0 auto;
+  
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+}
+
+.hero__footer-container {
+  height: var(--height);
+  width: calc( 100% - ( var(--padding-inset) * 2 ) );
+  max-width: var(--max-width);
+
+  display: grid;
+  grid-template-columns: 44px auto 142px 142px auto 44px;
+  grid-template-rows: var(--height-hat) var(--height-hat) 88px; /* 44 + 44 + 88 = 176 */
+}
+
+.hero__footer-hat-left {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  width: 0;
+  height: 0;
+  border-bottom: var(--height-hat) solid var(--color-middle);
+  border-left: var(--height-hat) solid transparent;
+}
+
+.hero__footer-hat-center {
+  grid-column-start: 2;
+  grid-column-end: -2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: var(--color-middle);
+}
+
+.hero__footer-hat-right {
+  grid-column-start: -2;
+  grid-column-end: -1;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  width: 0;
+  height: 0;
+  border-bottom: var(--height-hat) solid var(--color-middle);
+  border-right: var(--height-hat) solid transparent;
+}
+
+.hero__footer-body {
+  grid-column-start: 1;
+  grid-column-end: -1;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  background-color: var(--color-middle);
+}
+
+.hero__footer-button {
+  grid-column-start: 3;
+  grid-column-end: 5;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  background-color: var(--color-darkest);
+
+  display: flex;
+  justify-content: center;
+
+  @extend %hero__footer-button-text;
+}
+
+.hero__footer-button-text {
+  align-self: center;
+  color: var(--color-lightest);
+}
+
+.hero__text-container {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.hero__text {
+  color: var(--color-lightest);
+  @extend %hero__text;
+  margin: 0.25em;
+}
+
+.hero__timeline-marker {
+  position: absolute;
+  left: calc(50% - 1px);
+  width: 1px;
+  height: 120px;
+  bottom: -60px;
+  background-color: var(--color-darkest);
+}

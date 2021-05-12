@@ -1,0 +1,25 @@
+@function map-previous-key($map, $key) {
+  $keys: map-keys($map);
+  $index: index($keys, $key) - 1;
+
+  @if $index < 1 {
+    @return null;
+  }
+
+  $previous-key: nth($keys, $index);
+
+  @return $previous-key;
+}
+
+@function map-next-key($map, $key) {
+  $keys: map-keys($map);
+  $index: index($keys, $key) + 1;
+
+  @if $index > length($map) {
+    @return null;
+  }
+
+  $next-key: nth($keys, $index);
+
+  @return $next-key;
+}

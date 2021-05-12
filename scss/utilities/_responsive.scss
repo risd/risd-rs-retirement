@@ -1,0 +1,47 @@
+@import "map";
+
+$breakpoints: (
+  base: 0px,
+  small: 512px,
+  medium: 768px,
+  large: 1024px,
+  huge: 1600px,
+) !default;
+
+@mixin respond-above($breakpoint, $breakpoints: $breakpoints) {
+  $min-width: map-get($breakpoints, $breakpoint) + 1;
+  $queries: "screen and (min-width: #{$min-width})";
+
+  @media #{$queries} {
+    @content;
+  }
+}
+
+@mixin respond-below($breakpoint, $breakpoints: $breakpoints) {
+  $max-width: map-get($breakpoints, $breakpoint);
+  $queries: "screen and (max-width: #{$max-width})";
+
+  @media #{$queries} {
+    @content;
+  }
+}
+
+@mixin respond-at($breakpoint, $breakpoints: $breakpoints) {
+  $min-width: map-get($breakpoints, $breakpoint);
+  $max-width: map-get($breakpoints, map-next-key($breakpoints, $breakpoint));
+  $queries: "screen";
+
+  @if $min-width > 0 {
+    $min-width: $min-width + 1;
+    $queries: $queries + " and (min-width: #{$min-width})";
+  }
+
+  @if $max-width {
+    $queries: $queries + " and (max-width: #{$max-width})";
+  }
+
+  @media #{$queries} {
+    @content;
+  }
+}
+
