@@ -1,1 +1,11 @@
 @import "components/wysiwyg-custom";
+
+body {
+  width: calc( 100% - 2em );
+  max-width: 40em;
+  margin: 0 auto;
+}
+
+img {
+  max-width: 100%;
+}
