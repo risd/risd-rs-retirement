@@ -6,6 +6,8 @@
   top: 0;
   width: calc( 100% - ( 2 * var(--padding-inset ) ) ) ;
   padding: 0 var(--padding-inset);
+
+  z-index: 2;
 }
 
 .site-header__text-container {
