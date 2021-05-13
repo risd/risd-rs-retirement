@@ -22,12 +22,12 @@ module.exports = function(grunt) {
           'build-scripts'
         ]
       },
-      concat: {
-        files: ['<%= concat.dist.src %>'],
-        tasks: ['concat',
-          'build-static'
-        ]
-      }
+      // concat: {
+      //   files: ['<%= concat.dist.src %>'],
+      //   tasks: ['concat',
+      //     'build-static'
+      //   ]
+      // },
     },
 
 
@@ -85,15 +85,15 @@ module.exports = function(grunt) {
       }
     },
 
-    concat: {
-      options: {
-        separator: '\n\n'
-      },
-      dist: {
-        src: ['script/lib/**/*.js'],
-        dest: 'static/javascript/lib.js'
-      }
-    },
+    // concat: {
+    //   options: {
+    //     separator: '\n\n'
+    //   },
+    //   dist: {
+    //     src: ['script/lib/**/*.js'],
+    //     dest: 'static/javascript/lib.js'
+    //   }
+    // },
 
     /**
      * Extending Swig
