@@ -1,5 +1,243 @@
 .timeline {
-  width: 90%;
-  max-width: 40em;
+  --background-color: var(--color-lightest);
+  --background-color-hover: var(--color-darkest);
+  --border-height: 22px;
+  --padding-inset: 33px;
+  --text-color: var(--color-darkest);
+  --text-color-hover: var(--color-lightest);
+  --hover-transition-duration: 0.28s;
+  --hover-transition-timing-function: ease-in-out;
+  --card-width: 327px;
+  --card-gutter: 53px;
+
+  width: 100%;
   margin: 0 auto;
+  background-color: var(--color-middle);
+}
+
+.timeline--no-slider {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.timeline--no-slider .timeline__card {
+  padding-left: 0;
+}
+
+.timeline--slider {
+  padding: 0;
+}
+
+.timeline--unslicked {
+  width: 100%;
+  max-width: calc( ( var(--card-width) * 3 ) + ( var(--card-gutter) * 2 ) );
+  margin: 0 auto;
+  display: block;
+}
+
+/*
+(card width * 3) + (gutter * 2)
+(327 * 3) + (53 * 2) = 1087
+*/
+@media screen and (min-width: 1087px) {
+  .timeline--unslicked .slick-list .slick-track .slick-slide:first-child .timeline__card {
+    padding-left: 0;
+  }
+}
+
+.timeline__card-container {
+  list-style: none;
+  max-width: calc( var(--card-width) + var(--card-gutter) );
+}
+
+.timeline__card,
+.timeline__card-link {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--card-width);
+  min-height: 400px;
+}
+
+.timeline__card {
+  padding-left: var(--card-gutter);
+}
+
+.timeline__card-link {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.timeline__card-link:hover {
+  color: var(--text-color-color);
+}
+
+.timeline__card-hat {
+  width: 100%;
+  height: var(--border-height);
+  display: flex;
+  flex-grow: 0;
+}
+
+.timeline__card-hat-left {
+  width: 0;
+  height: 0;
+  flex-grow: 0;
+  border-bottom: var(--border-height) solid var(--background-color);
+  border-left: var(--border-height) solid transparent;
+
+  transition-property: border-bottom-color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-hat-left {
+  border-bottom: var(--border-height) solid var(--background-color-hover);
+}
+
+.timeline__card-hat-center {
+  width: var(--border-height);
+  height: var(--border-height);
+  flex-grow: 1;
+  background-color: var(--background-color);
+
+  transition-property: background-color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-hat-center {
+  background-color: var(--background-color-hover);
+}
+
+.timeline__card-hat-right {
+  width: 0;
+  height: 0;
+  flex-grow: 0;
+  border-bottom: var(--border-height) solid var(--background-color);
+  border-right: var(--border-height) solid transparent;
+
+  transition-property: border-bottom-color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-hat-right {
+  border-bottom: var(--border-height) solid var(--background-color-hover);
+}
+
+.timeline__card-header {
+  background-color: var(--background-color);
+  flex-grow: 0;
+  padding-left: var(--padding-inset);
+  padding-right: var(--padding-inset);
+
+  transition-property: background-color, color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-header {
+  background-color: var(--background-color-hover);
+  color: var(--text-color-hover);
+}
+
+.timeline__card-body {
+  background-color: var(--background-color);
+  flex-grow: 1;
+  padding-left: var(--padding-inset);
+  padding-right: var(--padding-inset);
+
+  transition-property: background-color, color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-body {
+  background-color: var(--background-color-hover);
+  color: var(--text-color-hover);
+}
+
+.timeline__card-footer {
+  background-color: var(--background-color);
+  flex-grow: 0;
+  padding-left: var(--padding-inset);
+  padding-right: var(--padding-inset);
+
+  transition-property: background-color, color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-footer {
+  background-color: var(--background-color-hover);
+  color: var(--text-color-hover);
+}
+
+.timeline__card-footer-read-more {
+  display: none;
+  text-transform: uppercase;
+}
+
+.timeline__card-link:hover .timeline__card-footer-year {
+  display: none;
+}
+
+.timeline__card-link:hover .timeline__card-footer-read-more {
+  display: block;
+}
+
+.timeline__card-shoe {
+  width: 100%;
+  height: var(--border-height);
+  display: flex;
+  flex-grow: 0;
+}
+
+.timeline__card-shoe-left {
+  width: 0;
+  height: 0;
+  flex-grow: 0;
+  border-top: var(--border-height) solid var(--background-color);
+  border-left: var(--border-height) solid transparent;
+
+  transition-property: border-top-color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-shoe-left {
+  border-top: var(--border-height) solid var(--background-color-hover);
+}
+
+.timeline__card-shoe-center {
+  width: var(--border-height);
+  height: var(--border-height);
+  flex-grow: 1;
+  background-color: var(--background-color);
+
+  transition-property: background-color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-shoe-center {
+  background-color: var(--background-color-hover);
+}
+
+.timeline__card-shoe-right {
+  width: 0;
+  height: 0;
+  flex-grow: 0;
+  border-top: var(--border-height) solid var(--background-color);
+  border-right: var(--border-height) solid transparent;
+
+  transition-property: border-top-color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-shoe-right {
+  border-top: var(--border-height) solid var(--background-color-hover);
 }
