@@ -95,6 +95,13 @@
   @extend %hero__footer-button-text;
 }
 
+.hero__footer-button-link {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  text-decoration: none;
+}
+
 .hero__footer-button-text {
   align-self: center;
   color: var(--color-lightest);

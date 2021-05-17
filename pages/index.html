@@ -16,9 +16,13 @@
           <div class="hero__footer-hat-center"></div>
           <div class="hero__footer-hat-right"></div>
           <div class="hero__footer-body"></div>
-          <div class="hero__footer-button">
-            <p class="hero__footer-button-text">Play Video</p>
-          </div>
+          {% if item.hero_video && item.hero_video.original_url %}
+            <div class="hero__footer-button">
+              <a href="{{ item.hero_video.original_url }}" data-lity class="hero__footer-button-link">
+                <p class="hero__footer-button-text">Play Video</p>
+              </a>
+            </div>
+          {% endif %}
           <div class="hero__text-container">
             <h1 class="hero__text">Rosanne<br />Somerson</h1>
           </div>
