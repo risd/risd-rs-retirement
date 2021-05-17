@@ -15,6 +15,7 @@
   background-color: var(--color-middle);
 }
 
+// no slider initialized, there is only a single card
 .timeline--no-slider {
   display: flex;
   justify-content: center;
@@ -25,10 +26,13 @@
   padding-left: 0;
 }
 
+// there are 2 or more cards in the timeline, a slider is initialized
 .timeline--slider {
   padding: 0;
 }
 
+// there are 3 or fewer cards in the timeline slider
+// it might be appropriate to just align items in the grid
 .timeline--unslicked {
   width: 100%;
   max-width: calc( ( var(--card-width) * 3 ) + ( var(--card-gutter) * 2 ) );
