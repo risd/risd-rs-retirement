@@ -14542,7 +14542,75 @@ var $ = require('jquery');
 require('slick-carousel');
 
 require('lity');
+/*
 
-console.log('hello');
+| 327px | 53px | 327px | 53px | 327px |
+( 327 * 3 ) + ( 53 * 2 ) = 1087
+
+| 327px | 53px | 327px |
+( 327 * 2 ) + 53 = 707
+
+ */
+
+
+var cardWidth = 327;
+var cardGutter = 53;
+var maxColumnWidth = cardWidth * 3 + cardGutter * 2;
+var slickConf = {
+  infinite: true,
+  mobileFirst: true,
+  slidesToShow: 1,
+  centerMode: false,
+  variableWidth: true,
+  centerPadding: '53px',
+  responsive: [{
+    breakpoint: 707,
+    settings: {
+      slidesToShow: 2,
+      centerMode: false,
+      variableWidth: true
+    }
+  }, {
+    breakpoint: 1087,
+    settings: {
+      slidesToShow: 3,
+      centerMode: false,
+      variableWidth: true
+    }
+  }]
+};
+$('.timeline--slider').slick(slickConf);
+unslick();
+reslick();
+$(window).resize(function () {
+  unslick();
+  reslick();
+});
+
+function unslick() {
+  $('.slick-slider').each(function (index) {
+    var $el = $(this);
+    var slideCount = $el.attr('data-card-count') ? parseInt($el.attr('data-card-count')) : 0;
+    if (slideCount === 0 || isNaN(slideCount)) return;
+    var slickWidth = slideCount * cardWidth + (slideCount - 1) * cardGutter;
+
+    if (slickWidth < window.innerWidth && slickWidth <= maxColumnWidth) {
+      $el.addClass('timeline--unslicked');
+    }
+  });
+}
+
+function reslick() {
+  $('.timeline--unslicked').each(function (index) {
+    var $el = $(this);
+    var slideCount = $el.attr('data-card-count') ? parseInt($el.attr('data-card-count')) : 0;
+    if (slideCount === 0 || isNaN(slideCount)) return;
+    var slickWidth = slideCount * cardWidth + (slideCount - 1) * cardGutter;
+
+    if (slickWidth > window.innerWidth) {
+      $el.removeClass('timeline--unslicked');
+    }
+  });
+}
 
 },{"jquery":1,"lity":2,"slick-carousel":3}]},{},[4]);
