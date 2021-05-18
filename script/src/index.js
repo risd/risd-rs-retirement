@@ -21,7 +21,7 @@ const slickConf = {
   infinite: true,
   mobileFirst: true,
   slidesToShow: 1,
-  centerMode: false,
+  centerMode: true,
   variableWidth: true,
   centerPadding: '53px',
   responsive: [
@@ -55,12 +55,10 @@ $( '.timeline--slider' ).slick( slickConf )
 
 unslick()
 reslick()
-setCardGutterMobile()
 
 $( window ).resize( function () {
   unslick()
   reslick()
-  setCardGutterMobile()
 } )
 
 function unslick () {
@@ -89,10 +87,4 @@ function reslick () {
       $el.removeClass( 'timeline--unslicked' )
     }
   } )
-}
-
-function setCardGutterMobile () {
-  let cardGutterMobile = ( window.innerWidth - cardWidth )
-  cardGutterMobile = Math.min( cardGutterMobile, cardGutter )
-  $( '.timeline__card' ).css( '--card-gutter-mobile', cardGutterMobile + 'px' )
 }
