@@ -8,6 +8,16 @@
   background-color: var(--color-middle);
 }
 
+.intro__timeline-marker {
+  position: absolute;
+  left: calc(50% - 1px);
+  width: 1px;
+  height: 120px;
+  top: -60px;
+  background-color: var(--color-darkest);
+  z-index: 2;
+}
+
 .intro p {
   width: 90%;
   max-width: 40em;
