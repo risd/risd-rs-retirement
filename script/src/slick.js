@@ -40,6 +40,7 @@
             _.defaults = {
                 accessibility: true,
                 adaptiveHeight: false,
+                additionalLeftOffset: 0,
                 appendArrows: $(element),
                 appendDots: $(element),
                 arrows: true,
@@ -1153,7 +1154,15 @@
                     targetLeft =  0;
                 }
             } else {
-                targetLeft = targetSlide[0] ? targetSlide[0].offsetLeft * -1 : 0;
+                let maxColumnWidth = ( 327 * 3 ) + ( 53 * 2 )
+                var additionalLeftOffset = 0
+                if (typeof _.options.additionalLeftOffset === 'number') {
+                    additionalLeftOffset = _.additionalLeftOffset
+                }
+                else if (typeof _.options.additionalLeftOffset === 'function') {
+                    additionalLeftOffset = _.options.additionalLeftOffset(_)
+                }
+                targetLeft = targetSlide[0] ? ( targetSlide[0].offsetLeft - additionalLeftOffset ) * -1 : 0;
             }
 
             if (_.options.centerMode === true) {

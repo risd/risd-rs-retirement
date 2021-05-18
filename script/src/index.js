@@ -1,5 +1,5 @@
 const $ = require( 'jquery' )
-require( 'slick-carousel' )
+require( './slick.js' )
 require( 'lity' )
 
 
@@ -42,6 +42,13 @@ const slickConf = {
       },
     },
   ],
+  additionalLeftOffset: function ( slick ) {
+    let additionalLeftOffset = 0
+    if ( window.innerWidth > maxColumnWidth && slick.slideCount > 3 ) {
+      additionalLeftOffset = ( ( window.innerWidth - maxColumnWidth ) / 2 ) - cardGutter
+    }
+    return additionalLeftOffset
+  },
 }
 
 $( '.timeline--slider' ).slick( slickConf )
