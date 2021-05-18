@@ -241,5 +241,57 @@
         {% endfor %}
         </ul>
       </li>
+      <li>
+        <strong>Footer: </strong>
+        {{ cms.homepage.footer }}
+      </li>
+      <li>
+        <strong>Footer Address: </strong>
+        {{ cms.homepage.footer_address|safe }}
+      </li>
+      <li>
+        <strong>Footer Phone Numbers: </strong>
+        {# Loop of your Repeatable Form items. Remember, you can sort the order in your CMS if you need. #}
+        <ul>
+        {% for row in cms.homepage.footer_phone_numbers %}
+            <li>
+              <strong>Phone Number: </strong>
+              {{ row.phone_number }}
+            </li>
+        {% endfor %}
+        </ul>
+      </li>
+      <li>
+        <strong>Footer Links: </strong>
+        {# Loop of your Repeatable Form items. Remember, you can sort the order in your CMS if you need. #}
+        <ul>
+        {% for row in cms.homepage.footer_links %}
+            <li>
+              <strong>Title: </strong>
+              {{ row.title }}
+            </li>
+            <li>
+              <strong>Link: </strong>
+              {{ row.link }}
+            </li>
+        {% endfor %}
+        </ul>
+      </li>
+      <li>
+        <strong>Footer Social Media Accounts: </strong>
+        {# Loop of your Repeatable Form items. Remember, you can sort the order in your CMS if you need. #}
+        <ul>
+        {% for row in cms.homepage.footer_social_media_accounts %}
+            <li>
+              <strong>Title: </strong>
+              {{ row.title }}
+            </li>
+            <li>
+              <strong>Link: </strong>
+              {{ row.link }}
+            </li>
+        {% endfor %}
+        </ul>
+      </li>
   </ul>
 {% endblock %}

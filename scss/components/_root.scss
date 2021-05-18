@@ -4,3 +4,7 @@ html, body {
   margin: 0;
   @include text-size($base);
 }
+
+* {
+  box-sizing: border-box;
+}

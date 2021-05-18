@@ -19,7 +19,7 @@
 
 .hero__footer {
   --max-width: 1145px;
-  --padding-inset: 1rem;
+  --padding-inset: 20px;
   --height: 176px;
   --height-hat: 44px;
   
@@ -40,7 +40,7 @@
   max-width: var(--max-width);
 
   display: grid;
-  grid-template-columns: 44px auto 80px 80px auto 44px;
+  grid-template-columns: var(--height-hat) auto 80px 80px auto var(--height-hat);
   grid-template-rows: var(--height-hat) var(--height-hat) 88px; /* 44 + 44 + 88 = 176 */
 }
 
