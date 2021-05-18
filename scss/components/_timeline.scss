@@ -65,8 +65,23 @@
 }
 
 .timeline__card {
-  padding-left: var(--card-gutter);
+  --card-gutter-mobile: 0px;
+
+  padding-left: calc( var(--card-gutter-mobile) / 2 );
+  padding-right: calc( var(--card-gutter-mobile) / 2 );
 }
+
+/*
+card width + gutter
+327 + ( 53 * 2 ) = 433
+*/
+@media screen and (min-width: 433px) {
+  .timeline__card {
+    padding-left: var(--card-gutter);
+    padding-right: 0;
+  }
+}
+
 
 .timeline__card-link {
   text-decoration: none;

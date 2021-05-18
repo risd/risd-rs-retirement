@@ -11566,8 +11566,6 @@ var slickConf = {
     }
   }],
   additionalLeftOffset: function additionalLeftOffset(slick) {
-    console.log('additionalLeftOffset');
-    console.log(slick.slideCount);
     var additionalLeftOffset = 0;
 
     if (window.innerWidth > maxColumnWidth && slick.slideCount > 3) {
@@ -11580,9 +11578,11 @@ var slickConf = {
 $('.timeline--slider').slick(slickConf);
 unslick();
 reslick();
+setCardGutterMobile();
 $(window).resize(function () {
   unslick();
   reslick();
+  setCardGutterMobile();
 });
 
 function unslick() {
@@ -11609,6 +11609,12 @@ function reslick() {
       $el.removeClass('timeline--unslicked');
     }
   });
+}
+
+function setCardGutterMobile() {
+  var cardGutterMobile = window.innerWidth - cardWidth;
+  cardGutterMobile = Math.min(cardGutterMobile, cardGutter);
+  $('.timeline__card').css('--card-gutter-mobile', cardGutterMobile + 'px');
 }
 
 },{"./slick.js":4,"jquery":1,"lity":2}],4:[function(require,module,exports){
