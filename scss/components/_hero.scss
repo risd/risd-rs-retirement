@@ -40,8 +40,19 @@
   max-width: var(--max-width);
 
   display: grid;
-  grid-template-columns: 44px auto 142px 142px auto 44px;
+  grid-template-columns: 44px auto 80px 80px auto 44px;
   grid-template-rows: var(--height-hat) var(--height-hat) 88px; /* 44 + 44 + 88 = 176 */
+}
+
+/*
+min width that fits the entire footer at full size
+padding left + left edge + left half of button + right half of button + right edge + padding right + 20px padding
+28 + 44 + 142 + 142 + 44 + 28 + 20 = 448
+ */
+@media screen and (min-width: 448px) {
+  .hero__footer-container {
+    grid-template-columns: 44px auto 142px 142px auto 44px;
+  }
 }
 
 .hero__footer-hat-left {
@@ -121,12 +132,12 @@
   margin: 0.25em;
 }
 
-.hero__timeline-marker {
-  position: absolute;
-  left: calc(50% - 1px);
-  width: 1px;
-  height: 120px;
-  bottom: -60px;
-  background-color: var(--color-darkest);
-  z-index: 2;
-}
+// .hero__timeline-marker {
+//   position: absolute;
+//   left: calc(50% - 1px);
+//   width: 1px;
+//   height: 120px;
+//   bottom: -60px;
+//   background-color: var(--color-darkest);
+//   z-index: 2;
+// }
