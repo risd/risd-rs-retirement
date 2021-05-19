@@ -11543,13 +11543,34 @@ require('lity');
 var cardWidth = 327;
 var cardGutter = 53;
 var maxColumnWidth = cardWidth * 3 + cardGutter * 2;
+var DEVICE_HAS_TOUCH = false;
+
+if ('ontouchstart' in window) {
+  $('body').addClass('device-has-touch');
+  DEVICE_HAS_TOUCH = true;
+} else {
+  $('body').addClass('device-has-no-touch');
+}
+
 var slickConf = {
   infinite: true,
   mobileFirst: true,
   slidesToShow: 1,
   centerMode: true,
   variableWidth: true,
-  centerPadding: '60px',
+  centerPadding: '0px',
+  arrows: DEVICE_HAS_TOUCH ? false : true,
+  additionalLeftOffset: function additionalLeftOffset(slick) {
+    var additionalLeftOffset = 0;
+
+    if (window.innerWidth > maxColumnWidth && slick.slideCount > 3 && $('body').hasClass('device-has-touch')) {
+      additionalLeftOffset = (window.innerWidth - maxColumnWidth) / 2;
+    }
+
+    return additionalLeftOffset;
+  },
+  prevArrow: slickPrevArrow(),
+  nextArrow: slickNextArrow(),
   responsive: [{
     breakpoint: 707,
     settings: {
@@ -11564,28 +11585,46 @@ var slickConf = {
       centerMode: false,
       variableWidth: true
     }
-  }],
-  additionalLeftOffset: function additionalLeftOffset(slick) {
-    var additionalLeftOffset = 0;
-
-    if (window.innerWidth > maxColumnWidth && slick.slideCount > 3) {
-      additionalLeftOffset = (window.innerWidth - maxColumnWidth) / 2 - cardGutter;
-    }
-
-    return additionalLeftOffset;
-  },
-  prevArrow: slickPrevArrow(),
-  nextArrow: slickNextArrow()
+  }]
 };
+$('.timeline--slider').on('setPositionStart', function (event, slick) {
+  console.log('set-position-start');
+  var $el = $(this);
+  var buttonWidth = $('.slick-prev').outerWidth();
+  buttonWidth = buttonWidth ? buttonWidth : window.innerWidth * 0.15;
+  var totalButtonWidth = buttonWidth * 2;
+  var cardListWidth = Math.ceil(window.innerWidth - totalButtonWidth);
 
-if ('ontouchstart' in window) {
-  $('body').addClass('device-has-touch');
-  slickConf.arrows = false;
-} else {
-  $('body').addClass('device-has-no-touch');
-}
+  if (window.innerWidth > 327 && cardListWidth < 286 + 10 + 286 && slick.slideCount > 1) {
+    console.log('1-up');
+    slick.options.centerMode = true;
+    var _cardWidth = cardListWidth;
+    $('.timeline').css('--card-width', _cardWidth + 'px').css('--card-gutter', '10px');
+    $el.find('.timeline__card-container').css('padding-left', '5px').css('padding-right', '5px');
+  } else if (cardListWidth >= 286 + 10 + 286 && cardListWidth < 286 + 10 + 286 + 10 + 286 && slick.slideCount > 1) {
+    console.log('2-up');
+    slick.options.centerMode = false;
 
-$('.timeline--slider').slick(slickConf);
+    var _cardWidth2 = Math.ceil(cardListWidth / 2 - 10);
+
+    $('.timeline').css('--card-width', _cardWidth2 + 'px').css('--card-gutter', '10px');
+    $el.find('.timeline__card-container').css('padding-left', '0px').css('padding-right', '10px');
+  } else if (cardListWidth >= 286 + 10 + 286 + 10 + 286 && cardListWidth < maxColumnWidth && slick.slideCount > 1) {
+    console.log('3-up-tight');
+    slick.options.centerMode = false;
+
+    var _cardWidth3 = Math.ceil((cardListWidth - 10 * 2) / 3);
+
+    $('.timeline').css('--card-width', _cardWidth3 + 'px').css('--card-gutter', '10px');
+    $el.find('.timeline__card-container').css('padding-left', '0px').css('padding-right', '10px');
+  } else if (cardListWidth >= maxColumnWidth) {
+    console.log('3-up-loose');
+    slick.options.centerMode = false;
+    var _cardWidth4 = 327;
+    $('.timeline').css('--card-width', _cardWidth4 + 'px').css('--card-gutter', cardGutter + 'px');
+    $el.find('.timeline__card-container').css('padding-left', '0px').css('padding-right', '53px');
+  }
+}).slick(slickConf);
 unslick();
 reslick();
 $(window).resize(function () {
@@ -12044,28 +12083,39 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     if (_.options.arrows === true) {
       _.$prevArrow = $(_.options.prevArrow).addClass('slick-arrow');
       _.$nextArrow = $(_.options.nextArrow).addClass('slick-arrow');
+      console.log('buildArrows');
+      console.log(_.$slider);
 
       if (_.slideCount > _.options.slidesToShow) {
+        console.log('buildArrows-build');
+
         _.$prevArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
 
         _.$nextArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
-
-        if (_.htmlExpr.test(_.options.prevArrow)) {
-          _.$prevArrow.prependTo(_.options.appendArrows);
-        }
-
-        if (_.htmlExpr.test(_.options.nextArrow)) {
-          _.$nextArrow.appendTo(_.options.appendArrows);
-        }
-
-        if (_.options.infinite !== true) {
-          _.$prevArrow.addClass('slick-disabled').attr('aria-disabled', 'true');
-        }
       } else {
-        _.$prevArrow.add(_.$nextArrow).addClass('slick-hidden').attr({
-          'aria-disabled': 'true',
-          'tabindex': '-1'
-        });
+        console.log('buildArrows-pass');
+
+        _.$prevArrow.addClass('slick-hidden');
+
+        _.$nextArrow.addClass('slick-hidden'); // _.$prevArrow.add( _.$nextArrow )
+        //     .addClass('slick-hidden')
+        //     .attr({
+        //         'aria-disabled': 'true',
+        //         'tabindex': '-1'
+        //     });
+
+      }
+
+      if (_.htmlExpr.test(_.options.prevArrow)) {
+        _.$prevArrow.prependTo(_.options.appendArrows);
+      }
+
+      if (_.htmlExpr.test(_.options.nextArrow)) {
+        _.$nextArrow.appendTo(_.options.appendArrows);
+      }
+
+      if (_.options.infinite !== true) {
+        _.$prevArrow.addClass('slick-disabled').attr('aria-disabled', 'true');
       }
     }
   };
@@ -13651,6 +13701,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
   Slick.prototype.setPosition = function () {
     var _ = this;
+
+    _.$slider.trigger('setPositionStart', [_]);
 
     _.setDimensions();
 

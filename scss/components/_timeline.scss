@@ -7,8 +7,8 @@
   --text-color-hover: var(--color-lightest);
   --hover-transition-duration: 0.28s;
   --hover-transition-timing-function: ease-in-out;
-  --card-width: 327px;
-  --card-gutter: 53px;
+  --card-width: 266px;
+  --card-gutter: 10px;
   --arrow-width: 60px;
 
   width: 100%;
@@ -24,28 +24,35 @@
 }
 
 .timeline--no-slider .timeline__card-container {
-  padding-left: 0;
+  padding-right: 0;
 }
 
 // there are 2 or more cards in the timeline, a slider is initialized
 .timeline--slider {
   padding: 0;
-  // display: flex;
-  // justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
-// .timeline--slider .slick-arrow {
-//   flex-grow: 0;
-// }
+.timeline--slider .slick-arrow {
+  flex-grow: 1;
+  align-self: stretch;
+  cursor: pointer;
+}
 
-// .timeline--slider .slick-list {
-//   flex-grow: 1;
-//   max-width: 1087px;
-// }
+.timeline--slider .slick-arrow.slick-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.device-has-no-touch .timeline--slider .slick-list {
+  flex-grow: 2;
+  max-width: 1087px;
+}
 
 // there are 3 or fewer cards in the timeline slider
 // it might be appropriate to just align items in the grid
-.timeline--unslicked {
+body.device-has-touch .timeline--unslicked {
   width: 100%;
   max-width: calc( ( var(--card-width) * 3 ) + ( var(--card-gutter) * 2 ) );
   margin: 0 auto;
@@ -56,29 +63,27 @@
   border: none;
   background-color: transparent;
   display: flex;
-  justify-self: center;
+  justify-content: center;
   
   z-index: 2;
 
-  position: absolute;
-  top: 0;
-  bottom: 0;
+  // position: absolute;
+  // top: 0;
+  // bottom: 0;
   height: 100%;
-  width: var(--arrow-width);
+  max-width: calc( var(--arrow-width) + var(--card-gutter) );
 
   padding: 0;
+
+  align-self: center;
 }
 
-body.device-has-touch .timeline .slick-arrow {
-  display: none;
+.timeline .slick-prev-text {
+  padding-right: var(--card-gutter);
 }
 
-.timeline .slick-prev {
-  left: 0;
-}
-
-.timeline .slick-next {
-  right: 0;  
+.timeline .slick-next-text {
+  padding-left: var(--card-gutter);
 }
 
 .slick-arrow-text {
@@ -97,10 +102,10 @@ body.device-has-touch .timeline .slick-arrow {
   }
 }
 
-.timeline .slick-slide,
-.timeline--no-slider .timeline__card-container {
-  max-width: 286px;
-}
+// .timeline .slick-slide,
+// .timeline--no-slider .timeline__card-container {
+//   max-width: 286px;
+// }
 
 .timeline__card-container {
   list-style: none;
@@ -136,11 +141,11 @@ card width + gutter
   .timeline {
     --card-gutter: 20px;
   }
-  .timeline--no-slider .timeline__card-container,
-  .timeline .slick-slide,
-  .timeline__card-container {
-    max-width: calc( var(--card-width) + var(--card-gutter) );
-  }
+  // .timeline--no-slider .timeline__card-container,
+  // .timeline .slick-slide,
+  // .timeline__card-container {
+  //   max-width: calc( var(--card-width) + var(--card-gutter) );
+  // }
   .timeline__card-container {
     padding-left: calc( var(--card-gutter) / 2 );
     padding-right: calc( var(--card-gutter) / 2 );
@@ -158,34 +163,24 @@ card width + gutter + card width
   .timeline {
     --card-gutter: 53px;
   }
-  .timeline--no-slider .timeline__card-container,
-  .timeline .slick-slide,
   .timeline__card-container {
-    max-width: calc( var(--card-width) + var(--card-gutter) );
+    padding-left: 0;
+    padding-right: var(--card-gutter);
   }
-  .timeline__card-container {
-    padding-left: var(--card-gutter);
-    padding-right: 0;
-  }
-  // .timeline__card {
-  //   padding-left: var(--card-gutter);
-  //   padding-right: 0;
-  // }
 }
 
 /*
-card width + gutter + card width + gutter + card width
-327 + 53 + 327 + 53 + 327 = 1087
+card width 327
+gutter 53
+arrow width 60
+60 + 53 + 327 + 53 + 327 + 53 + 327 + 53 + 60 = 1313
  */
-@media screen and (min-width: 1087px) {
-  .timeline__card-container {
-    padding-left: var(--card-gutter);
-    padding-right: 0;
+@media screen and (min-width: 1313px) {
+  .timeline {
+    --card-width: 327px;
+    --card-gutter: 53px;
+    --arrow-width: 70px;
   }
-  // .timeline__card {
-  //   padding-left: var(--card-gutter);
-  //   padding-right: 0;
-  // }
 }
 
 .timeline__card-link {
