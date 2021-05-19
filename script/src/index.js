@@ -23,7 +23,7 @@ const slickConf = {
   slidesToShow: 1,
   centerMode: true,
   variableWidth: true,
-  centerPadding: '53px',
+  centerPadding: '60px',
   responsive: [
     {
       breakpoint: 707,
@@ -49,6 +49,16 @@ const slickConf = {
     }
     return additionalLeftOffset
   },
+  prevArrow: slickPrevArrow(),
+  nextArrow: slickNextArrow(),
+}
+
+if ( 'ontouchstart' in window ) {
+  $( 'body' ).addClass( 'device-has-touch' )
+  slickConf.arrows = false
+}
+else {
+  $( 'body' ).addClass( 'device-has-no-touch' )
 }
 
 $( '.timeline--slider' ).slick( slickConf )
@@ -87,4 +97,19 @@ function reslick () {
       $el.removeClass( 'timeline--unslicked' )
     }
   } )
+}
+
+function slickPrevArrow () {
+  return `
+    <button class="slick-prev" aria-label="Previous" type="button">
+      <div class="slick-arrow-text slick-prev-text"><</div>
+    </button>
+  `.trim()
+}
+function slickNextArrow () {
+  return `
+    <button class="slick-next" aria-label="Next" type="button">
+      <div class="slick-arrow-text slick-next-text">></div>
+    </button>
+  `.trim()
 }

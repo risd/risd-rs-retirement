@@ -9,6 +9,7 @@
   --hover-transition-timing-function: ease-in-out;
   --card-width: 327px;
   --card-gutter: 53px;
+  --arrow-width: 60px;
 
   width: 100%;
   margin: 0 auto;
@@ -22,14 +23,25 @@
   padding: 0;
 }
 
-.timeline--no-slider .timeline__card {
+.timeline--no-slider .timeline__card-container {
   padding-left: 0;
 }
 
 // there are 2 or more cards in the timeline, a slider is initialized
 .timeline--slider {
   padding: 0;
+  // display: flex;
+  // justify-content: center;
 }
+
+// .timeline--slider .slick-arrow {
+//   flex-grow: 0;
+// }
+
+// .timeline--slider .slick-list {
+//   flex-grow: 1;
+//   max-width: 1087px;
+// }
 
 // there are 3 or fewer cards in the timeline slider
 // it might be appropriate to just align items in the grid
@@ -40,12 +52,47 @@
   display: block;
 }
 
+.timeline .slick-arrow {
+  border: none;
+  background-color: transparent;
+  display: flex;
+  justify-self: center;
+  
+  z-index: 2;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: var(--arrow-width);
+
+  padding: 0;
+}
+
+body.device-has-touch .timeline .slick-arrow {
+  display: none;
+}
+
+.timeline .slick-prev {
+  left: 0;
+}
+
+.timeline .slick-next {
+  right: 0;  
+}
+
+.slick-arrow-text {
+  align-self: center;
+  @extend %timeline__slick-arrow;
+  color: var(--color-darkest);
+}
+
 /*
 (card width * 3) + (gutter * 2)
 (327 * 3) + (53 * 2) = 1087
 */
 @media screen and (min-width: 1087px) {
-  .timeline--unslicked .slick-list .slick-track .slick-slide:first-child .timeline__card {
+  .timeline--unslicked .slick-list .slick-track .slick-slide:first-child .timeline__card-container {
     padding-left: 0;
   }
 }
@@ -77,8 +124,6 @@
 }
 
 .timeline__card {
-  --card-gutter-mobile: 0px;
-
   padding-left: 0;
   padding-right: 0;
 }
@@ -96,10 +141,12 @@ card width + gutter
   .timeline__card-container {
     max-width: calc( var(--card-width) + var(--card-gutter) );
   }
-  .timeline__card {
-    width: 100%;
+  .timeline__card-container {
     padding-left: calc( var(--card-gutter) / 2 );
     padding-right: calc( var(--card-gutter) / 2 );
+  }
+  .timeline__card {
+    width: 100%;
   }
 }
 
@@ -116,10 +163,14 @@ card width + gutter + card width
   .timeline__card-container {
     max-width: calc( var(--card-width) + var(--card-gutter) );
   }
-  .timeline__card {
+  .timeline__card-container {
     padding-left: var(--card-gutter);
     padding-right: 0;
   }
+  // .timeline__card {
+  //   padding-left: var(--card-gutter);
+  //   padding-right: 0;
+  // }
 }
 
 /*
@@ -127,10 +178,14 @@ card width + gutter + card width + gutter + card width
 327 + 53 + 327 + 53 + 327 = 1087
  */
 @media screen and (min-width: 1087px) {
-  .timeline__card {
+  .timeline__card-container {
     padding-left: var(--card-gutter);
     padding-right: 0;
   }
+  // .timeline__card {
+  //   padding-left: var(--card-gutter);
+  //   padding-right: 0;
+  // }
 }
 
 .timeline__card-link {

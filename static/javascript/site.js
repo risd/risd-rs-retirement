@@ -11549,7 +11549,7 @@ var slickConf = {
   slidesToShow: 1,
   centerMode: true,
   variableWidth: true,
-  centerPadding: '53px',
+  centerPadding: '60px',
   responsive: [{
     breakpoint: 707,
     settings: {
@@ -11573,8 +11573,18 @@ var slickConf = {
     }
 
     return additionalLeftOffset;
-  }
+  },
+  prevArrow: slickPrevArrow(),
+  nextArrow: slickNextArrow()
 };
+
+if ('ontouchstart' in window) {
+  $('body').addClass('device-has-touch');
+  slickConf.arrows = false;
+} else {
+  $('body').addClass('device-has-no-touch');
+}
+
 $('.timeline--slider').slick(slickConf);
 unslick();
 reslick();
@@ -11607,6 +11617,14 @@ function reslick() {
       $el.removeClass('timeline--unslicked');
     }
   });
+}
+
+function slickPrevArrow() {
+  return "\n    <button class=\"slick-prev\" aria-label=\"Previous\" type=\"button\">\n      <div class=\"slick-arrow-text slick-prev-text\"><</div>\n    </button>\n  ".trim();
+}
+
+function slickNextArrow() {
+  return "\n    <button class=\"slick-next\" aria-label=\"Next\" type=\"button\">\n      <div class=\"slick-arrow-text slick-next-text\">></div>\n    </button>\n  ".trim();
 }
 
 },{"./slick.js":4,"jquery":1,"lity":2}],4:[function(require,module,exports){
@@ -12676,7 +12694,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           targetLeft = 0;
         }
       } else {
-        var maxColumnWidth = 327 * 3 + 53 * 2;
         var additionalLeftOffset = 0;
 
         if (typeof _.options.additionalLeftOffset === 'number') {

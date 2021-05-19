@@ -1154,7 +1154,6 @@
                     targetLeft =  0;
                 }
             } else {
-                let maxColumnWidth = ( 327 * 3 ) + ( 53 * 2 )
                 var additionalLeftOffset = 0
                 if (typeof _.options.additionalLeftOffset === 'number') {
                     additionalLeftOffset = _.additionalLeftOffset
