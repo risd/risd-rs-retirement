@@ -444,36 +444,39 @@
 
             _.$prevArrow = $(_.options.prevArrow).addClass('slick-arrow');
             _.$nextArrow = $(_.options.nextArrow).addClass('slick-arrow');
-
+console.log( 'buildArrows' )
+console.log( _.$slider )
             if( _.slideCount > _.options.slidesToShow ) {
-
+console.log( 'buildArrows-build' )
                 _.$prevArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
                 _.$nextArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
 
-                if (_.htmlExpr.test(_.options.prevArrow)) {
-                    _.$prevArrow.prependTo(_.options.appendArrows);
-                }
-
-                if (_.htmlExpr.test(_.options.nextArrow)) {
-                    _.$nextArrow.appendTo(_.options.appendArrows);
-                }
-
-                if (_.options.infinite !== true) {
-                    _.$prevArrow
-                        .addClass('slick-disabled')
-                        .attr('aria-disabled', 'true');
-                }
-
             } else {
+console.log( 'buildArrows-pass' )
+                _.$prevArrow.addClass('slick-hidden')
+                _.$nextArrow.addClass('slick-hidden')
+                // _.$prevArrow.add( _.$nextArrow )
 
-                _.$prevArrow.add( _.$nextArrow )
+                //     .addClass('slick-hidden')
+                //     .attr({
+                //         'aria-disabled': 'true',
+                //         'tabindex': '-1'
+                //     });
 
-                    .addClass('slick-hidden')
-                    .attr({
-                        'aria-disabled': 'true',
-                        'tabindex': '-1'
-                    });
+            }
 
+            if (_.htmlExpr.test(_.options.prevArrow)) {
+                _.$prevArrow.prependTo(_.options.appendArrows);
+            }
+
+            if (_.htmlExpr.test(_.options.nextArrow)) {
+                _.$nextArrow.appendTo(_.options.appendArrows);
+            }
+
+            if (_.options.infinite !== true) {
+                _.$prevArrow
+                    .addClass('slick-disabled')
+                    .attr('aria-disabled', 'true');
             }
 
         }
@@ -2216,6 +2219,8 @@
     Slick.prototype.setPosition = function() {
 
         var _ = this;
+
+        _.$slider.trigger('setPositionStart', [_]);
 
         _.setDimensions();
 
