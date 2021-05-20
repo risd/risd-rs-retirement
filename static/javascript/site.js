@@ -11540,9 +11540,16 @@ require('lity');
  */
 
 
+var cardWidthSmall = 286;
+var cardGutterSmall = 10;
 var cardWidth = 327;
 var cardGutter = 53;
 var maxColumnWidth = cardWidth * 3 + cardGutter * 2;
+
+var touchMargin = function touchMargin() {
+  return Math.max(window.innerWidth * 0.1, 60);
+};
+
 var DEVICE_HAS_TOUCH = false;
 
 if ('ontouchstart' in window) {
@@ -11561,9 +11568,13 @@ var slickConf = {
   centerPadding: '0px',
   arrows: DEVICE_HAS_TOUCH ? false : true,
   additionalLeftOffset: function additionalLeftOffset(slick) {
+    // no additional offset on no-touch devices
+    if (DEVICE_HAS_TOUCH === false) return 0;
     var additionalLeftOffset = 0;
 
-    if (window.innerWidth > maxColumnWidth && slick.slideCount > 3 && $('body').hasClass('device-has-touch')) {
+    if (window.innerWidth < maxColumnWidth && window.innerWidth > 582) {
+      additionalLeftOffset = touchMargin() / 2;
+    } else if (window.innerWidth >= maxColumnWidth && slick.slideCount > 3) {
       additionalLeftOffset = (window.innerWidth - maxColumnWidth) / 2;
     }
 
@@ -11572,14 +11583,14 @@ var slickConf = {
   prevArrow: slickPrevArrow(),
   nextArrow: slickNextArrow(),
   responsive: [{
-    breakpoint: 707,
+    breakpoint: 582,
     settings: {
       slidesToShow: 2,
       centerMode: false,
       variableWidth: true
     }
   }, {
-    breakpoint: 1087,
+    breakpoint: 878,
     settings: {
       slidesToShow: 3,
       centerMode: false,
@@ -11590,73 +11601,47 @@ var slickConf = {
 $('.timeline--slider').on('setPositionStart', function (event, slick) {
   console.log('set-position-start');
   var $el = $(this);
-  var buttonWidth = $('.slick-prev').outerWidth();
-  buttonWidth = buttonWidth ? buttonWidth : window.innerWidth * 0.15;
-  var totalButtonWidth = buttonWidth * 2;
+  var buttonWidth = $('.slick-prev').outerWidth(); // get the total button width. there are no buttons
+  // we are on a touch device, and we can 
+
+  var totalButtonWidth = buttonWidth ? buttonWidth * 2 : touchMargin(); // this represents the width that the fully showing cards will be displayed
+
   var cardListWidth = Math.ceil(window.innerWidth - totalButtonWidth);
 
-  if (window.innerWidth > 327 && cardListWidth < 286 + 10 + 286 && slick.slideCount > 1) {
-    console.log('1-up');
+  if (window.innerWidth >= 327 && cardListWidth < cardWidthSmall + cardGutterSmall + cardWidthSmall && slick.slideCount > 1) {
+    console.log('1-up-medium');
     slick.options.centerMode = true;
     var _cardWidth = cardListWidth;
-    $('.timeline').css('--card-width', _cardWidth + 'px').css('--card-gutter', '10px');
-    $el.find('.timeline__card-container').css('padding-left', '5px').css('padding-right', '5px');
-  } else if (cardListWidth >= 286 + 10 + 286 && cardListWidth < 286 + 10 + 286 + 10 + 286 && slick.slideCount > 1) {
+    $('.timeline').css('--card-width', _cardWidth + 'px').css('--card-gutter', '10px'); // $el.find( '.timeline__card-container' )
+    //   .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
+    //   .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
+  } else if (cardListWidth >= cardWidthSmall + cardGutterSmall + cardWidthSmall && cardListWidth < cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall && slick.slideCount > 1) {
     console.log('2-up');
     slick.options.centerMode = false;
 
     var _cardWidth2 = Math.ceil(cardListWidth / 2 - 10);
 
-    $('.timeline').css('--card-width', _cardWidth2 + 'px').css('--card-gutter', '10px');
-    $el.find('.timeline__card-container').css('padding-left', '0px').css('padding-right', '10px');
-  } else if (cardListWidth >= 286 + 10 + 286 + 10 + 286 && cardListWidth < maxColumnWidth && slick.slideCount > 1) {
+    $('.timeline').css('--card-width', _cardWidth2 + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px")); // $el.find( '.timeline__card-container' )
+    //   .css( 'padding-left', '0px' )
+    //   .css( 'padding-right', `${ cardGutterSmall }px` )
+  } else if (cardListWidth >= cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall && cardListWidth < maxColumnWidth && slick.slideCount > 1) {
     console.log('3-up-tight');
     slick.options.centerMode = false;
 
     var _cardWidth3 = Math.ceil((cardListWidth - 10 * 2) / 3);
 
-    $('.timeline').css('--card-width', _cardWidth3 + 'px').css('--card-gutter', '10px');
-    $el.find('.timeline__card-container').css('padding-left', '0px').css('padding-right', '10px');
+    $('.timeline').css('--card-width', _cardWidth3 + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px")); // $el.find( '.timeline__card-container' )
+    //   .css( 'padding-left', '0px' )
+    //   .css( 'padding-right', `${ cardGutterSmall }px` )
   } else if (cardListWidth >= maxColumnWidth) {
     console.log('3-up-loose');
     slick.options.centerMode = false;
     var _cardWidth4 = 327;
-    $('.timeline').css('--card-width', _cardWidth4 + 'px').css('--card-gutter', cardGutter + 'px');
-    $el.find('.timeline__card-container').css('padding-left', '0px').css('padding-right', '53px');
+    $('.timeline').css('--card-width', _cardWidth4 + 'px').css('--card-gutter', cardGutter + 'px'); // $el.find( '.timeline__card-container' )
+    //   .css( 'padding-left', '0px' )
+    //   .css( 'padding-right', `${ cardGutter }px` )
   }
 }).slick(slickConf);
-unslick();
-reslick();
-$(window).resize(function () {
-  unslick();
-  reslick();
-});
-
-function unslick() {
-  $('.slick-slider').each(function (index) {
-    var $el = $(this);
-    var slideCount = $el.attr('data-card-count') ? parseInt($el.attr('data-card-count')) : 0;
-    if (slideCount === 0 || isNaN(slideCount)) return;
-    var slickWidth = slideCount * cardWidth + (slideCount - 1) * cardGutter;
-
-    if (slickWidth < window.innerWidth && slickWidth <= maxColumnWidth) {
-      $el.addClass('timeline--unslicked');
-    }
-  });
-}
-
-function reslick() {
-  $('.timeline--unslicked').each(function (index) {
-    var $el = $(this);
-    var slideCount = $el.attr('data-card-count') ? parseInt($el.attr('data-card-count')) : 0;
-    if (slideCount === 0 || isNaN(slideCount)) return;
-    var slickWidth = slideCount * cardWidth + (slideCount - 1) * cardGutter;
-
-    if (slickWidth > window.innerWidth) {
-      $el.removeClass('timeline--unslicked');
-    }
-  });
-}
 
 function slickPrevArrow() {
   return "\n    <button class=\"slick-prev\" aria-label=\"Previous\" type=\"button\">\n      <div class=\"slick-arrow-text slick-prev-text\"><</div>\n    </button>\n  ".trim();

@@ -16,6 +16,20 @@
   background-color: var(--color-middle);
 }
 
+/*
+card width = 327
+gutter = 53
+arrow width = 70
+70 + 53 + 327 + 53 + 327 + 53 + 327 + 53 + 70 = 1333
+ */
+@media screen and (min-width: 1333px) {
+  .timeline {
+    --card-width: 327px;
+    --card-gutter: 53px;
+    --arrow-width: 70px;
+  }
+}
+
 // no slider initialized, there is only a single card
 .timeline--no-slider {
   display: flex;
@@ -50,15 +64,6 @@
   max-width: 1087px;
 }
 
-// there are 3 or fewer cards in the timeline slider
-// it might be appropriate to just align items in the grid
-body.device-has-touch .timeline--unslicked {
-  width: 100%;
-  max-width: calc( ( var(--card-width) * 3 ) + ( var(--card-gutter) * 2 ) );
-  margin: 0 auto;
-  display: block;
-}
-
 .timeline .slick-arrow {
   border: none;
   background-color: transparent;
@@ -67,9 +72,6 @@ body.device-has-touch .timeline--unslicked {
   
   z-index: 2;
 
-  // position: absolute;
-  // top: 0;
-  // bottom: 0;
   height: 100%;
   max-width: calc( var(--arrow-width) + var(--card-gutter) );
 
@@ -102,20 +104,17 @@ body.device-has-touch .timeline--unslicked {
   }
 }
 
-// .timeline .slick-slide,
-// .timeline--no-slider .timeline__card-container {
-//   max-width: 286px;
-// }
-
 .timeline__card-container {
   list-style: none;
   max-width: calc( var(--card-width) + var(--card-gutter) );
+  padding-left: calc( var(--card-gutter) / 2 );
+  padding-right: calc( var(--card-gutter) / 2 );
 }
 
 .timeline__card {
   display: flex;
   flex-direction: column;
-  width: 95%;
+  width: 100%;
   margin: 0 auto;
   max-width: var(--card-width);
   min-height: 400px;
@@ -134,52 +133,14 @@ body.device-has-touch .timeline--unslicked {
 }
 
 /*
-card width + gutter
-327 + ( 53 * 2 ) = 433
-*/
-@media screen and (min-width: 433px) {
-  .timeline {
-    --card-gutter: 20px;
-  }
-  // .timeline--no-slider .timeline__card-container,
-  // .timeline .slick-slide,
-  // .timeline__card-container {
-  //   max-width: calc( var(--card-width) + var(--card-gutter) );
-  // }
-  .timeline__card-container {
-    padding-left: calc( var(--card-gutter) / 2 );
-    padding-right: calc( var(--card-gutter) / 2 );
-  }
-  .timeline__card {
-    width: 100%;
-  }
-}
-
-/*
-card width + gutter + card width
-327 + 53 + 327 = 707
+card width small = 286
+gutter small = 10
+286 + 10 + 286 = 582
  */
-@media screen and (min-width: 707px) {
-  .timeline {
-    --card-gutter: 53px;
-  }
+@media screen and (min-width: 582px) {
   .timeline__card-container {
     padding-left: 0;
     padding-right: var(--card-gutter);
-  }
-}
-
-/*
-card width 327
-gutter 53
-arrow width 60
-60 + 53 + 327 + 53 + 327 + 53 + 327 + 53 + 60 = 1313
- */
-@media screen and (min-width: 1313px) {
-  .timeline {
-    --card-width: 327px;
-    --card-gutter: 53px;
-    --arrow-width: 70px;
   }
 }
 
