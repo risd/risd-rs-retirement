@@ -30,11 +30,27 @@ arrow width = 70
   }
 }
 
+.timeline__heading {
+  @extend %timeline__heading;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.timeline__timeline-marker {
+  margin-left: calc(50% - 1px);
+  width: 1px;
+  height: 175px;
+  background-color: var(--color-darkest);
+}
+
 // no slider initialized, there is only a single card
 .timeline--no-slider {
   display: flex;
   justify-content: center;
   padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .timeline--no-slider .timeline__card-container {
@@ -46,6 +62,8 @@ arrow width = 70
   padding: 0;
   display: flex;
   justify-content: center;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .timeline--slider .slick-arrow {
@@ -137,7 +155,7 @@ card width small = 286
 gutter small = 10
 286 + 10 + 286 = 582
  */
-@media screen and (min-width: 582px) {
+@media screen and (min-width: 878px) {
   .timeline__card-container {
     padding-left: 0;
     padding-right: var(--card-gutter);

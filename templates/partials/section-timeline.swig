@@ -10,7 +10,11 @@
   }
 #}
 {% if title %}
-  <h2 id="{{ title|slugify }}">{{ title }}</h2>
+  <header class="timeline__header">
+    <div class="timeline__timeline-marker"></div>
+    <h2 id="{{ title|slugify }}" class="timeline__heading">{{ title }}</h2>
+    <div class="timeline__timeline-marker"></div>
+  </header>
 {% endif %}
 
 {% if cards|size == 1 %}

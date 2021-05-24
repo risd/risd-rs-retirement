@@ -125,6 +125,10 @@ $hero__footer-button-text: (
   base: (16px, 26px),
 );
 
+$timeline__heading: (
+  base: (111.11px, 133.33px),
+);
+
 $timeline__slick-arrow: (
   base: (30px, 36px),
   small: (55px, 66px),
@@ -175,6 +179,13 @@ $footer__copyright: (
   @extend %sans-serif;
   @extend %antialiased;
   text-transform: uppercase;
+}
+
+%timeline__heading {
+  @include text-size($timeline__heading);
+  @extend %serif-display;
+  @extend %antialiased;
+  font-weight: 400;
 }
 
 %timeline__slick-arrow {
