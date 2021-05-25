@@ -1,12 +1,10 @@
 .timeline {
   --background-color: var(--color-lightest);
-  --background-color-hover: var(--color-darkest);
+  --background-color-hover: var(--color-pop);
   --border-height: 22px;
   --padding-inset: 33px;
   --text-color: var(--color-darkest);
   --text-color-hover: var(--color-lightest);
-  --hover-transition-duration: 0.28s;
-  --hover-transition-timing-function: ease-in-out;
   --card-width: 266px;
   --card-gutter: 10px;
   --arrow-width: 60px;
@@ -34,6 +32,7 @@ arrow width = 70
   text-align: center;
   margin-top: 0;
   margin-bottom: 0;
+  color: var(--color-lightest);
 }
 
 .timeline__timeline-marker {
@@ -108,7 +107,15 @@ arrow width = 70
 .slick-arrow-text {
   align-self: center;
   @extend %timeline__slick-arrow;
-  color: var(--color-darkest);
+  color: var(--color-lightest);
+
+  transition-property: color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.slick-arrow:hover .slick-arrow-text {
+  color: var(--color-pop);
 }
 
 /*
@@ -244,7 +251,7 @@ gutter small = 10
 
 .timeline__card-body {
   --card-body-height: 0;
-  
+
   background-color: var(--background-color);
   flex-grow: 1;
   padding-left: var(--padding-inset);

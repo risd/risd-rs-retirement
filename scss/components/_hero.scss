@@ -3,8 +3,6 @@
   height: 100vh;
 
   position: relative;
-  
-  background-color: var(--color-middle);
 
   overflow: hidden;
 }
@@ -62,7 +60,7 @@ padding left + left edge + left half of button + right half of button + right ed
   grid-row-end: 3;
   width: 0;
   height: 0;
-  border-bottom: var(--height-hat) solid var(--color-middle);
+  border-bottom: var(--height-hat) solid var(--color-background);
   border-left: var(--height-hat) solid transparent;
 }
 
@@ -71,7 +69,7 @@ padding left + left edge + left half of button + right half of button + right ed
   grid-column-end: -2;
   grid-row-start: 2;
   grid-row-end: 3;
-  background-color: var(--color-middle);
+  background-color: var(--color-background);
 }
 
 .hero__footer-hat-right {
@@ -81,7 +79,7 @@ padding left + left edge + left half of button + right half of button + right ed
   grid-row-end: 3;
   width: 0;
   height: 0;
-  border-bottom: var(--height-hat) solid var(--color-middle);
+  border-bottom: var(--height-hat) solid var(--color-background);
   border-right: var(--height-hat) solid transparent;
 }
 
@@ -90,7 +88,7 @@ padding left + left edge + left half of button + right half of button + right ed
   grid-column-end: -1;
   grid-row-start: 3;
   grid-row-end: 4;
-  background-color: var(--color-middle);
+  background-color: var(--color-background);
 }
 
 .hero__footer-button {
