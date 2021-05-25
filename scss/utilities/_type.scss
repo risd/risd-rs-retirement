@@ -101,6 +101,42 @@ This definition includes redundant repitition of values, so it can be defined mo
     url("../fonts/modernpictogramspro_234.woff");
 }
 
+@font-face {
+  font-family: 'Canela Light Web';
+  src: url("../fonts/Canela-Light-Web.woff2") format("woff2"),
+       url("../fonts/Canela-Light-Web.woff") format("woff");
+  font-weight:  300;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Canela Text Web';
+  src: url('../fonts/CanelaText-Light-Web.woff2') format('woff2'),
+       url('../fonts/CanelaText-Light-Web.woff') format('woff');
+  font-weight:  300;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Canela Text Web';
+  src: url('../fonts/CanelaText-Regular-Web.woff2') format('woff2'),
+       url('../fonts/CanelaText-Regular-Web.woff') format('woff');
+  font-weight:  400;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Canela Text Web';
+  src: url('../fonts/CanelaText-RegularItalic-Web.woff2') format('woff2'),
+       url('../fonts/CanelaText-RegularItalic-Web.woff') format('woff');
+  font-weight:  400;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
 @mixin pictogram-after($character, $width: 1em, $height: 1em) {
   font-family: "Modern Pictograms";
   display: inline-block;
@@ -125,8 +161,20 @@ $hero__footer-button-text: (
   base: (16px, 26px),
 );
 
+$intro__text: (
+  base: (43px, 51.6px),
+);
+
 $timeline__heading: (
   base: (111.11px, 133.33px),
+);
+
+$timeline__card-header: (
+  base: (21px, 27px),
+);
+
+$timeline__card-body: (
+  base: (18px, 24px),
 );
 
 $timeline__slick-arrow: (
@@ -145,15 +193,19 @@ $footer__copyright: (
 );
 
 %sans-serif {
+  font-family: "Arial", sans-serif;
+}
+
+%sans-serif-alt {
   font-family: "Gotham SSm A", "Gotham SSm B", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 %serif {
-  font-family: "Canela", "Georgia", "Times New Roman", "Times", serif;
+  font-family: "Canela Text Web", "Georgia", "Times New Roman", "Times", serif;
 }
 
-%serif-display {
-  font-family: "Canela Deck", "Georgia", "Times New Roman", "Times", serif;
+%serif-light {
+  font-family: "Canela Light Web", "Georgia", "Times New Roman", "Times", serif;
 }
 
 %antialiased {
@@ -164,13 +216,14 @@ $footer__copyright: (
 
 %site-header__text {
   @include text-size($site-header__text);
-  @extend %sans-serif;
+  @extend %sans-serif-alt;
   @extend %antialiased;
 }
 
 %hero__text {
   @include text-size($hero__text);
-  @extend %serif-display;
+  @extend %serif;
+  font-weight: 300;
   @extend %antialiased;
 }
 
@@ -181,29 +234,50 @@ $footer__copyright: (
   text-transform: uppercase;
 }
 
+%intro__text {
+  @include text-size($intro__text);
+  @extend %serif-light;
+  font-weight: 300;
+  @extend %antialiased;
+}
+
 %timeline__heading {
   @include text-size($timeline__heading);
-  @extend %serif-display;
+  @extend %serif;
+  font-weight: 300;
   @extend %antialiased;
+}
+
+%timeline__card-header {
+  @include text-size($timeline__card-header);
+  @extend %serif;
   font-weight: 400;
+  @extend %antialiased;
+}
+
+%timeline__card-body {
+  @include text-size($timeline__card-body);
+  @extend %sans-serif;
+  font-weight: 400;
+  @extend %antialiased;
 }
 
 %timeline__slick-arrow {
   @include text-size($timeline__slick-arrow);
-  @extend %serif-display;
+  @extend %serif;
   @extend %antialiased;
   font-weight: 300;
 }
 
 %footer__text {
   @include text-size($footer__text);
-  @extend %sans-serif;
+  @extend %sans-serif-alt;
   @extend %antialiased;
 }
 
 %footer__link-text {
   @include text-size($footer__text);
-  @extend %sans-serif;
+  @extend %sans-serif-alt;
   @extend %antialiased;
   font-weight: 700;
   text-transform: uppercase;
@@ -211,5 +285,6 @@ $footer__copyright: (
 
 %footer__copyright {
   @include text-size($footer__copyright);
+  @extend %sans-serif-alt;
   text-transform: uppercase;
 }

@@ -21,7 +21,12 @@
 }
 
 .intro p {
+  @extend %intro__text;
   width: 90%;
-  max-width: 40em;
+  max-width: 21.56em;
   margin: 0 auto;
+}
+
+.intro p:not(:first-child) {
+  margin-top: 1.65em;
 }

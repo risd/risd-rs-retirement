@@ -35,6 +35,14 @@ arrow width = 70
   color: var(--color-lightest);
 }
 
+.timeline__heading--space-below-1 {
+  margin-bottom: 0.2em;
+}
+
+.timeline__heading--space-below-2 {
+  margin-bottom: 0.4em;
+}
+
 .timeline__timeline-marker {
   margin-left: calc(50% - 1px);
   width: 1px;
@@ -246,6 +254,10 @@ gutter small = 10
   min-height: var(--card-header-height);
 }
 
+.timeline__card-header p {
+  @extend %timeline__card-header;
+}
+
 .timeline__card-link:hover .timeline__card-header {
   background-color: var(--background-color-hover);
   color: var(--text-color-hover);
@@ -264,6 +276,10 @@ gutter small = 10
   transition-timing-function: var(--hover-transition-timing-function);
 
   min-height: var(--card-body-height);
+}
+
+.timeline__card-body p {
+  @extend %timeline__card-body;
 }
 
 
@@ -289,6 +305,18 @@ gutter small = 10
 
 .timeline__card-link:hover .timeline__card-footer {
   background-color: var(--background-color-hover);
+}
+
+.timeline__card-footer-year {
+  @extend %timeline__card-body;
+  color: var(--color-darker);
+  
+  transition-property: color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.timeline__card-link:hover .timeline__card-footer-year {
   color: var(--text-color-hover);
 }
 

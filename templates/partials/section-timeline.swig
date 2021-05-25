@@ -10,9 +10,16 @@
   }
 #}
 {% if title %}
+  {% set headingClass = 'timeline__heading' %}
+  {% if title == '1980' %}
+    {% set headingClass = headingClass + ' timeline__heading--space-below-1' %}
+  {% endif %}
+  {% if title == '1970' || title == '1990' %}
+    {% set headingClass = headingClass + ' timeline__heading--space-below-2' %}
+  {% endif %}
   <header class="timeline__header">
     <div class="timeline__timeline-marker"></div>
-    <h2 id="{{ title|slugify }}" class="timeline__heading">{{ title }}</h2>
+    <h2 id="{{ title|slugify }}" class="{{ headingClass }}">{{ title }}</h2>
     <div class="timeline__timeline-marker"></div>
   </header>
 {% endif %}
