@@ -39,14 +39,13 @@
             <div class="timeline__card-hat-right"></div>
           </div>
           <header class="timeline__card-header">
-            {{ card.title|safe }}
+            {{ card.title|removeEmptyPTag|safe }}
           </header>
           <div class="timeline__card-body">
-            {{ card.description|safe }}
+            {{ card.description|removeEmptyPTag|appendReadMore(card.link)|safe }}
           </div>
           <div class="timeline__card-footer">
             <p class="timeline__card-footer-year">{{ card.year }}</p>
-            <p class="timeline__card-footer-read-more">Read more</p>
           </div>
           <div class="timeline__card-shoe">
             <div class="timeline__card-shoe-left"></div>

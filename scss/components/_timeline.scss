@@ -251,6 +251,11 @@ gutter small = 10
   transition-timing-function: var(--hover-transition-timing-function);
 }
 
+
+.timeline__card-body-read-more {
+  text-decoration: underline;
+}
+
 .timeline__card-link:hover .timeline__card-body {
   background-color: var(--background-color-hover);
   color: var(--text-color-hover);
@@ -270,19 +275,6 @@ gutter small = 10
 .timeline__card-link:hover .timeline__card-footer {
   background-color: var(--background-color-hover);
   color: var(--text-color-hover);
-}
-
-.timeline__card-footer-read-more {
-  display: none;
-  text-transform: uppercase;
-}
-
-.timeline__card-link:hover .timeline__card-footer-year {
-  display: none;
-}
-
-.timeline__card-link:hover .timeline__card-footer-read-more {
-  display: block;
 }
 
 .timeline__card-shoe {

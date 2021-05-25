@@ -28,7 +28,8 @@
     "build-page": "grunt build-page",
     "build-pages": "grunt build-pages",
     "build-template": "grunt build-template",
-    "conf": "rm-wh conf rs-retirement"
+    "conf": "rm-wh conf rs-retirement",
+    "test": "tape test/*"
   },
   "homepage": "https://github.com/risd/webhook-generate",
   "dependencies": {
@@ -84,6 +85,7 @@
   },
   "devDependencies": {
     "grunt-cli": "^1.2.0",
-    "rm-webhook": "^2.0.5"
+    "rm-webhook": "^2.0.5",
+    "tape": "^5.2.2"
   }
 }
