@@ -90,35 +90,43 @@ $( '.timeline--slider' )
       : touchMargin()
     // this represents the width that the fully showing cards will be displayed
     let cardListWidth = Math.ceil( window.innerWidth - totalButtonWidth )
-    if ( ( window.innerWidth >= 327 ) &&
-         ( cardListWidth < ( cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
+    if ( ( cardListWidth < ( cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
          ( slick.slideCount > 1 ) ) {
-      console.log( '1-up-medium' )
+      console.log( '1-up' )
       slick.options.centerMode = true;
       let cardWidth = cardListWidth
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', '10px' )
+      $el.find( '.timeline__card-container' )
+        .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
+        .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
     }
     else if ( ( cardListWidth >= ( cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
               ( cardListWidth < ( cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
               ( slick.slideCount > 1 ) ) {
       console.log( '2-up' )
       slick.options.centerMode = false;
-      let cardWidth = Math.ceil( cardListWidth / 2 - 10 )
+      let cardWidth = Math.ceil( ( cardListWidth - ( cardGutterSmall  * 2 ) ) / 2 )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', `${ cardGutterSmall }px` )
+      $el.find( '.timeline__card-container' )
+        .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
+        .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
     }
     else if ( ( cardListWidth >= ( cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
               ( cardListWidth < maxColumnWidth ) &&
               ( slick.slideCount > 1 ) ) {
       console.log( '3-up-tight' )
       slick.options.centerMode = false;
-      let cardWidth = Math.ceil( ( cardListWidth - ( 10  * 2 ) ) / 3 )
+      let cardWidth = Math.ceil( ( cardListWidth - ( cardGutterSmall  * 2 ) ) / 3 )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', `${ cardGutterSmall }px` )
+      $el.find( '.timeline__card-container' )
+        .css( 'padding-left', `0px` )
+        .css( 'padding-right', `${ cardGutterSmall }px` )
     }
     else if ( ( cardListWidth >= maxColumnWidth ) ) {
       console.log( '3-up-loose' )
@@ -127,34 +135,51 @@ $( '.timeline--slider' )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', cardGutter + 'px' )
+      $el.find( '.timeline__card-container' )
+        .css( 'padding-left', `0px` )
+        .css( 'padding-right', `${ cardGutter }px` )
     }
     /* --- set card width & gutter : end --- */
 
     /* --- set card header & body height : start --- */
-    let cardHeaderHeight = 0
+    // let cardHeaderHeight = 0
 
-    $el.find( '.timeline__card-header' )
-      .each( function ( index ) {
-        let $header = $( this )
-        let currentHeight = $header.outerHeight()
-        if ( currentHeight > cardHeaderHeight ) {
-          cardHeaderHeight = currentHeight
-        }
-      } )
-      .css( '--card-header-height', `${ cardHeaderHeight }px` )
+    // $el.find( '.timeline__card-header' )
+    //   .each( function ( index ) {
+    //     let $header = $( this )
+    //     let currentHeight = $header.outerHeight()
+    //     if ( currentHeight > cardHeaderHeight ) {
+    //       cardHeaderHeight = currentHeight
+    //     }
+    //   } )
+    //   .css( '--card-header-height', `${ cardHeaderHeight }px` )
 
-    let cardBodyHeight = 0
+    // let cardBodyHeight = 0
     
-    $el.find( '.timeline__card-body' )
+    // $el.find( '.timeline__card-body' )
+    //   .each( function ( index ) {
+    //     let $body = $( this )
+    //     let currentHeight = $body.outerHeight()
+    //     if ( currentHeight > cardBodyHeight ) {
+    //       cardBodyHeight = currentHeight
+    //     }
+    //   } )
+    //   .css( '--card-body-height', `${ cardBodyHeight }px` )
+    /* --- set card header & body height : end --- */
+    
+    /* --- set min card height : start --- */
+    let minCardHeight = 0
+
+    $el.find( '.timeline__card' )
       .each( function ( index ) {
-        let $body = $( this )
-        let currentHeight = $body.outerHeight()
-        if ( currentHeight > cardBodyHeight ) {
-          cardBodyHeight = currentHeight
+        let $card = $( this )
+        let currentHeight = $card.outerHeight()
+        if ( currentHeight > minCardHeight ) {
+          minCardHeight = currentHeight
         }
       } )
-      .css( '--card-body-height', `${ cardBodyHeight }px` )
-    /* --- set card header & body height : end --- */
+      .css( '--min-card-height', `${ minCardHeight }px` )
+    /* --- set min card height : end --- */
   } )
   .slick( slickConf )
 

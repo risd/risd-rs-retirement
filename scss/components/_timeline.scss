@@ -136,12 +136,14 @@ arrow width = 70
 }
 
 .timeline__card {
+  --min-card-height: 400px;
+
   display: flex;
   flex-direction: column;
   width: 100%;
   margin: 0 auto;
   max-width: var(--card-width);
-  min-height: 400px;
+  min-height: var(--min-card-height);
 
   padding-left: 0;
   padding-right: 0;
@@ -151,7 +153,7 @@ arrow width = 70
   width: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 400px;
+  min-height: var(--min-card-height);
 }
 
 /*
