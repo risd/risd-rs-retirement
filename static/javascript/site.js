@@ -11601,6 +11601,8 @@ var slickConf = {
 $('.timeline--slider').on('setPositionStart', function (event, slick) {
   console.log('set-position-start');
   var $el = $(this);
+  /* --- set card width & gutter : start --- */
+
   var buttonWidth = $('.slick-prev').outerWidth(); // get the total button width. there are no buttons
   // we are on a touch device, and we can 
 
@@ -11612,35 +11614,51 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
     console.log('1-up-medium');
     slick.options.centerMode = true;
     var _cardWidth = cardListWidth;
-    $('.timeline').css('--card-width', _cardWidth + 'px').css('--card-gutter', '10px'); // $el.find( '.timeline__card-container' )
-    //   .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
-    //   .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
+    $('.timeline').css('--card-width', _cardWidth + 'px').css('--card-gutter', '10px');
   } else if (cardListWidth >= cardWidthSmall + cardGutterSmall + cardWidthSmall && cardListWidth < cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall && slick.slideCount > 1) {
     console.log('2-up');
     slick.options.centerMode = false;
 
     var _cardWidth2 = Math.ceil(cardListWidth / 2 - 10);
 
-    $('.timeline').css('--card-width', _cardWidth2 + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px")); // $el.find( '.timeline__card-container' )
-    //   .css( 'padding-left', '0px' )
-    //   .css( 'padding-right', `${ cardGutterSmall }px` )
+    $('.timeline').css('--card-width', _cardWidth2 + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px"));
   } else if (cardListWidth >= cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall && cardListWidth < maxColumnWidth && slick.slideCount > 1) {
     console.log('3-up-tight');
     slick.options.centerMode = false;
 
     var _cardWidth3 = Math.ceil((cardListWidth - 10 * 2) / 3);
 
-    $('.timeline').css('--card-width', _cardWidth3 + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px")); // $el.find( '.timeline__card-container' )
-    //   .css( 'padding-left', '0px' )
-    //   .css( 'padding-right', `${ cardGutterSmall }px` )
+    $('.timeline').css('--card-width', _cardWidth3 + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px"));
   } else if (cardListWidth >= maxColumnWidth) {
     console.log('3-up-loose');
     slick.options.centerMode = false;
     var _cardWidth4 = 327;
-    $('.timeline').css('--card-width', _cardWidth4 + 'px').css('--card-gutter', cardGutter + 'px'); // $el.find( '.timeline__card-container' )
-    //   .css( 'padding-left', '0px' )
-    //   .css( 'padding-right', `${ cardGutter }px` )
+    $('.timeline').css('--card-width', _cardWidth4 + 'px').css('--card-gutter', cardGutter + 'px');
   }
+  /* --- set card width & gutter : end --- */
+
+  /* --- set card header & body height : start --- */
+
+
+  var cardHeaderHeight = 0;
+  $el.find('.timeline__card-header').each(function (index) {
+    var $header = $(this);
+    var currentHeight = $header.outerHeight();
+
+    if (currentHeight > cardHeaderHeight) {
+      cardHeaderHeight = currentHeight;
+    }
+  }).css('--card-header-height', "".concat(cardHeaderHeight, "px"));
+  var cardBodyHeight = 0;
+  $el.find('.timeline__card-body').each(function (index) {
+    var $body = $(this);
+    var currentHeight = $body.outerHeight();
+
+    if (currentHeight > cardBodyHeight) {
+      cardBodyHeight = currentHeight;
+    }
+  }).css('--card-body-height', "".concat(cardBodyHeight, "px"));
+  /* --- set card header & body height : end --- */
 }).slick(slickConf);
 
 function slickPrevArrow() {

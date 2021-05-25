@@ -80,6 +80,8 @@ $( '.timeline--slider' )
   .on( 'setPositionStart', function ( event, slick ) {
     console.log( 'set-position-start' )
     let $el = $( this )
+
+    /* --- set card width & gutter : start --- */
     let buttonWidth = $( '.slick-prev' ).outerWidth()
     // get the total button width. there are no buttons
     // we are on a touch device, and we can 
@@ -97,9 +99,6 @@ $( '.timeline--slider' )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', '10px' )
-      // $el.find( '.timeline__card-container' )
-      //   .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
-      //   .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
     }
     else if ( ( cardListWidth >= ( cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
               ( cardListWidth < ( cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
@@ -110,9 +109,6 @@ $( '.timeline--slider' )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', `${ cardGutterSmall }px` )
-      // $el.find( '.timeline__card-container' )
-      //   .css( 'padding-left', '0px' )
-      //   .css( 'padding-right', `${ cardGutterSmall }px` )
     }
     else if ( ( cardListWidth >= ( cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
               ( cardListWidth < maxColumnWidth ) &&
@@ -123,9 +119,6 @@ $( '.timeline--slider' )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', `${ cardGutterSmall }px` )
-      // $el.find( '.timeline__card-container' )
-      //   .css( 'padding-left', '0px' )
-      //   .css( 'padding-right', `${ cardGutterSmall }px` )
     }
     else if ( ( cardListWidth >= maxColumnWidth ) ) {
       console.log( '3-up-loose' )
@@ -134,10 +127,34 @@ $( '.timeline--slider' )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', cardGutter + 'px' )
-      // $el.find( '.timeline__card-container' )
-      //   .css( 'padding-left', '0px' )
-      //   .css( 'padding-right', `${ cardGutter }px` )
     }
+    /* --- set card width & gutter : end --- */
+
+    /* --- set card header & body height : start --- */
+    let cardHeaderHeight = 0
+
+    $el.find( '.timeline__card-header' )
+      .each( function ( index ) {
+        let $header = $( this )
+        let currentHeight = $header.outerHeight()
+        if ( currentHeight > cardHeaderHeight ) {
+          cardHeaderHeight = currentHeight
+        }
+      } )
+      .css( '--card-header-height', `${ cardHeaderHeight }px` )
+
+    let cardBodyHeight = 0
+    
+    $el.find( '.timeline__card-body' )
+      .each( function ( index ) {
+        let $body = $( this )
+        let currentHeight = $body.outerHeight()
+        if ( currentHeight > cardBodyHeight ) {
+          cardBodyHeight = currentHeight
+        }
+      } )
+      .css( '--card-body-height', `${ cardBodyHeight }px` )
+    /* --- set card header & body height : end --- */
   } )
   .slick( slickConf )
 
