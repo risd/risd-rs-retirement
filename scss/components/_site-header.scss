@@ -55,3 +55,22 @@
 .site-header__logo path {
   fill: var(--color-lightest);
 }
+
+.wordmark {
+  height: 20px;
+  width: auto;
+}
+
+.wordmark__letter {
+  fill: var(--color-lightest);
+}
+
+.screen-reader-only {
+  clip: rect(0 0 0 0); 
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap; 
+  width: 1px;
+}
