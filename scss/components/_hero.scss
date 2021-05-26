@@ -1,6 +1,9 @@
 .hero {
-  width: 100vw;
-  height: 100vh;
+  --hero-width: 100vw;
+  --hero-height: 100vh;
+
+  width: var(--hero-width);
+  height: var(--hero-height);
 
   position: relative;
 
@@ -10,11 +13,37 @@
 }
 
 .hero__image {
-  width: 100vw;
-  height: 100vh;
+  width: var(--hero-width);
+  height: var(--hero-height);
 
   background-position: center;
   background-size: cover;
+}
+
+.hero__background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--hero-width);
+  min-height: var(--hero-height);
+  background-position: center;
+  background-size: cover;
+  display: none;
+}
+
+.hero__background-video--mobile {
+  display: block;
+  @include respond-above(small) {
+    display: none;
+  }
+}
+
+.hero__background-video--desktop {
+  display: none;
+  @include respond-above(small) {
+    display: block;
+  }
 }
 
 .hero__footer {

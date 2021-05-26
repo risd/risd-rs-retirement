@@ -9,6 +9,18 @@
       {% if item.hero_image %}
         <div class="hero__image" style="background-image: url('{{ item.hero_image|imageSize(1200) }}');" ></div>
       {% endif %}
+      {% if item.hero_mobile_background_loop_video && item.hero_mobile_background_loop_video.original_url %}
+        {% include 'templates/partials/background-video.swig' with {
+          video: item.hero_mobile_background_loop_video,
+          classString: 'hero__background-video hero__background-video--mobile',
+        } %}
+      {% endif %}
+      {% if item.hero_desktop_background_loop_video && item.hero_desktop_background_loop_video.original_url %}
+        {% include 'templates/partials/background-video.swig' with {
+          video: item.hero_desktop_background_loop_video,
+          classString: 'hero__background-video hero__background-video--desktop',
+        } %}
+      {% endif %}
       
       <div class="hero__footer">
         <div class="hero__footer-container">
