@@ -293,8 +293,9 @@ gutter small = 10
 
 .timeline__card-body p {
   @extend %timeline__card-body;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
-
 
 .timeline__card-body-read-more {
   text-decoration: underline;

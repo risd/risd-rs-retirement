@@ -49,7 +49,10 @@
             {{ card.title|removeEmptyPTag|safe }}
           </header>
           <div class="timeline__card-body">
-            {{ card.description|removeEmptyPTag|appendReadMore(card.link)|safe }}
+            {{ card.description|removeEmptyPTag|safe }}
+            {% if card.link %}
+              <p class="timeline__card-body-read-more">Read more</p>
+            {% endif %}
           </div>
           <div class="timeline__card-footer">
             <p class="timeline__card-footer-year">{{ card.year }}</p>
