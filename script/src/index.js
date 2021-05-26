@@ -79,6 +79,7 @@ const slickConf = {
 $( '.timeline--slider' )
   .on( 'setPositionStart', function ( event, slick ) {
     console.log( 'set-position-start' )
+    console.log( slick.$slider )
     let $el = $( this )
 
     /* --- set card width & gutter : start --- */
@@ -165,10 +166,10 @@ $( '.timeline--slider' )
     let headerSizeAdjusted = headerScaler( cardWidth )
     let bodySizeAdjusted = bodyScaler( cardWidth )
 
-    $el.find( '.timeline__card-header p' )
+    $( '.timeline__card-header p' )
       .css( 'font-size', `${ headerSizeAdjusted }px` )
 
-    $el.find( '.timeline__card-body p' )
+    $( '.timeline__card-body p' )
       .css( 'font-size', `${ bodySizeAdjusted }px` )
 
     /* --- set card width & gutter : end --- */
@@ -204,6 +205,7 @@ $( '.timeline--slider' )
     let minCardHeight = 0
 
     $el.find( '.timeline__card' )
+      .css( '--min-card-height', '0px' )
       .each( function ( index ) {
         let $card = $( this )
         let currentHeight = $card.outerHeight()

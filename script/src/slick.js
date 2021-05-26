@@ -444,15 +444,12 @@
 
             _.$prevArrow = $(_.options.prevArrow).addClass('slick-arrow');
             _.$nextArrow = $(_.options.nextArrow).addClass('slick-arrow');
-console.log( 'buildArrows' )
-console.log( _.$slider )
+
             if( _.slideCount > _.options.slidesToShow ) {
-console.log( 'buildArrows-build' )
                 _.$prevArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
                 _.$nextArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
 
             } else {
-console.log( 'buildArrows-pass' )
                 _.$prevArrow.addClass('slick-hidden')
                 _.$nextArrow.addClass('slick-hidden')
                 // _.$prevArrow.add( _.$nextArrow )

@@ -11600,6 +11600,7 @@ var slickConf = {
 };
 $('.timeline--slider').on('setPositionStart', function (event, slick) {
   console.log('set-position-start');
+  console.log(slick.$slider);
   var $el = $(this);
   /* --- set card width & gutter : start --- */
 
@@ -11649,8 +11650,8 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
 
   var headerSizeAdjusted = headerScaler(cardWidth);
   var bodySizeAdjusted = bodyScaler(cardWidth);
-  $el.find('.timeline__card-header p').css('font-size', "".concat(headerSizeAdjusted, "px"));
-  $el.find('.timeline__card-body p').css('font-size', "".concat(bodySizeAdjusted, "px"));
+  $('.timeline__card-header p').css('font-size', "".concat(headerSizeAdjusted, "px"));
+  $('.timeline__card-body p').css('font-size', "".concat(bodySizeAdjusted, "px"));
   /* --- set card width & gutter : end --- */
 
   /* --- set card header & body height : start --- */
@@ -11680,7 +11681,7 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
   /* --- set min card height : start --- */
 
   var minCardHeight = 0;
-  $el.find('.timeline__card').each(function (index) {
+  $el.find('.timeline__card').css('--min-card-height', '0px').each(function (index) {
     var $card = $(this);
     var currentHeight = $card.outerHeight();
 
@@ -12142,18 +12143,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     if (_.options.arrows === true) {
       _.$prevArrow = $(_.options.prevArrow).addClass('slick-arrow');
       _.$nextArrow = $(_.options.nextArrow).addClass('slick-arrow');
-      console.log('buildArrows');
-      console.log(_.$slider);
 
       if (_.slideCount > _.options.slidesToShow) {
-        console.log('buildArrows-build');
-
         _.$prevArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
 
         _.$nextArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
       } else {
-        console.log('buildArrows-pass');
-
         _.$prevArrow.addClass('slick-hidden');
 
         _.$nextArrow.addClass('slick-hidden'); // _.$prevArrow.add( _.$nextArrow )
