@@ -79,7 +79,6 @@ const slickConf = {
 $( '.timeline--slider' )
   .on( 'setPositionStart', function ( event, slick ) {
     console.log( 'set-position-start' )
-    console.log( slick.$slider )
     let $el = $( this )
 
     /* --- set card width & gutter : start --- */

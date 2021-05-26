@@ -205,7 +205,7 @@ $footer__copyright: (
 }
 
 %sans-serif-alt {
-  font-family: "Gotham SSm A", "Gotham SSm B", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "Gotham A", "Gotham B", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 %serif {
@@ -217,28 +217,30 @@ $footer__copyright: (
 }
 
 %antialiased {
-  -webkit-font-smoothing:antialiased;
-  -moz-font-smoothing:antialiased;
-  font-smoothing:antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-font-smoothing: antialiased;
+  font-smoothing: antialiased;
 }
 
 %site-header__text {
   @include text-size($site-header__text);
   @extend %sans-serif-alt;
-  @extend %antialiased;
+  // @extend %antialiased;
 }
 
 %hero__text {
   @include text-size($hero__text);
   @extend %serif;
   font-weight: 300;
-  @extend %antialiased;
+  letter-spacing: -4px;
+  // @extend %antialiased;
 }
 
 %hero__footer-button-text {
   @include text-size($hero__footer-button-text);
   @extend %sans-serif;
-  @extend %antialiased;
+  // @extend %antialiased;
   text-transform: uppercase;
 }
 
@@ -253,41 +255,42 @@ $footer__copyright: (
   @include text-size($timeline__heading);
   @extend %serif;
   font-weight: 300;
-  @extend %antialiased;
+  // @extend %antialiased;
 }
 
 %timeline__card-header {
   @include text-size($timeline__card-header);
   @extend %serif;
   font-weight: 400;
-  @extend %antialiased;
+  // @extend %antialiased;
 }
 
 %timeline__card-body {
   @include text-size($timeline__card-body);
   @extend %sans-serif;
   font-weight: 400;
-  @extend %antialiased;
+  // @extend %antialiased;
 }
 
 %timeline__slick-arrow {
   @include text-size($timeline__slick-arrow);
   @extend %serif;
-  @extend %antialiased;
+  // @extend %antialiased;
   font-weight: 300;
 }
 
 %footer__text {
   @include text-size($footer__text);
   @extend %sans-serif-alt;
-  @extend %antialiased;
+  // @extend %antialiased;
 }
 
 %footer__link-text {
   @include text-size($footer__text);
   @extend %sans-serif-alt;
-  @extend %antialiased;
+  // @extend %antialiased;
   font-weight: 700;
+  font-style: normal;
   text-transform: uppercase;
 }
 
@@ -295,4 +298,7 @@ $footer__copyright: (
   @include text-size($footer__copyright);
   @extend %sans-serif-alt;
   text-transform: uppercase;
+  // @extend %antialiased;
+  font-weight: 400;
+  font-style: normal;
 }

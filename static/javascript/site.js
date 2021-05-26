@@ -11600,7 +11600,6 @@ var slickConf = {
 };
 $('.timeline--slider').on('setPositionStart', function (event, slick) {
   console.log('set-position-start');
-  console.log(slick.$slider);
   var $el = $(this);
   /* --- set card width & gutter : start --- */
 
