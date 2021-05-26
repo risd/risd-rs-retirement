@@ -1,9 +1,15 @@
 .intro {
+  --padding-vertical: 80px;
+
   position: relative;
 
   width: 100%;
-  padding-top: 100px;
-  padding-bottom: 100px;
+  padding-top: var(--padding-vertical);
+  padding-bottom: var(--padding-vertical);
+
+  @include respond-above(small) {
+    --padding-vertical: 100px;
+  }
 }
 
 .intro__timeline-marker {

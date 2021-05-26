@@ -11542,9 +11542,9 @@ require('lity');
 
 var cardWidthSmall = 286;
 var cardGutterSmall = 10;
-var cardWidth = 327;
-var cardGutter = 53;
-var maxColumnWidth = cardWidth * 3 + cardGutter * 2;
+var cardWidthDesktop = 327;
+var cardGutterDesktop = 53;
+var maxColumnWidth = cardWidthDesktop * 3 + cardGutterDesktop * 2;
 
 var touchMargin = function touchMargin() {
   return Math.max(window.innerWidth * 0.1, 60);
@@ -11608,37 +11608,49 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
 
   var totalButtonWidth = buttonWidth ? buttonWidth * 2 : touchMargin(); // this represents the width that the fully showing cards will be displayed
 
-  var cardListWidth = Math.ceil(window.innerWidth - totalButtonWidth);
+  var cardListWidth = Math.ceil(window.innerWidth - totalButtonWidth); // scalers for card type
+
+  var headerScaler = scaleLinear().domain([cardWidthDesktop, cardWidthDesktop]).range([21, 28]);
+  var bodyScaler = scaleLinear().domain([cardWidthDesktop, cardWidthDesktop]).range([18, 24]); // set `cardWidth` depending on the number of cards visible
+
+  var cardWidth;
 
   if (cardListWidth < cardWidthSmall + cardGutterSmall + cardWidthSmall && slick.slideCount > 1) {
     console.log('1-up');
     slick.options.centerMode = true;
-    var _cardWidth = cardListWidth;
-    $('.timeline').css('--card-width', _cardWidth + 'px').css('--card-gutter', '10px');
+    cardWidth = cardListWidth;
+    $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px"));
     $el.find('.timeline__card-container').css('padding-left', "".concat(cardGutterSmall / 2, "px")).css('padding-right', "".concat(cardGutterSmall / 2, "px"));
+    var scalerDomain = [cardWidthDesktop, cardWidthSmall * 2 + cardGutterSmall - 1];
+    bodyScaler.domain(scalerDomain);
+    headerScaler.domain(scalerDomain);
   } else if (cardListWidth >= cardWidthSmall + cardGutterSmall + cardWidthSmall && cardListWidth < cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall && slick.slideCount > 1) {
     console.log('2-up');
     slick.options.centerMode = false;
-
-    var _cardWidth2 = Math.ceil((cardListWidth - cardGutterSmall * 2) / 2);
-
-    $('.timeline').css('--card-width', _cardWidth2 + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px"));
+    cardWidth = Math.ceil((cardListWidth - cardGutterSmall * 2) / 2);
+    $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px"));
     $el.find('.timeline__card-container').css('padding-left', "".concat(cardGutterSmall / 2, "px")).css('padding-right', "".concat(cardGutterSmall / 2, "px"));
+    var _scalerDomain = [cardWidthDesktop, (cardWidthSmall * 3 - 1) / 2];
+    bodyScaler.domain(_scalerDomain);
+    headerScaler.domain(_scalerDomain);
   } else if (cardListWidth >= cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall && cardListWidth < maxColumnWidth && slick.slideCount > 1) {
     console.log('3-up-tight');
     slick.options.centerMode = false;
-
-    var _cardWidth3 = Math.ceil((cardListWidth - cardGutterSmall * 2) / 3);
-
-    $('.timeline').css('--card-width', _cardWidth3 + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px"));
+    cardWidth = Math.ceil((cardListWidth - cardGutterSmall * 2) / 3);
+    $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', "".concat(cardGutterSmall, "px"));
     $el.find('.timeline__card-container').css('padding-left', "0px").css('padding-right', "".concat(cardGutterSmall, "px"));
   } else if (cardListWidth >= maxColumnWidth) {
     console.log('3-up-loose');
     slick.options.centerMode = false;
-    var _cardWidth4 = 327;
-    $('.timeline').css('--card-width', _cardWidth4 + 'px').css('--card-gutter', cardGutter + 'px');
-    $el.find('.timeline__card-container').css('padding-left', "0px").css('padding-right', "".concat(cardGutter, "px"));
+    cardWidth = cardWidthDesktop;
+    $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', cardGutterDesktop + 'px');
+    $el.find('.timeline__card-container').css('padding-left', "0px").css('padding-right', "".concat(cardGutterDesktop, "px"));
   }
+
+  var headerSizeAdjusted = headerScaler(cardWidth);
+  var bodySizeAdjusted = bodyScaler(cardWidth);
+  $el.find('.timeline__card-header p').css('font-size', "".concat(headerSizeAdjusted, "px"));
+  $el.find('.timeline__card-body p').css('font-size', "".concat(bodySizeAdjusted, "px"));
   /* --- set card width & gutter : end --- */
 
   /* --- set card header & body height : start --- */
@@ -11667,7 +11679,6 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
 
   /* --- set min card height : start --- */
 
-
   var minCardHeight = 0;
   $el.find('.timeline__card').each(function (index) {
     var $card = $(this);
@@ -11686,6 +11697,32 @@ function slickPrevArrow() {
 
 function slickNextArrow() {
   return "\n    <button class=\"slick-next\" aria-label=\"Next\" type=\"button\">\n      <div class=\"slick-arrow-text slick-next-text\">></div>\n    </button>\n  ".trim();
+}
+
+function scaleLinear() {
+  var _domain = [0, 1];
+  var _range = [0, 1];
+
+  function scale(toScale) {
+    // clamp results
+    if (toScale <= _domain[0]) return _range[0];
+    if (toScale > _domain[1]) return _range[1];
+    var scaledRatio = toScale / _domain[1];
+    var rangeDiff = _range[1] - _range[0];
+    return scaledRatio * rangeDiff + _range[0];
+  }
+
+  scale.domain = function (domain) {
+    _domain = domain;
+    return scale;
+  };
+
+  scale.range = function (range) {
+    _range = range;
+    return scale;
+  };
+
+  return scale;
 }
 
 },{"./slick.js":4,"jquery":1,"lity":2}],4:[function(require,module,exports){

@@ -14,9 +14,9 @@ require( 'lity' )
  */
 const cardWidthSmall = 286
 const cardGutterSmall = 10
-const cardWidth = 327
-const cardGutter = 53
-const maxColumnWidth = ( cardWidth * 3 ) + ( cardGutter * 2 )
+const cardWidthDesktop = 327
+const cardGutterDesktop = 53
+const maxColumnWidth = ( cardWidthDesktop * 3 ) + ( cardGutterDesktop * 2 )
 const touchMargin = () => {
   return Math.max( window.innerWidth * 0.1, 60 )
 }
@@ -82,45 +82,67 @@ $( '.timeline--slider' )
     let $el = $( this )
 
     /* --- set card width & gutter : start --- */
+
     let buttonWidth = $( '.slick-prev' ).outerWidth()
+
     // get the total button width. there are no buttons
     // we are on a touch device, and we can 
     let totalButtonWidth = buttonWidth
       ? buttonWidth * 2
       : touchMargin()
+
     // this represents the width that the fully showing cards will be displayed
     let cardListWidth = Math.ceil( window.innerWidth - totalButtonWidth )
+
+    // scalers for card type
+    let headerScaler = scaleLinear()
+      .domain( [ cardWidthDesktop, cardWidthDesktop ] )
+      .range( [ 21, 28 ] )
+    let bodyScaler = scaleLinear()
+      .domain( [ cardWidthDesktop, cardWidthDesktop ] )
+      .range( [ 18, 24 ] )
+    
+    // set `cardWidth` depending on the number of cards visible
+    let cardWidth;
     if ( ( cardListWidth < ( cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
          ( slick.slideCount > 1 ) ) {
       console.log( '1-up' )
       slick.options.centerMode = true;
-      let cardWidth = cardListWidth
-      $( '.timeline' )
-        .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', '10px' )
-      $el.find( '.timeline__card-container' )
-        .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
-        .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
-    }
-    else if ( ( cardListWidth >= ( cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
-              ( cardListWidth < ( cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
-              ( slick.slideCount > 1 ) ) {
-      console.log( '2-up' )
-      slick.options.centerMode = false;
-      let cardWidth = Math.ceil( ( cardListWidth - ( cardGutterSmall  * 2 ) ) / 2 )
+      cardWidth = cardListWidth
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', `${ cardGutterSmall }px` )
       $el.find( '.timeline__card-container' )
         .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
         .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
+
+      let scalerDomain = [ cardWidthDesktop, ( cardWidthSmall * 2 + cardGutterSmall - 1 ) ]
+      bodyScaler.domain( scalerDomain )
+      headerScaler.domain( scalerDomain )
+    }
+    else if ( ( cardListWidth >= ( cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
+              ( cardListWidth < ( cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
+              ( slick.slideCount > 1 ) ) {
+      console.log( '2-up' )
+      slick.options.centerMode = false;
+      cardWidth = Math.ceil( ( cardListWidth - ( cardGutterSmall * 2 ) ) / 2 )
+      $( '.timeline' )
+        .css( '--card-width', cardWidth + 'px' )
+        .css( '--card-gutter', `${ cardGutterSmall }px` )
+      $el.find( '.timeline__card-container' )
+        .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
+        .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
+
+      let scalerDomain = [ cardWidthDesktop, ( ( cardWidthSmall * 3 - 1 ) / 2 ) ]
+      bodyScaler.domain( scalerDomain )
+      headerScaler.domain( scalerDomain )
     }
     else if ( ( cardListWidth >= ( cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
               ( cardListWidth < maxColumnWidth ) &&
               ( slick.slideCount > 1 ) ) {
       console.log( '3-up-tight' )
       slick.options.centerMode = false;
-      let cardWidth = Math.ceil( ( cardListWidth - ( cardGutterSmall  * 2 ) ) / 3 )
+      cardWidth = Math.ceil( ( cardListWidth - ( cardGutterSmall  * 2 ) ) / 3 )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
         .css( '--card-gutter', `${ cardGutterSmall }px` )
@@ -131,14 +153,24 @@ $( '.timeline--slider' )
     else if ( ( cardListWidth >= maxColumnWidth ) ) {
       console.log( '3-up-loose' )
       slick.options.centerMode = false;
-      let cardWidth = 327
+      cardWidth = cardWidthDesktop
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', cardGutter + 'px' )
+        .css( '--card-gutter', cardGutterDesktop + 'px' )
       $el.find( '.timeline__card-container' )
         .css( 'padding-left', `0px` )
-        .css( 'padding-right', `${ cardGutter }px` )
+        .css( 'padding-right', `${ cardGutterDesktop }px` )
     }
+
+    let headerSizeAdjusted = headerScaler( cardWidth )
+    let bodySizeAdjusted = bodyScaler( cardWidth )
+
+    $el.find( '.timeline__card-header p' )
+      .css( 'font-size', `${ headerSizeAdjusted }px` )
+
+    $el.find( '.timeline__card-body p' )
+      .css( 'font-size', `${ bodySizeAdjusted }px` )
+
     /* --- set card width & gutter : end --- */
 
     /* --- set card header & body height : start --- */
@@ -168,6 +200,7 @@ $( '.timeline--slider' )
     /* --- set card header & body height : end --- */
     
     /* --- set min card height : start --- */
+
     let minCardHeight = 0
 
     $el.find( '.timeline__card' )
@@ -179,6 +212,7 @@ $( '.timeline--slider' )
         }
       } )
       .css( '--min-card-height', `${ minCardHeight }px` )
+
     /* --- set min card height : end --- */
   } )
   .slick( slickConf )
@@ -190,10 +224,40 @@ function slickPrevArrow () {
     </button>
   `.trim()
 }
+
 function slickNextArrow () {
   return `
     <button class="slick-next" aria-label="Next" type="button">
       <div class="slick-arrow-text slick-next-text">></div>
     </button>
   `.trim()
+}
+
+function scaleLinear () {
+
+  let _domain = [ 0, 1 ]
+  let _range = [ 0, 1 ]
+  
+  function scale ( toScale ) {
+    // clamp results
+    if ( toScale <= _domain[ 0 ] ) return _range[ 0 ]
+    if ( toScale > _domain[ 1 ] ) return _range[ 1 ]
+
+    let scaledRatio = toScale / _domain[ 1 ]
+    let rangeDiff = _range[ 1 ] - _range[ 0 ]
+
+    return scaledRatio * rangeDiff + _range[ 0 ]
+  }
+
+  scale.domain = function ( domain ) {
+    _domain = domain
+    return scale
+  }
+
+  scale.range = function ( range ) {
+    _range = range
+    return scale
+  }
+
+  return scale
 }

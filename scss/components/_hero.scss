@@ -20,8 +20,8 @@
 .hero__footer {
   --max-width: 1145px;
   --padding-inset: 20px;
-  --height: 176px;
-  --height-hat: 44px;
+  --height: 148px;
+  --height-hat: 30px;
   
   width: 100%;
   height: var(--height);
@@ -32,6 +32,11 @@
   justify-content: center;
   position: absolute;
   bottom: 0;
+
+  @include respond-above(small) {
+    --height: 176px;
+    --height-hat: 44px;
+  }
 }
 
 .hero__footer-container {
@@ -51,7 +56,7 @@ padding left + left edge + left half of button + right half of button + right ed
  */
 @media screen and (min-width: 448px) {
   .hero__footer-container {
-    grid-template-columns: 44px auto 142px 142px auto 44px;
+    grid-template-columns: var(--height-hat) auto 142px 142px auto var(--height-hat);
   }
 }
 
@@ -119,11 +124,20 @@ padding left + left edge + left half of button + right half of button + right ed
 }
 
 .hero__text-container {
+  --bottom: 108%;
   position: absolute;
-  bottom: 100%;
+  bottom: var(--bottom);
   left: 0;
   right: 0;
   text-align: center;
+
+  @include respond-above(small) {
+    --bottom: 105%;
+  }
+
+  @include respond-above(medium) {
+    --bottom: 100%;
+  }
 }
 
 .hero__text {

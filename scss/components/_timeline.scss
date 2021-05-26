@@ -8,9 +8,22 @@
   --card-width: 266px;
   --card-gutter: 10px;
   --arrow-width: 60px;
+  --marker-height: 100px;
 
   width: 100%;
   margin: 0 auto;
+
+  @include respond-above(small) {
+    --marker-height: 120px;
+  }
+
+  @include respond-above(medium) {
+    --marker-height: 150px;
+  }
+
+  @include respond-above(large) {
+    --marker-height: 175px;
+  }
 }
 
 /*
@@ -46,7 +59,7 @@ arrow width = 70
 .timeline__timeline-marker {
   margin-left: calc(50% - 1px);
   width: 1px;
-  height: 175px;
+  height: var(--marker-height);
   background-color: var(--color-darkest);
 }
 
@@ -144,7 +157,7 @@ arrow width = 70
 }
 
 .timeline__card {
-  --min-card-height: 400px;
+  --min-card-height: 350px;
 
   display: flex;
   flex-direction: column;
