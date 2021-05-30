@@ -1,7 +1,32 @@
 const $ = require( 'jquery' )
 require( './slick.js' )
 require( 'lity' )
+const Vimeo = require( '@vimeo/player' )
 
+const videoOptions = {
+  loop: true,
+  background: true,
+  muted: true,
+  autoplay: true,
+  controls: false,
+}
+
+const $mobileVideo = document.querySelector( '.hero__background-video--mobile' )
+const mobileVideo = new Vimeo( $mobileVideo, videoOptions )
+
+const $desktopVideo = document.querySelector( '.hero__background-video--desktop' )
+const desktopVideo = new Vimeo( $desktopVideo, videoOptions )
+
+mobileVideo.on( 'play', function () {
+  console.log( 'playing-mobile-video' )
+} )
+
+desktopVideo.on( 'play', function () {
+  console.log( 'playing-desktop-video' )
+} )
+
+mobileVideo.play()
+desktopVideo.play()
 
 /*
 
