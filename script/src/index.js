@@ -37,10 +37,6 @@ const touchMargin = () => {
   return Math.max( window.innerWidth * 0.1, 60 )
 }
 
-/*
-min size for 2 cards up: 286 * 2 + 10 = 582
-min size for 3 cards up: 327 * 3 + ( 53 * 2 ) = 1087
- */
 const slickConf = {
   infinite: true,
   mobileFirst: true,
