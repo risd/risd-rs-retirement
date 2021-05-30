@@ -32,11 +32,6 @@
   display: none;
 }
 
-.hero__background-video iframe {
-  width: 100%;
-  min-height: 100%;
-}
-
 .hero__background-video--mobile {
   display: block;
   @include respond-above(small) {

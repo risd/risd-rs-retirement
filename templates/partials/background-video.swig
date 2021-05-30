@@ -15,7 +15,7 @@
   {% set videoHeight = video.height %}
   {% set videoWidthRatio = videoWidth / videoHeight * 100 %}
   {% set videoHeightRatio = videoHeight / videoWidth  * 100 %}
-{#
+
   <iframe
     class="{{ classString }}"
     src="https://player.vimeo.com/video/{{ videoID }}?background=1&autoplay=1&loop=1&autopause=0&muted=1"
@@ -26,11 +26,4 @@
     allow=autoplay
     style="min-width: {{ videoWidthRatio }}vh; height: {{ videoHeightRatio }}vw;"></iframe>
 }
-#}
-
-  <div
-    class="{{ classString }}"
-    data-vimeo-id="{{ videoID }}"
-    style="min-width: {{ videoWidthRatio }}vh; height: {{ videoHeightRatio }}vw;"></div>
-
 {% endif %}
