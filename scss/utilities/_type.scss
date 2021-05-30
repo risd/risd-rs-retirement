@@ -44,7 +44,8 @@ If the mixin is called and values are not entered, it will default to regular fo
     // @debug $leading-unitless;
 
     @include respond-above($fs-breakpoint) {
-      font-size: $fontSize;
+      --font-size: #{ $fontSize };
+      font-size: var(--font-size);
       line-height: $leading-unitless;
     };
   }

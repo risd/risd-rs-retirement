@@ -81,7 +81,7 @@ $( '.timeline--slider' )
     console.log( 'set-position-start' )
     let $el = $( this )
 
-    /* --- set card width & gutter : start --- */
+    /* --- set card & gutter : start --- */
 
     let buttonWidth = $( '.slick-prev' ).outerWidth()
 
@@ -166,12 +166,25 @@ $( '.timeline--slider' )
     let bodySizeAdjusted = bodyScaler( cardWidth )
 
     $( '.timeline__card-header p' )
-      .css( 'font-size', `${ headerSizeAdjusted }px` )
+      .css( '--font-size', `${ headerSizeAdjusted }px` )
 
     $( '.timeline__card-body p' )
-      .css( 'font-size', `${ bodySizeAdjusted }px` )
+      .css( '--font-size', `${ bodySizeAdjusted }px` )
 
-    /* --- set card width & gutter : end --- */
+    /* --- set card & gutter : end --- */
+
+    /* --- set intro : start --- */
+    let smallBreakpoint = 512
+    if ( window.innerWidth <= smallBreakpoint ) {
+      // use one of the type scalers to adjust the intro to the same ratio
+      headerScaler.range( [ 22, 28 ] )
+      let introSizeAdjusted = headerScaler( cardWidth )
+      $( '.intro p' ).css( '--font-size', `${ introSizeAdjusted }px` )
+    }
+    else {
+      $( '.intro p' ).css( '--font-size', '' )
+    }
+    /* --- set intro : end --- */
 
     /* --- set card header & body height : start --- */
     // let cardHeaderHeight = 0
@@ -251,11 +264,13 @@ function scaleLinear () {
   }
 
   scale.domain = function ( domain ) {
+    if ( ! domain ) return _domain
     _domain = domain
     return scale
   }
 
   scale.range = function ( range ) {
+    if ( ! range ) return _range
     _range = range
     return scale
   }

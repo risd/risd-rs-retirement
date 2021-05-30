@@ -11601,7 +11601,7 @@ var slickConf = {
 $('.timeline--slider').on('setPositionStart', function (event, slick) {
   console.log('set-position-start');
   var $el = $(this);
-  /* --- set card width & gutter : start --- */
+  /* --- set card & gutter : start --- */
 
   var buttonWidth = $('.slick-prev').outerWidth(); // get the total button width. there are no buttons
   // we are on a touch device, and we can 
@@ -11649,9 +11649,23 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
 
   var headerSizeAdjusted = headerScaler(cardWidth);
   var bodySizeAdjusted = bodyScaler(cardWidth);
-  $('.timeline__card-header p').css('font-size', "".concat(headerSizeAdjusted, "px"));
-  $('.timeline__card-body p').css('font-size', "".concat(bodySizeAdjusted, "px"));
-  /* --- set card width & gutter : end --- */
+  $('.timeline__card-header p').css('--font-size', "".concat(headerSizeAdjusted, "px"));
+  $('.timeline__card-body p').css('--font-size', "".concat(bodySizeAdjusted, "px"));
+  /* --- set card & gutter : end --- */
+
+  /* --- set intro : start --- */
+
+  var smallBreakpoint = 512;
+
+  if (window.innerWidth <= smallBreakpoint) {
+    // use one of the type scalers to adjust the intro to the same ratio
+    headerScaler.range([22, 28]);
+    var introSizeAdjusted = headerScaler(cardWidth);
+    $('.intro p').css('--font-size', "".concat(introSizeAdjusted, "px"));
+  } else {
+    $('.intro p').css('--font-size', '');
+  }
+  /* --- set intro : end --- */
 
   /* --- set card header & body height : start --- */
   // let cardHeaderHeight = 0
@@ -11678,6 +11692,7 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
   /* --- set card header & body height : end --- */
 
   /* --- set min card height : start --- */
+
 
   var minCardHeight = 0;
   $el.find('.timeline__card').css('--min-card-height', '0px').each(function (index) {
@@ -11713,11 +11728,13 @@ function scaleLinear() {
   }
 
   scale.domain = function (domain) {
+    if (!domain) return _domain;
     _domain = domain;
     return scale;
   };
 
   scale.range = function (range) {
+    if (!range) return _range;
     _range = range;
     return scale;
   };
