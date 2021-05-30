@@ -3,27 +3,6 @@ require( './slick.js' )
 require( 'lity' )
 
 
-/*
-
-| 327px | 53px | 327px | 53px | 327px |
-( 327 * 3 ) + ( 53 * 2 ) = 1087
-
-| 327px | 53px | 327px |
-( 327 * 2 ) + 53 = 707
-
- */
-// small suffix variables define values on the smaller end of their range
-const cardWidthSmall = 286
-const cardGutterSmall = 10
-// desktop suffix variables define the largest these values will get
-const cardWidthDesktop = 327
-const cardGutterDesktop = 53
-// max width of the timeline card column
-const maxColumnWidth = ( cardWidthDesktop * 3 ) + ( cardGutterDesktop * 2 )
-const touchMargin = () => {
-  return Math.max( window.innerWidth * 0.1, 60 )
-}
-
 let DEVICE_HAS_TOUCH = false
 
 if ( 'ontouchstart' in window ) {
@@ -34,6 +13,34 @@ else {
   $( 'body' ).addClass( 'device-has-no-touch' )
 }
 
+
+const cardSizes = {
+  width: {
+    small: 286,
+    desktop: 327,
+  },
+  gutter: {
+    small: 10,
+    desktop: 53,
+  },
+}
+
+const cardGridSizes = {
+  twoUpMin: ( cardSizes.width.small * 2 + cardSizes.gutter.small ),
+  threeUpMin: ( cardSizes.width.small * 3 ) + ( cardSizes.gutter.small * 2 ),
+  threeUpMax: ( cardSizes.width.desktop * 3 ) + ( cardSizes.gutter.desktop * 2 ),
+}
+
+// touch margine to use in cases where cards will bleed off the edge
+// into this margin
+const touchMargin = () => {
+  return Math.max( window.innerWidth * 0.1, 60 )
+}
+
+/*
+min size for 2 cards up: 286 * 2 + 10 = 582
+min size for 3 cards up: 327 * 3 + ( 53 * 2 ) = 1087
+ */
 const slickConf = {
   infinite: true,
   mobileFirst: true,
@@ -43,40 +50,32 @@ const slickConf = {
   centerPadding: '0px',
   arrows: DEVICE_HAS_TOUCH ? false : true,
   additionalLeftOffset: function ( slick ) {
+    // this function will run within the context of the
+    // `getLeft` function, which gets the left position
+    // of the current slick track. this offset is subtracted
+    // from that value in order to change where the left
+    // alignment occures
+    
+    // in this case, we want a more space left of the first card
+    // on devices that have touch in order to allow cards to
+    // bleed in off the edge of the screen
+    
     // no additional offset on no-touch devices
     if ( DEVICE_HAS_TOUCH === false ) return 0
 
     let additionalLeftOffset = 0
-    if ( window.innerWidth < maxColumnWidth &&
-         window.innerWidth > 582 ) {
+    if ( window.innerWidth < cardGridSizes.threeUpMax &&
+         window.innerWidth > cardGridSizes.twoUpMin ) {
       additionalLeftOffset = touchMargin() / 2
     }
-    else if ( window.innerWidth >= maxColumnWidth &&
+    else if ( window.innerWidth >= cardGridSizes.threeUpMax &&
               slick.slideCount > 3  ) {
-      additionalLeftOffset = ( ( window.innerWidth - maxColumnWidth ) / 2 )
+      additionalLeftOffset = ( ( window.innerWidth - cardGridSizes.threeUpMax ) / 2 )
     }
     return additionalLeftOffset
   },
   prevArrow: slickPrevArrow(),
   nextArrow: slickNextArrow(),
-    responsive: [
-    {
-      breakpoint: 582,
-      settings: {
-        slidesToShow: 2,
-        centerMode: false,
-        variableWidth: true,
-      },
-    },
-    {
-      breakpoint: 878,
-      settings: {
-        slidesToShow: 3,
-        centerMode: false,
-        variableWidth: true,
-      },
-    },
-  ],
 }
 
 $( '.timeline--slider' )
@@ -107,70 +106,66 @@ $( '.timeline--slider' )
 
     // scalers for card type
     let headerScaler = scaleLinear()
-      .domain( [ cardWidthDesktop, cardWidthDesktop ] )
+      .domain( [ cardSizes.width.desktop, cardSizes.width.desktop ] )
       .range( [ 21, 28 ] )
     let bodyScaler = scaleLinear()
-      .domain( [ cardWidthDesktop, cardWidthDesktop ] )
+      .domain( [ cardSizes.width.desktop, cardSizes.width.desktop ] )
       .range( [ 18, 24 ] )
     
     // set `cardWidth` depending on the number of cards visible
     let cardWidth;
-    if ( ( cardListWidth < ( cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
+    if ( ( cardListWidth < cardGridSizes.twoUpMin ) &&
          ( slick.slideCount > 1 ) ) {
-      console.log( '1-up' )
       slick.options.centerMode = true;
       cardWidth = cardListWidth
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', `${ cardGutterSmall }px` )
+        .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
       $el.find( '.timeline__card-container' )
-        .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
-        .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
+        .css( 'padding-left', `${ cardSizes.gutter.small / 2 }px` )
+        .css( 'padding-right', `${ cardSizes.gutter.small / 2 }px` )
 
-      let scalerDomain = [ cardWidthDesktop, ( cardWidthSmall * 2 + cardGutterSmall - 1 ) ]
+      let scalerDomain = [ cardSizes.width.desktop, ( cardSizes.width.small * 2 + cardSizes.gutter.small - 1 ) ]
       bodyScaler.domain( scalerDomain )
       headerScaler.domain( scalerDomain )
     }
-    else if ( ( cardListWidth >= ( cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
-              ( cardListWidth < ( cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
+    else if ( ( cardListWidth >= cardGridSizes.twoUpMin ) &&
+              ( cardListWidth < cardGridSizes.threeUpMin ) &&
               ( slick.slideCount > 1 ) ) {
-      console.log( '2-up' )
       slick.options.centerMode = false;
-      cardWidth = Math.ceil( ( cardListWidth - ( cardGutterSmall * 2 ) ) / 2 )
+      cardWidth = Math.ceil( ( cardListWidth - ( cardSizes.gutter.small * 2 ) ) / 2 )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', `${ cardGutterSmall }px` )
+        .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
       $el.find( '.timeline__card-container' )
-        .css( 'padding-left', `${ cardGutterSmall / 2 }px` )
-        .css( 'padding-right', `${ cardGutterSmall / 2 }px` )
+        .css( 'padding-left', `${ cardSizes.gutter.small / 2 }px` )
+        .css( 'padding-right', `${ cardSizes.gutter.small / 2 }px` )
 
-      let scalerDomain = [ cardWidthDesktop, ( ( cardWidthSmall * 3 - 1 ) / 2 ) ]
+      let scalerDomain = [ cardSizes.width.desktop, ( ( cardSizes.width.small * 3 - 1 ) / 2 ) ]
       bodyScaler.domain( scalerDomain )
       headerScaler.domain( scalerDomain )
     }
-    else if ( ( cardListWidth >= ( cardWidthSmall + cardGutterSmall + cardWidthSmall + cardGutterSmall + cardWidthSmall ) ) &&
-              ( cardListWidth < maxColumnWidth ) &&
+    else if ( ( cardListWidth >= cardGridSizes.threeUpMin ) &&
+              ( cardListWidth < cardGridSizes.threeUpMax ) &&
               ( slick.slideCount > 1 ) ) {
-      console.log( '3-up-tight' )
       slick.options.centerMode = false;
-      cardWidth = Math.ceil( ( cardListWidth - ( cardGutterSmall  * 2 ) ) / 3 )
+      cardWidth = Math.ceil( ( cardListWidth - ( cardSizes.gutter.small  * 2 ) ) / 3 )
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', `${ cardGutterSmall }px` )
+        .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
       $el.find( '.timeline__card-container' )
         .css( 'padding-left', `0px` )
-        .css( 'padding-right', `${ cardGutterSmall }px` )
+        .css( 'padding-right', `${ cardSizes.gutter.small }px` )
     }
-    else if ( ( cardListWidth >= maxColumnWidth ) ) {
-      console.log( '3-up-loose' )
+    else if ( ( cardListWidth >= cardGridSizes.threeUpMax ) ) {
       slick.options.centerMode = false;
-      cardWidth = cardWidthDesktop
+      cardWidth = cardSizes.width.desktop
       $( '.timeline' )
         .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', cardGutterDesktop + 'px' )
+        .css( '--card-gutter', cardSizes.gutter.desktop + 'px' )
       $el.find( '.timeline__card-container' )
         .css( 'padding-left', `0px` )
-        .css( 'padding-right', `${ cardGutterDesktop }px` )
+        .css( 'padding-right', `${ cardSizes.gutter.desktop }px` )
     }
 
     let headerSizeAdjusted = headerScaler( cardWidth )
@@ -185,6 +180,7 @@ $( '.timeline--slider' )
     /* --- set card & gutter : end --- */
 
     /* --- set intro : start --- */
+
     // the intro text breakpoints are set such that between base & small
     // the type can be rendered smaller than the card sizes. this block
     // ensures that type is scaled to the same percent between the intro's
@@ -200,33 +196,8 @@ $( '.timeline--slider' )
     else {
       $( '.intro p' ).css( '--font-size', '' )
     }
+
     /* --- set intro : end --- */
-
-    /* --- set card header & body height : start --- */
-    // let cardHeaderHeight = 0
-
-    // $el.find( '.timeline__card-header' )
-    //   .each( function ( index ) {
-    //     let $header = $( this )
-    //     let currentHeight = $header.outerHeight()
-    //     if ( currentHeight > cardHeaderHeight ) {
-    //       cardHeaderHeight = currentHeight
-    //     }
-    //   } )
-    //   .css( '--card-header-height', `${ cardHeaderHeight }px` )
-
-    // let cardBodyHeight = 0
-    
-    // $el.find( '.timeline__card-body' )
-    //   .each( function ( index ) {
-    //     let $body = $( this )
-    //     let currentHeight = $body.outerHeight()
-    //     if ( currentHeight > cardBodyHeight ) {
-    //       cardBodyHeight = currentHeight
-    //     }
-    //   } )
-    //   .css( '--card-body-height', `${ cardBodyHeight }px` )
-    /* --- set card header & body height : end --- */
     
     /* --- set min card height : start --- */
 
