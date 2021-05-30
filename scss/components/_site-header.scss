@@ -20,7 +20,7 @@
   color: var(--color-lightest);
 }
 
-.site-header__text--acronym {
+.site-header__text--seal {
   display: block;
 
   @include respond-above(small) {
@@ -40,6 +40,12 @@
   position: absolute;
   right: var(--padding-inset);
   top: 0;
+
+  display: none;
+
+  @include respond-above(small) {
+    display: block;
+  }
 }
 
 .site-header__logo-link {
@@ -54,6 +60,10 @@
 
 .site-header__logo path {
   fill: var(--color-lightest);
+}
+
+.site-header__text--seal .site-header__logo {
+  margin-top: 0;
 }
 
 .wordmark {
