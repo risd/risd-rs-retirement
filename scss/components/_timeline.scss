@@ -40,6 +40,11 @@ arrow width = 70
   }
 }
 
+.device-has-touch .timeline {
+  --background-color-hover: var(--color-lightest);
+  --text-color-hover: var(--color-darkest);
+}
+
 .timeline__heading {
   @extend %timeline__heading;
   text-align: center;
