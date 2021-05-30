@@ -18,7 +18,7 @@
 
   <iframe
     class="{{ classString }}"
-    src="https://player.vimeo.com/video/{{ videoID }}?background=1&autoplay=1&loop=1&autopause=0&muted=1"
+    src="https://player.vimeo.com/video/{{ videoID }}?background=1"
     frameborder="0"
     webkitallowfullscreen
     mozallowfullscreen
