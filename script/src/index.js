@@ -12,10 +12,13 @@ require( 'lity' )
 ( 327 * 2 ) + 53 = 707
 
  */
+// small suffix variables define values on the smaller end of their range
 const cardWidthSmall = 286
 const cardGutterSmall = 10
+// desktop suffix variables define the largest these values will get
 const cardWidthDesktop = 327
 const cardGutterDesktop = 53
+// max width of the timeline card column
 const maxColumnWidth = ( cardWidthDesktop * 3 ) + ( cardGutterDesktop * 2 )
 const touchMargin = () => {
   return Math.max( window.innerWidth * 0.1, 60 )
@@ -78,6 +81,14 @@ const slickConf = {
 
 $( '.timeline--slider' )
   .on( 'setPositionStart', function ( event, slick ) {
+    // set-position-start is run at
+    // - init
+    // - orientation change
+    // - window resize
+    // it runs before all slider positions are set, and is
+    // a useful hook for adjusting all slider item sizes in
+    // anticipation of being redrawn within the new context
+
     console.log( 'set-position-start' )
     let $el = $( this )
 
@@ -174,11 +185,16 @@ $( '.timeline--slider' )
     /* --- set card & gutter : end --- */
 
     /* --- set intro : start --- */
+    // the intro text breakpoints are set such that between base & small
+    // the type can be rendered smaller than the card sizes. this block
+    // ensures that type is scaled to the same percent between the intro's
+    // base & small type sizes ([22, 28])
     let smallBreakpoint = 512
     if ( window.innerWidth <= smallBreakpoint ) {
       // use one of the type scalers to adjust the intro to the same ratio
-      headerScaler.range( [ 22, 28 ] )
-      let introSizeAdjusted = headerScaler( cardWidth )
+      let introScaler = headerScaler
+      introScaler.range( [ 22, 28 ] )
+      let introSizeAdjusted = introScaler( cardWidth )
       $( '.intro p' ).css( '--font-size', `${ introSizeAdjusted }px` )
     }
     else {
@@ -257,10 +273,12 @@ function scaleLinear () {
     if ( toScale <= _domain[ 0 ] ) return _range[ 0 ]
     if ( toScale > _domain[ 1 ] ) return _range[ 1 ]
 
-    let scaledRatio = toScale / _domain[ 1 ]
-    let rangeDiff = _range[ 1 ] - _range[ 0 ]
+    let domainExtent = _domain[ 1 ] - _domain[ 0 ]
+    let scaledOffset = toScale - _domain[ 0 ]
+    let scaledRatio = scaledOffset / domainExtent
+    let rangeExtent = _range[ 1 ] - _range[ 0 ]
 
-    return scaledRatio * rangeDiff + _range[ 0 ]
+    return scaledRatio * rangeExtent + _range[ 0 ]
   }
 
   scale.domain = function ( domain ) {
