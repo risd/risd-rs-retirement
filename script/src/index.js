@@ -76,6 +76,7 @@ const slickConf = {
 }
 
 $( '.timeline--slider' )
+  .on( 'buildOut', setParametersAndDisplay )
   .on( 'setPositionStart', setParametersAndDisplay )
   .slick( slickConf )
 

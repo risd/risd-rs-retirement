@@ -11594,7 +11594,7 @@ var slickConf = {
   prevArrow: slickPrevArrow(),
   nextArrow: slickNextArrow()
 };
-$('.timeline--slider').on('setPositionStart', setParametersAndDisplay).slick(slickConf);
+$('.timeline--slider').on('buildOut', setParametersAndDisplay).on('setPositionStart', setParametersAndDisplay).slick(slickConf);
 
 function setParametersAndDisplay(event, slick) {
   // set-position-start is run at
