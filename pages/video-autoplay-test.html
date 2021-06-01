@@ -1,0 +1,110 @@
+{% extends "templates/partials/base.html" %}
+
+{% block content %}
+
+  {% set item = cms.homepage %}
+
+  <main class="page">
+    <h1>vimeo - background=1</h1>
+    <section class="hero">
+      {% if item.hero_image %}
+        <div class="hero__image" style="background-image: url('{{ item.hero_image|imageSize(1200) }}');" ></div>
+      {% endif %}
+      {% if item.hero_mobile_background_loop_video && item.hero_mobile_background_loop_video.original_url %}
+        {% include 'templates/partials/background-video.swig' with {
+          video: item.hero_mobile_background_loop_video,
+          classString: 'hero__background-video hero__background-video--mobile',
+        } %}
+      {% endif %}
+      {% if item.hero_desktop_background_loop_video && item.hero_desktop_background_loop_video.original_url %}
+        {% include 'templates/partials/background-video.swig' with {
+          video: item.hero_desktop_background_loop_video,
+          classString: 'hero__background-video hero__background-video--desktop',
+        } %}
+      {% endif %}
+    </section>
+
+    <h1>vimeo - all iframe parameters</h1>
+    <section class="hero">
+      <iframe
+      class="hero__background-video"
+      src="https://player.vimeo.com/video/556211697?background=1&muted=1&loop=1&autoplay=1&autopause=0"
+      frameborder="0"
+      webkitallowfullscreen
+      mozallowfullscreen
+      allowfullscreen
+      allow=autoplay
+      style="min-width: 177.77777777777777vh; height: 56.25vw; display: block;"></iframe>
+    </section>
+
+    <h1>youtube - javascript</h1>
+    <section class="hero">
+      <div id="player"></div>
+
+      <script>
+        // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        
+        var player;
+        // 4. The API will call this function when the video player is ready.
+        function onPlayerReady(event) {
+          console.log( 'ready:play-video' )
+          console.log( event.target )
+          event.target.playVideo();
+        }
+
+        // 5. The API calls this function when the player's state changes.
+        //    The function indicates that when playing a video (state=1),
+        //    the player should play for six seconds and then stop.
+        var done = false;
+        function onPlayerStateChange(event) {
+          if (event.data == YT.PlayerState.PLAYING && !done) {
+            setTimeout(stopVideo, 6000);
+            done = true;
+          }
+        }
+        function stopVideo() {
+          console.log( 'stop-video' )
+          player.stopVideo();
+        }
+
+        // 3. This function creates an <iframe> (and YouTube player)
+        //    after the API code downloads.
+        function onYouTubeIframeAPIReady() {
+          player = new YT.Player('player', {
+            height: '390',
+            width: '640',
+            videoId: 'Q3GxnCr_1mg',
+            playerVars: {
+              'playsinline': 1,
+              'autoplay': 1,
+              'controls': 0,
+              'enablejsapi': 1,
+              'loop': 1,
+              'playlist': 'Q3GxnCr_1mg',
+              'showinfo': 0,
+              'modestbranding': 1,
+              'fs': 0,
+              'autohide': 0,
+              'rel': 0,
+            },
+            events: {
+              'onReady': onPlayerReady,
+              'onStateChange': onPlayerStateChange
+            }
+          });
+        }
+      </script>
+    </section>
+
+
+    <h1>youtube - iframe</h1>
+    <section class="hero">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/Q3GxnCr_1mg?playlist=Q3GxnCr_1mg&loop=1&autoplay=1&controls=0&mute=1&showinfo=0&modestbranding=1&fs=0&autohide=0&playsinline=1&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="pointer-events: none;"></iframe>
+    </section>
+  </main>
+{% endblock %}
