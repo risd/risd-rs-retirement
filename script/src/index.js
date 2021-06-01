@@ -41,6 +41,7 @@ const slickConf = {
   infinite: true,
   mobileFirst: true,
   slidesToShow: 1,
+  slidesToScroll: 1,
   centerMode: true,
   variableWidth: true,
   centerPadding: '0px',
@@ -75,144 +76,167 @@ const slickConf = {
 }
 
 $( '.timeline--slider' )
-  .on( 'setPositionStart', function ( event, slick ) {
-    // set-position-start is run at
-    // - init
-    // - orientation change
-    // - window resize
-    // it runs before all slider positions are set, and is
-    // a useful hook for adjusting all slider item sizes in
-    // anticipation of being redrawn within the new context
-
-    console.log( 'set-position-start' )
-    let $el = $( this )
-
-    /* --- set card & gutter : start --- */
-
-    let buttonWidth = $( '.slick-prev' ).outerWidth()
-
-    // get the total button width. there are no buttons
-    // we are on a touch device, and we can 
-    let totalButtonWidth = buttonWidth
-      ? buttonWidth * 2
-      : touchMargin()
-
-    // this represents the width that the fully showing cards will be displayed
-    let cardListWidth = Math.ceil( window.innerWidth - totalButtonWidth )
-
-    // scalers for card type
-    let headerScaler = scaleLinear()
-      .domain( [ cardSizes.width.desktop, cardSizes.width.desktop ] )
-      .range( [ 21, 28 ] )
-    let bodyScaler = scaleLinear()
-      .domain( [ cardSizes.width.desktop, cardSizes.width.desktop ] )
-      .range( [ 18, 24 ] )
-    
-    // set `cardWidth` depending on the number of cards visible
-    let cardWidth;
-    if ( ( cardListWidth < cardGridSizes.twoUpMin ) &&
-         ( slick.slideCount > 1 ) ) {
-      slick.options.centerMode = true;
-      cardWidth = cardListWidth
-      $( '.timeline' )
-        .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
-      $el.find( '.timeline__card-container' )
-        .css( 'padding-left', `${ cardSizes.gutter.small / 2 }px` )
-        .css( 'padding-right', `${ cardSizes.gutter.small / 2 }px` )
-
-      let scalerDomain = [ cardSizes.width.desktop, ( cardSizes.width.small * 2 + cardSizes.gutter.small - 1 ) ]
-      bodyScaler.domain( scalerDomain )
-      headerScaler.domain( scalerDomain )
-    }
-    else if ( ( cardListWidth >= cardGridSizes.twoUpMin ) &&
-              ( cardListWidth < cardGridSizes.threeUpMin ) &&
-              ( slick.slideCount > 1 ) ) {
-      slick.options.centerMode = false;
-      cardWidth = Math.ceil( ( cardListWidth - ( cardSizes.gutter.small * 2 ) ) / 2 )
-      $( '.timeline' )
-        .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
-      $el.find( '.timeline__card-container' )
-        .css( 'padding-left', `${ cardSizes.gutter.small / 2 }px` )
-        .css( 'padding-right', `${ cardSizes.gutter.small / 2 }px` )
-
-      let scalerDomain = [ cardSizes.width.desktop, ( ( cardSizes.width.small * 3 - 1 ) / 2 ) ]
-      bodyScaler.domain( scalerDomain )
-      headerScaler.domain( scalerDomain )
-    }
-    else if ( ( cardListWidth >= cardGridSizes.threeUpMin ) &&
-              ( cardListWidth < cardGridSizes.threeUpMax ) &&
-              ( slick.slideCount > 1 ) ) {
-      slick.options.centerMode = false;
-      cardWidth = Math.ceil( ( cardListWidth - ( cardSizes.gutter.small  * 2 ) ) / 3 )
-      $( '.timeline' )
-        .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
-      $el.find( '.timeline__card-container' )
-        .css( 'padding-left', `0px` )
-        .css( 'padding-right', `${ cardSizes.gutter.small }px` )
-    }
-    else if ( ( cardListWidth >= cardGridSizes.threeUpMax ) ) {
-      slick.options.centerMode = false;
-      cardWidth = cardSizes.width.desktop
-      $( '.timeline' )
-        .css( '--card-width', cardWidth + 'px' )
-        .css( '--card-gutter', cardSizes.gutter.desktop + 'px' )
-      $el.find( '.timeline__card-container' )
-        .css( 'padding-left', `0px` )
-        .css( 'padding-right', `${ cardSizes.gutter.desktop }px` )
-    }
-
-    let headerSizeAdjusted = headerScaler( cardWidth )
-    let bodySizeAdjusted = bodyScaler( cardWidth )
-
-    $( '.timeline__card-header p' )
-      .css( '--font-size', `${ headerSizeAdjusted }px` )
-
-    $( '.timeline__card-body p' )
-      .css( '--font-size', `${ bodySizeAdjusted }px` )
-
-    /* --- set card & gutter : end --- */
-
-    /* --- set intro : start --- */
-
-    // the intro text breakpoints are set such that between base & small
-    // the type can be rendered smaller than the card sizes. this block
-    // ensures that type is scaled to the same percent between the intro's
-    // base & small type sizes ([22, 28])
-    let smallBreakpoint = 512
-    if ( window.innerWidth <= smallBreakpoint ) {
-      // use one of the type scalers to adjust the intro to the same ratio
-      let introScaler = headerScaler
-      introScaler.range( [ 22, 28 ] )
-      let introSizeAdjusted = introScaler( cardWidth )
-      $( '.intro p' ).css( '--font-size', `${ introSizeAdjusted }px` )
-    }
-    else {
-      $( '.intro p' ).css( '--font-size', '' )
-    }
-
-    /* --- set intro : end --- */
-    
-    /* --- set min card height : start --- */
-
-    let minCardHeight = 0
-
-    $el.find( '.timeline__card' )
-      .css( '--min-card-height', '0px' )
-      .each( function ( index ) {
-        let $card = $( this )
-        let currentHeight = $card.outerHeight()
-        if ( currentHeight > minCardHeight ) {
-          minCardHeight = currentHeight
-        }
-      } )
-      .css( '--min-card-height', `${ minCardHeight }px` )
-
-    /* --- set min card height : end --- */
-  } )
+  .on( 'setPositionStart', setParametersAndDisplay )
   .slick( slickConf )
+
+function setParametersAndDisplay ( event, slick ) {
+  // set-position-start is run at
+  // - init
+  // - orientation change
+  // - window resize
+  // it runs before all slider positions are set, and is
+  // a useful hook for adjusting all slider item sizes in
+  // anticipation of being redrawn within the new context
+
+  console.log( 'set-parameters-and-display' )
+  let $el = $( this )
+
+  /* --- set card & gutter : start --- */
+
+  let buttonWidth = $( '.slick-prev' ).outerWidth()
+
+  // get the total button width. there are no buttons
+  // we are on a touch device, and we can 
+  let totalButtonWidth = buttonWidth
+    ? buttonWidth * 2
+    : touchMargin()
+
+  // this represents the width that the fully showing cards will be displayed
+  let cardListWidth = Math.ceil( window.innerWidth - totalButtonWidth )
+
+  // scalers for card type
+  let headerScaler = scaleLinear()
+    .domain( [ cardSizes.width.desktop, cardSizes.width.desktop ] )
+    .range( [ 21, 28 ] )
+  let bodyScaler = scaleLinear()
+    .domain( [ cardSizes.width.desktop, cardSizes.width.desktop ] )
+    .range( [ 18, 24 ] )
+  
+  // set `cardWidth` depending on the number of cards visible
+  let cardWidth;
+  if ( ( cardListWidth < cardGridSizes.twoUpMin ) &&
+       ( slick.slideCount > 1 ) ) {
+    slick.options.centerMode = true
+    slick.options.slidesToShow = 1
+    slick.options.infinite = slick.slideCount > 1 ? true : false
+
+    cardWidth = cardListWidth
+
+    $( '.timeline' )
+      .css( '--card-width', cardWidth + 'px' )
+      .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
+    $el.find( '.timeline__card-container' )
+      .css( 'padding-left', `${ cardSizes.gutter.small / 2 }px` )
+      .css( 'padding-right', `${ cardSizes.gutter.small / 2 }px` )
+
+    let scalerDomain = [ cardSizes.width.desktop, ( cardSizes.width.small * 2 + cardSizes.gutter.small - 1 ) ]
+    bodyScaler.domain( scalerDomain )
+    headerScaler.domain( scalerDomain )
+  }
+  else if ( ( cardListWidth >= cardGridSizes.twoUpMin ) &&
+            ( cardListWidth < cardGridSizes.threeUpMin ) &&
+            ( slick.slideCount > 1 ) ) {
+    console.log('2-up')
+    slick.options.centerMode = false
+    slick.options.slidesToShow = 2
+    slick.options.infinite = slick.slideCount > 2 ? true : false
+
+    cardWidth = Math.ceil( ( cardListWidth - ( cardSizes.gutter.small * 2 ) ) / 2 )
+
+    $( '.timeline' )
+      .css( '--card-width', cardWidth + 'px' )
+      .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
+    $el.find( '.timeline__card-container' )
+      .css( 'padding-left', `${ cardSizes.gutter.small / 2 }px` )
+      .css( 'padding-right', `${ cardSizes.gutter.small / 2 }px` )
+
+    let scalerDomain = [ cardSizes.width.desktop, ( ( cardSizes.width.small * 3 - 1 ) / 2 ) ]
+    bodyScaler.domain( scalerDomain )
+    headerScaler.domain( scalerDomain )
+  }
+  else if ( ( cardListWidth >= cardGridSizes.threeUpMin ) &&
+            ( cardListWidth < cardGridSizes.threeUpMax ) &&
+            ( slick.slideCount > 1 ) ) {
+    slick.options.centerMode = false
+    slick.options.slidesToShow = 3
+    slick.options.infinite = slick.slideCount > 3 ? true : false
+
+    cardWidth = Math.ceil( ( cardListWidth - ( cardSizes.gutter.small  * 2 ) ) / 3 )
+
+    $( '.timeline' )
+      .css( '--card-width', cardWidth + 'px' )
+      .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
+    $el.find( '.timeline__card-container' )
+      .css( 'padding-left', `0px` )
+      .css( 'padding-right', `${ cardSizes.gutter.small }px` )
+  }
+  else if ( ( cardListWidth >= cardGridSizes.threeUpMax ) ) {
+    slick.options.centerMode = false
+    slick.options.slidesToShow = 3
+    slick.options.infinite = slick.slideCount > 3 ? true : false
+
+    cardWidth = cardSizes.width.desktop
+
+    $( '.timeline' )
+      .css( '--card-width', cardWidth + 'px' )
+      .css( '--card-gutter', cardSizes.gutter.desktop + 'px' )
+    $el.find( '.timeline__card-container' )
+      .css( 'padding-left', `0px` )
+      .css( 'padding-right', `${ cardSizes.gutter.desktop }px` )
+  }
+
+  console.log( 'slick.slideCount', slick.slideCount )
+  console.log( 'slick.options.slidesToShow', slick.options.slidesToShow )
+  console.log( 'slick.options.infinite', slick.options.infinite )
+
+  let headerSizeAdjusted = headerScaler( cardWidth )
+  let bodySizeAdjusted = bodyScaler( cardWidth )
+
+  $( '.timeline__card-header p' )
+    .css( '--font-size', `${ headerSizeAdjusted }px` )
+
+  $( '.timeline__card-body p' )
+    .css( '--font-size', `${ bodySizeAdjusted }px` )
+
+  /* --- set card & gutter : end --- */
+
+  /* --- set intro : start --- */
+
+  // the intro text breakpoints are set such that between base & small
+  // the type can be rendered smaller than the card sizes. this block
+  // ensures that type is scaled to the same percent between the intro's
+  // base & small type sizes ([22, 28])
+  let smallBreakpoint = 512
+  if ( window.innerWidth <= smallBreakpoint ) {
+    // use one of the type scalers to adjust the intro to the same ratio
+    let introScaler = headerScaler
+    introScaler.range( [ 22, 28 ] )
+    let introSizeAdjusted = introScaler( cardWidth )
+    $( '.intro p' ).css( '--font-size', `${ introSizeAdjusted }px` )
+  }
+  else {
+    $( '.intro p' ).css( '--font-size', '' )
+  }
+
+  /* --- set intro : end --- */
+  
+  /* --- set min card height : start --- */
+
+  let minCardHeight = 0
+
+  $el.find( '.timeline__card' )
+    .css( '--min-card-height', '0px' )
+    .each( function ( index ) {
+      let $card = $( this )
+      let currentHeight = $card.outerHeight()
+      if ( currentHeight > minCardHeight ) {
+        minCardHeight = currentHeight
+      }
+    } )
+    .css( '--min-card-height', `${ minCardHeight }px` )
+
+  /* --- set min card height : end --- */
+}
 
 function slickPrevArrow () {
   return `

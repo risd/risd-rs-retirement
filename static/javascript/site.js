@@ -11565,6 +11565,7 @@ var slickConf = {
   infinite: true,
   mobileFirst: true,
   slidesToShow: 1,
+  slidesToScroll: 1,
   centerMode: true,
   variableWidth: true,
   centerPadding: '0px',
@@ -11593,7 +11594,9 @@ var slickConf = {
   prevArrow: slickPrevArrow(),
   nextArrow: slickNextArrow()
 };
-$('.timeline--slider').on('setPositionStart', function (event, slick) {
+$('.timeline--slider').on('setPositionStart', setParametersAndDisplay).slick(slickConf);
+
+function setParametersAndDisplay(event, slick) {
   // set-position-start is run at
   // - init
   // - orientation change
@@ -11601,7 +11604,7 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
   // it runs before all slider positions are set, and is
   // a useful hook for adjusting all slider item sizes in
   // anticipation of being redrawn within the new context
-  console.log('set-position-start');
+  console.log('set-parameters-and-display');
   var $el = $(this);
   /* --- set card & gutter : start --- */
 
@@ -11619,6 +11622,8 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
 
   if (cardListWidth < cardGridSizes.twoUpMin && slick.slideCount > 1) {
     slick.options.centerMode = true;
+    slick.options.slidesToShow = 1;
+    slick.options.infinite = slick.slideCount > 1 ? true : false;
     cardWidth = cardListWidth;
     $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', "".concat(cardSizes.gutter.small, "px"));
     $el.find('.timeline__card-container').css('padding-left', "".concat(cardSizes.gutter.small / 2, "px")).css('padding-right', "".concat(cardSizes.gutter.small / 2, "px"));
@@ -11626,7 +11631,10 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
     bodyScaler.domain(scalerDomain);
     headerScaler.domain(scalerDomain);
   } else if (cardListWidth >= cardGridSizes.twoUpMin && cardListWidth < cardGridSizes.threeUpMin && slick.slideCount > 1) {
+    console.log('2-up');
     slick.options.centerMode = false;
+    slick.options.slidesToShow = 2;
+    slick.options.infinite = slick.slideCount > 2 ? true : false;
     cardWidth = Math.ceil((cardListWidth - cardSizes.gutter.small * 2) / 2);
     $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', "".concat(cardSizes.gutter.small, "px"));
     $el.find('.timeline__card-container').css('padding-left', "".concat(cardSizes.gutter.small / 2, "px")).css('padding-right', "".concat(cardSizes.gutter.small / 2, "px"));
@@ -11635,16 +11643,23 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
     headerScaler.domain(_scalerDomain);
   } else if (cardListWidth >= cardGridSizes.threeUpMin && cardListWidth < cardGridSizes.threeUpMax && slick.slideCount > 1) {
     slick.options.centerMode = false;
+    slick.options.slidesToShow = 3;
+    slick.options.infinite = slick.slideCount > 3 ? true : false;
     cardWidth = Math.ceil((cardListWidth - cardSizes.gutter.small * 2) / 3);
     $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', "".concat(cardSizes.gutter.small, "px"));
     $el.find('.timeline__card-container').css('padding-left', "0px").css('padding-right', "".concat(cardSizes.gutter.small, "px"));
   } else if (cardListWidth >= cardGridSizes.threeUpMax) {
     slick.options.centerMode = false;
+    slick.options.slidesToShow = 3;
+    slick.options.infinite = slick.slideCount > 3 ? true : false;
     cardWidth = cardSizes.width.desktop;
     $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', cardSizes.gutter.desktop + 'px');
     $el.find('.timeline__card-container').css('padding-left', "0px").css('padding-right', "".concat(cardSizes.gutter.desktop, "px"));
   }
 
+  console.log('slick.slideCount', slick.slideCount);
+  console.log('slick.options.slidesToShow', slick.options.slidesToShow);
+  console.log('slick.options.infinite', slick.options.infinite);
   var headerSizeAdjusted = headerScaler(cardWidth);
   var bodySizeAdjusted = bodyScaler(cardWidth);
   $('.timeline__card-header p').css('--font-size', "".concat(headerSizeAdjusted, "px"));
@@ -11683,7 +11698,7 @@ $('.timeline--slider').on('setPositionStart', function (event, slick) {
     }
   }).css('--min-card-height', "".concat(minCardHeight, "px"));
   /* --- set min card height : end --- */
-}).slick(slickConf);
+}
 
 function slickPrevArrow() {
   return "\n    <button class=\"slick-prev\" aria-label=\"Previous\" type=\"button\">\n      <div class=\"slick-arrow-text slick-prev-text\"><</div>\n    </button>\n  ".trim();
@@ -12214,6 +12229,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
     $('img[data-lazy]', _.$slider).not('[src]').addClass('slick-loading');
 
+    _.$slider.trigger('buildOut', [_]);
+
     _.setupInfinite();
 
     _.buildArrows();
@@ -12367,6 +12384,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         _.$slider.trigger('breakpoint', [_, triggerBreakpoint]);
       }
     }
+
+    _.$slider.trigger('checkResponsive', [_]);
   };
 
   Slick.prototype.changeSlide = function (event, dontAnimate) {
@@ -12901,6 +12920,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   Slick.prototype.init = function (creation) {
     var _ = this;
 
+    _.$slider.trigger('initStart', [_]);
+
     if (!$(_.$slider).hasClass('slick-initialized')) {
       $(_.$slider).addClass('slick-initialized');
 
@@ -13102,9 +13123,13 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     var _ = this;
 
     if (_.options.arrows === true && _.slideCount > _.options.slidesToShow) {
-      _.$prevArrow.show();
+      _.$prevArrow.show().removeClass('slick-hidden');
 
-      _.$nextArrow.show();
+      _.$nextArrow.show().removeClass('slick-hidden');
+    } else if (_.options.arrows === true && _.slideCount <= _.options.slidesToShow) {
+      _.$prevArrow.show().addClass('slick-hidden');
+
+      _.$nextArrow.show().addClass('slick-hidden');
     }
 
     if (_.options.dots === true && _.slideCount > _.options.slidesToShow) {
@@ -13530,6 +13555,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
         if (!_.unslicked) {
           _.setPosition();
+
+          _.refresh();
         }
       }, 50);
     }
@@ -13831,6 +13858,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }
 
     _.transformsEnabled = _.options.useTransform && _.animType !== null && _.animType !== false;
+
+    _.$slider.trigger('setProps', [_]);
   };
 
   Slick.prototype.setSlideClasses = function (index) {
@@ -13900,6 +13929,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       slideIndex = null;
 
       if (_.slideCount > _.options.slidesToShow) {
+        console.log('setupInfinite:slideCount > slidesToShow');
+
         if (_.options.centerMode === true) {
           infiniteCount = _.options.slidesToShow + 1;
         } else {
@@ -13919,7 +13950,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         _.$slideTrack.find('.slick-cloned').find('[id]').each(function () {
           $(this).attr('id', '');
         });
+      } else {
+        console.log('setupInfinite:slideCount < slidesToShow');
       }
+
+      console.log('_.slideCount', _.slideCount);
+      console.log('_.options.slidesToShow', _.options.slidesToShow);
     }
   };
 
@@ -14078,9 +14114,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     var _ = this;
 
     if (_.options.arrows === true && _.slideCount > _.options.slidesToShow) {
-      _.$prevArrow.hide();
+      _.$prevArrow.show();
 
-      _.$nextArrow.hide();
+      _.$nextArrow.show();
     }
 
     if (_.options.dots === true && _.slideCount > _.options.slidesToShow) {
@@ -14384,6 +14420,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
         _.$prevArrow.removeClass('slick-disabled').attr('aria-disabled', 'false');
       }
+    } else if (_.options.arrows === true && _.slideCount <= _.options.slidesToShow) {
+      _.$prevArrow.show().addClass('slick-hidden');
+
+      _.$nextArrow.show().addClass('slick-hidden');
     }
   };
 

@@ -536,6 +536,8 @@
 
         $('img[data-lazy]', _.$slider).not('[src]').addClass('slick-loading');
 
+        _.$slider.trigger('buildOut', [_]);
+
         _.setupInfinite();
 
         _.buildArrows();
@@ -679,6 +681,7 @@
             }
         }
 
+        _.$slider.trigger('checkResponsive', [_]);
     };
 
     Slick.prototype.changeSlide = function(event, dontAnimate) {
@@ -1271,6 +1274,8 @@
 
         var _ = this;
 
+        _.$slider.trigger('initStart', [_]);
+
         if (!$(_.$slider).hasClass('slick-initialized')) {
 
             $(_.$slider).addClass('slick-initialized');
@@ -1485,9 +1490,13 @@
 
         if (_.options.arrows === true && _.slideCount > _.options.slidesToShow) {
 
-            _.$prevArrow.show();
-            _.$nextArrow.show();
+            _.$prevArrow.show().removeClass('slick-hidden');
+            _.$nextArrow.show().removeClass('slick-hidden');
 
+        }
+        else if (_.options.arrows === true && _.slideCount <= _.options.slidesToShow ) {
+            _.$prevArrow.show().addClass('slick-hidden');
+            _.$nextArrow.show().addClass('slick-hidden');
         }
 
         if (_.options.dots === true && _.slideCount > _.options.slidesToShow) {
@@ -1963,7 +1972,10 @@
             _.windowDelay = window.setTimeout(function() {
                 _.windowWidth = $(window).width();
                 _.checkResponsive();
-                if( !_.unslicked ) { _.setPosition(); }
+                if( !_.unslicked ) {
+                    _.setPosition();
+                    _.refresh();
+                }
             }, 50);
         }
     };
@@ -2294,6 +2306,8 @@
             _.transitionType = 'transition';
         }
         _.transformsEnabled = _.options.useTransform && (_.animType !== null && _.animType !== false);
+
+        _.$slider.trigger('setProps', [_]);
     };
 
 
@@ -2414,6 +2428,7 @@
             slideIndex = null;
 
             if (_.slideCount > _.options.slidesToShow) {
+                console.log('setupInfinite:slideCount > slidesToShow')
 
                 if (_.options.centerMode === true) {
                     infiniteCount = _.options.slidesToShow + 1;
@@ -2439,7 +2454,12 @@
                 });
 
             }
+            else {
+                console.log('setupInfinite:slideCount < slidesToShow')
+            }
 
+            console.log( '_.slideCount', _.slideCount )
+            console.log( '_.options.slidesToShow', _.options.slidesToShow )
         }
 
     };
@@ -2605,8 +2625,8 @@
 
         if (_.options.arrows === true && _.slideCount > _.options.slidesToShow) {
 
-            _.$prevArrow.hide();
-            _.$nextArrow.hide();
+            _.$prevArrow.show();
+            _.$nextArrow.show();
 
         }
 
@@ -2957,6 +2977,11 @@
 
             }
 
+        }
+        else if (_.options.arrows === true &&
+                 _.slideCount <= _.options.slidesToShow) {
+            _.$prevArrow.show().addClass('slick-hidden')
+            _.$nextArrow.show().addClass('slick-hidden')
         }
 
     };
