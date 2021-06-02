@@ -2429,7 +2429,6 @@
             slideIndex = null;
 
             if (_.slideCount > _.options.slidesToShow) {
-                console.log('setupInfinite:slideCount > slidesToShow')
 
                 if (_.options.centerMode === true) {
                     infiniteCount = _.options.slidesToShow + 1;
@@ -2455,12 +2454,6 @@
                 });
 
             }
-            else {
-                console.log('setupInfinite:slideCount < slidesToShow')
-            }
-
-            console.log( '_.slideCount', _.slideCount )
-            console.log( '_.options.slidesToShow', _.options.slidesToShow )
         }
 
     };

@@ -13945,8 +13945,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       slideIndex = null;
 
       if (_.slideCount > _.options.slidesToShow) {
-        console.log('setupInfinite:slideCount > slidesToShow');
-
         if (_.options.centerMode === true) {
           infiniteCount = _.options.slidesToShow + 1;
         } else {
@@ -13966,12 +13964,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         _.$slideTrack.find('.slick-cloned').find('[id]').each(function () {
           $(this).attr('id', '');
         });
-      } else {
-        console.log('setupInfinite:slideCount < slidesToShow');
       }
-
-      console.log('_.slideCount', _.slideCount);
-      console.log('_.options.slidesToShow', _.options.slidesToShow);
     }
   };
 
