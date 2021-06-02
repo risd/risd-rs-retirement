@@ -109,6 +109,7 @@ module.exports = function(grunt) {
       filters: [
         'swig/wysiwyg-remove-empty-p.js',
         'swig/append-read-more-to-wysiwyg.js',
+        'swig/prevent-widows.js',
       ],
       functions: [],
     }

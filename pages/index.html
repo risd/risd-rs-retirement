@@ -52,7 +52,7 @@
       {% endif %}
       {% if item.intro_description %}
       <div class="intro__description">
-        {{ item.intro_description|safe }}
+        {{ item.intro_description|preventWidows|safe }}
       </div>
       {% endif %}
     </section>
