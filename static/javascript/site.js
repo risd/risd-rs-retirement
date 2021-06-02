@@ -11539,6 +11539,7 @@ if ('ontouchstart' in window) {
   $('body').addClass('device-has-no-touch');
 }
 
+$(".intro__description p").each(preventWidows);
 var cardSizes = {
   width: {
     small: 286,
@@ -11575,6 +11576,17 @@ var slickConf = {
   nextArrow: slickNextArrow()
 };
 $('.timeline--slider').on('buildOut', setParametersAndDisplay).on('setPositionStart', setParametersAndDisplay).slick(slickConf);
+
+function preventWidows() {
+  var $el = $(this);
+  var wordArray = $el.html().split(' ');
+
+  if (wordArray.length > 1) {
+    wordArray[wordArray.length - 2] += '&nbsp;' + wordArray[wordArray.length - 1];
+    wordArray.pop();
+    $el.html(wordArray.join(' '));
+  }
+}
 
 function additionalLeftOffsetFn(slick) {
   // this function will run within the context of the
