@@ -1675,6 +1675,7 @@
 
         _.checkResponsive();
         _.setPosition();
+        _.refresh();
 
     };
 

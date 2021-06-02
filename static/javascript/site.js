@@ -11570,74 +11570,87 @@ var slickConf = {
   variableWidth: true,
   centerPadding: '0px',
   arrows: DEVICE_HAS_TOUCH ? false : true,
-  additionalLeftOffset: function additionalLeftOffset(slick) {
-    // this function will run within the context of the
-    // `getLeft` function, which gets the left position
-    // of the current slick track. this offset is subtracted
-    // from that value in order to change where the left
-    // alignment occures
-    // in this case, we want a more space left of the first card
-    // on devices that have touch in order to allow cards to
-    // bleed in off the edge of the screen
-    // no additional offset on no-touch devices
-    if (DEVICE_HAS_TOUCH === false) return 0;
-    var additionalLeftOffset = 0;
-
-    if (window.innerWidth < cardGridSizes.threeUpMax && window.innerWidth > cardGridSizes.twoUpMin) {
-      additionalLeftOffset = touchMargin() / 2;
-    } else if (window.innerWidth >= cardGridSizes.threeUpMax && slick.slideCount > 3) {
-      additionalLeftOffset = (window.innerWidth - cardGridSizes.threeUpMax) / 2;
-    }
-
-    return additionalLeftOffset;
-  },
+  additionalLeftOffset: additionalLeftOffsetFn,
   prevArrow: slickPrevArrow(),
   nextArrow: slickNextArrow()
 };
 $('.timeline--slider').on('buildOut', setParametersAndDisplay).on('setPositionStart', setParametersAndDisplay).slick(slickConf);
 
+function additionalLeftOffsetFn(slick) {
+  // this function will run within the context of the
+  // `getLeft` function, which gets the left position
+  // of the current slick track. this offset is subtracted
+  // from that value in order to change where the left
+  // alignment occures
+  // in this case, we want a more space left of the first card
+  // on devices that have touch in order to allow cards to
+  // bleed in off the edge of the screen
+  // no additional offset on no-touch devices
+  if (DEVICE_HAS_TOUCH === false) return 0;
+  var additionalLeftOffset = 0;
+
+  if (window.innerWidth < cardGridSizes.threeUpMax && window.innerWidth > cardGridSizes.twoUpMin) {
+    additionalLeftOffset = touchMargin() / 2;
+  } else if (window.innerWidth >= cardGridSizes.threeUpMax && slick.slideCount > 3) {
+    additionalLeftOffset = (window.innerWidth - cardGridSizes.threeUpMax) / 2;
+  }
+
+  return additionalLeftOffset;
+}
+
 function setParametersAndDisplay(event, slick) {
-  // set-position-start is run at
-  // - init
+  // `buildOut` is run just after the `slick.slideCount` is
+  //  stored, and just before the initial build of the
+  //  slider starts. running this function allows dynamic
+  //  `slick.options` to be set before the build starts
+  // `setPositionStart` is run at:
   // - orientation change
   // - window resize
   // it runs before all slider positions are set, and is
   // a useful hook for adjusting all slider item sizes in
-  // anticipation of being redrawn within the new context
-  console.log('set-parameters-and-display');
+  // anticipation of being redrawn within the new context.
+  // this also relies on `slick.refresh` being run after
+  // in order to rerender in the context of the new
+  // `slick.options` set within this function
   var $el = $(this);
   /* --- set card & gutter : start --- */
 
   var buttonWidth = $('.slick-prev').outerWidth(); // get the total button width. there are no buttons
-  // we are on a touch device, and we can 
+  // we are on a touch device, so use `touchMargin` to
+  // allow for space on either side of the timeline for
+  // cards to bleed onto the page
 
   var totalButtonWidth = buttonWidth ? buttonWidth * 2 : touchMargin(); // this represents the width that the fully showing cards will be displayed
 
   var cardListWidth = Math.ceil(window.innerWidth - totalButtonWidth); // scalers for card type
 
   var headerScaler = scaleLinear().domain([cardSizes.width.desktop, cardSizes.width.desktop]).range([21, 28]);
-  var bodyScaler = scaleLinear().domain([cardSizes.width.desktop, cardSizes.width.desktop]).range([18, 24]); // set `cardWidth` depending on the number of cards visible
+  var bodyScaler = scaleLinear().domain([cardSizes.width.desktop, cardSizes.width.desktop]).range([18, 24]); // set depending on the number of cards visible
 
   var cardWidth;
+  var cardGutter;
+  var cardGutterLeft;
+  var cardGutterRight;
 
   if (cardListWidth < cardGridSizes.twoUpMin && slick.slideCount > 1) {
     slick.options.centerMode = true;
     slick.options.slidesToShow = 1;
     slick.options.infinite = slick.slideCount > 1 ? true : false;
     cardWidth = cardListWidth;
-    $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', "".concat(cardSizes.gutter.small, "px"));
-    $el.find('.timeline__card-container').css('padding-left', "".concat(cardSizes.gutter.small / 2, "px")).css('padding-right', "".concat(cardSizes.gutter.small / 2, "px"));
+    cardGutter = cardSizes.gutter.small;
+    cardGutterLeft = cardSizes.gutter.small / 2;
+    cardGutterRight = cardSizes.gutter.small / 2;
     var scalerDomain = [cardSizes.width.desktop, cardSizes.width.small * 2 + cardSizes.gutter.small - 1];
     bodyScaler.domain(scalerDomain);
     headerScaler.domain(scalerDomain);
   } else if (cardListWidth >= cardGridSizes.twoUpMin && cardListWidth < cardGridSizes.threeUpMin && slick.slideCount > 1) {
-    console.log('2-up');
     slick.options.centerMode = false;
     slick.options.slidesToShow = 2;
     slick.options.infinite = slick.slideCount > 2 ? true : false;
     cardWidth = Math.ceil((cardListWidth - cardSizes.gutter.small * 2) / 2);
-    $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', "".concat(cardSizes.gutter.small, "px"));
-    $el.find('.timeline__card-container').css('padding-left', "".concat(cardSizes.gutter.small / 2, "px")).css('padding-right', "".concat(cardSizes.gutter.small / 2, "px"));
+    cardGutter = cardSizes.gutter.small;
+    cardGutterLeft = cardSizes.gutter.small / 2;
+    cardGutterRight = cardSizes.gutter.small / 2;
     var _scalerDomain = [cardSizes.width.desktop, (cardSizes.width.small * 3 - 1) / 2];
     bodyScaler.domain(_scalerDomain);
     headerScaler.domain(_scalerDomain);
@@ -11646,20 +11659,21 @@ function setParametersAndDisplay(event, slick) {
     slick.options.slidesToShow = 3;
     slick.options.infinite = slick.slideCount > 3 ? true : false;
     cardWidth = Math.ceil((cardListWidth - cardSizes.gutter.small * 2) / 3);
-    $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', "".concat(cardSizes.gutter.small, "px"));
-    $el.find('.timeline__card-container').css('padding-left', "0px").css('padding-right', "".concat(cardSizes.gutter.small, "px"));
+    cardGutter = cardSizes.gutter.small;
+    cardGutterLeft = 0;
+    cardGutterRight = cardSizes.gutter.small;
   } else if (cardListWidth >= cardGridSizes.threeUpMax) {
     slick.options.centerMode = false;
     slick.options.slidesToShow = 3;
     slick.options.infinite = slick.slideCount > 3 ? true : false;
     cardWidth = cardSizes.width.desktop;
-    $('.timeline').css('--card-width', cardWidth + 'px').css('--card-gutter', cardSizes.gutter.desktop + 'px');
-    $el.find('.timeline__card-container').css('padding-left', "0px").css('padding-right', "".concat(cardSizes.gutter.desktop, "px"));
+    cardGutter = cardSizes.gutter.desktop;
+    cardGutterLeft = 0;
+    cardGutterRight = cardSizes.gutter.desktop;
   }
 
-  console.log('slick.slideCount', slick.slideCount);
-  console.log('slick.options.slidesToShow', slick.options.slidesToShow);
-  console.log('slick.options.infinite', slick.options.infinite);
+  $('.timeline').css('--card-width', "".concat(cardWidth, "px")).css('--card-gutter', "".concat(cardGutter, "px"));
+  $el.find('.timeline__card-container').css('padding-left', "".concat(cardGutterLeft, "px")).css('padding-right', "".concat(cardGutterRight, "px"));
   var headerSizeAdjusted = headerScaler(cardWidth);
   var bodySizeAdjusted = bodyScaler(cardWidth);
   $('.timeline__card-header p').css('--font-size', "".concat(headerSizeAdjusted, "px"));
@@ -13287,6 +13301,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     _.checkResponsive();
 
     _.setPosition();
+
+    _.refresh();
   };
 
   Slick.prototype.pause = Slick.prototype.slickPause = function () {

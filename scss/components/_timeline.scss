@@ -185,7 +185,7 @@ arrow width = 70
 /*
 card width small = 286
 gutter small = 10
-286 + 10 + 286 = 582
+(286 * 3) + (10 * 2) = 878
  */
 @media screen and (min-width: 878px) {
   .timeline__card-container {

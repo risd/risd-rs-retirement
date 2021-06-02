@@ -46,31 +46,7 @@ const slickConf = {
   variableWidth: true,
   centerPadding: '0px',
   arrows: DEVICE_HAS_TOUCH ? false : true,
-  additionalLeftOffset: function ( slick ) {
-    // this function will run within the context of the
-    // `getLeft` function, which gets the left position
-    // of the current slick track. this offset is subtracted
-    // from that value in order to change where the left
-    // alignment occures
-    
-    // in this case, we want a more space left of the first card
-    // on devices that have touch in order to allow cards to
-    // bleed in off the edge of the screen
-    
-    // no additional offset on no-touch devices
-    if ( DEVICE_HAS_TOUCH === false ) return 0
-
-    let additionalLeftOffset = 0
-    if ( window.innerWidth < cardGridSizes.threeUpMax &&
-         window.innerWidth > cardGridSizes.twoUpMin ) {
-      additionalLeftOffset = touchMargin() / 2
-    }
-    else if ( window.innerWidth >= cardGridSizes.threeUpMax &&
-              slick.slideCount > 3  ) {
-      additionalLeftOffset = ( ( window.innerWidth - cardGridSizes.threeUpMax ) / 2 )
-    }
-    return additionalLeftOffset
-  },
+  additionalLeftOffset: additionalLeftOffsetFn,
   prevArrow: slickPrevArrow(),
   nextArrow: slickNextArrow(),
 }
@@ -80,16 +56,48 @@ $( '.timeline--slider' )
   .on( 'setPositionStart', setParametersAndDisplay )
   .slick( slickConf )
 
+
+function additionalLeftOffsetFn ( slick ) {
+  // this function will run within the context of the
+  // `getLeft` function, which gets the left position
+  // of the current slick track. this offset is subtracted
+  // from that value in order to change where the left
+  // alignment occures
+  
+  // in this case, we want a more space left of the first card
+  // on devices that have touch in order to allow cards to
+  // bleed in off the edge of the screen
+  
+  // no additional offset on no-touch devices
+  if ( DEVICE_HAS_TOUCH === false ) return 0
+
+  let additionalLeftOffset = 0
+  if ( window.innerWidth < cardGridSizes.threeUpMax &&
+       window.innerWidth > cardGridSizes.twoUpMin ) {
+    additionalLeftOffset = touchMargin() / 2
+  }
+  else if ( window.innerWidth >= cardGridSizes.threeUpMax &&
+            slick.slideCount > 3  ) {
+    additionalLeftOffset = ( ( window.innerWidth - cardGridSizes.threeUpMax ) / 2 )
+  }
+  return additionalLeftOffset
+}
+
 function setParametersAndDisplay ( event, slick ) {
-  // set-position-start is run at
-  // - init
+  // `buildOut` is run just after the `slick.slideCount` is
+  //  stored, and just before the initial build of the
+  //  slider starts. running this function allows dynamic
+  //  `slick.options` to be set before the build starts
+  // `setPositionStart` is run at:
   // - orientation change
   // - window resize
   // it runs before all slider positions are set, and is
   // a useful hook for adjusting all slider item sizes in
-  // anticipation of being redrawn within the new context
+  // anticipation of being redrawn within the new context.
+  // this also relies on `slick.refresh` being run after
+  // in order to rerender in the context of the new
+  // `slick.options` set within this function
 
-  console.log( 'set-parameters-and-display' )
   let $el = $( this )
 
   /* --- set card & gutter : start --- */
@@ -97,7 +105,9 @@ function setParametersAndDisplay ( event, slick ) {
   let buttonWidth = $( '.slick-prev' ).outerWidth()
 
   // get the total button width. there are no buttons
-  // we are on a touch device, and we can 
+  // we are on a touch device, so use `touchMargin` to
+  // allow for space on either side of the timeline for
+  // cards to bleed onto the page
   let totalButtonWidth = buttonWidth
     ? buttonWidth * 2
     : touchMargin()
@@ -113,8 +123,11 @@ function setParametersAndDisplay ( event, slick ) {
     .domain( [ cardSizes.width.desktop, cardSizes.width.desktop ] )
     .range( [ 18, 24 ] )
   
-  // set `cardWidth` depending on the number of cards visible
-  let cardWidth;
+  // set depending on the number of cards visible
+  let cardWidth
+  let cardGutter
+  let cardGutterLeft
+  let cardGutterRight
   if ( ( cardListWidth < cardGridSizes.twoUpMin ) &&
        ( slick.slideCount > 1 ) ) {
     slick.options.centerMode = true
@@ -122,13 +135,9 @@ function setParametersAndDisplay ( event, slick ) {
     slick.options.infinite = slick.slideCount > 1 ? true : false
 
     cardWidth = cardListWidth
-
-    $( '.timeline' )
-      .css( '--card-width', cardWidth + 'px' )
-      .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
-    $el.find( '.timeline__card-container' )
-      .css( 'padding-left', `${ cardSizes.gutter.small / 2 }px` )
-      .css( 'padding-right', `${ cardSizes.gutter.small / 2 }px` )
+    cardGutter = cardSizes.gutter.small
+    cardGutterLeft = cardSizes.gutter.small / 2
+    cardGutterRight = cardSizes.gutter.small / 2
 
     let scalerDomain = [ cardSizes.width.desktop, ( cardSizes.width.small * 2 + cardSizes.gutter.small - 1 ) ]
     bodyScaler.domain( scalerDomain )
@@ -137,19 +146,14 @@ function setParametersAndDisplay ( event, slick ) {
   else if ( ( cardListWidth >= cardGridSizes.twoUpMin ) &&
             ( cardListWidth < cardGridSizes.threeUpMin ) &&
             ( slick.slideCount > 1 ) ) {
-    console.log('2-up')
     slick.options.centerMode = false
     slick.options.slidesToShow = 2
     slick.options.infinite = slick.slideCount > 2 ? true : false
 
     cardWidth = Math.ceil( ( cardListWidth - ( cardSizes.gutter.small * 2 ) ) / 2 )
-
-    $( '.timeline' )
-      .css( '--card-width', cardWidth + 'px' )
-      .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
-    $el.find( '.timeline__card-container' )
-      .css( 'padding-left', `${ cardSizes.gutter.small / 2 }px` )
-      .css( 'padding-right', `${ cardSizes.gutter.small / 2 }px` )
+    cardGutter = cardSizes.gutter.small
+    cardGutterLeft = cardSizes.gutter.small / 2
+    cardGutterRight = cardSizes.gutter.small / 2
 
     let scalerDomain = [ cardSizes.width.desktop, ( ( cardSizes.width.small * 3 - 1 ) / 2 ) ]
     bodyScaler.domain( scalerDomain )
@@ -163,13 +167,9 @@ function setParametersAndDisplay ( event, slick ) {
     slick.options.infinite = slick.slideCount > 3 ? true : false
 
     cardWidth = Math.ceil( ( cardListWidth - ( cardSizes.gutter.small  * 2 ) ) / 3 )
-
-    $( '.timeline' )
-      .css( '--card-width', cardWidth + 'px' )
-      .css( '--card-gutter', `${ cardSizes.gutter.small }px` )
-    $el.find( '.timeline__card-container' )
-      .css( 'padding-left', `0px` )
-      .css( 'padding-right', `${ cardSizes.gutter.small }px` )
+    cardGutter = cardSizes.gutter.small
+    cardGutterLeft = 0
+    cardGutterRight = cardSizes.gutter.small
   }
   else if ( ( cardListWidth >= cardGridSizes.threeUpMax ) ) {
     slick.options.centerMode = false
@@ -177,18 +177,17 @@ function setParametersAndDisplay ( event, slick ) {
     slick.options.infinite = slick.slideCount > 3 ? true : false
 
     cardWidth = cardSizes.width.desktop
-
-    $( '.timeline' )
-      .css( '--card-width', cardWidth + 'px' )
-      .css( '--card-gutter', cardSizes.gutter.desktop + 'px' )
-    $el.find( '.timeline__card-container' )
-      .css( 'padding-left', `0px` )
-      .css( 'padding-right', `${ cardSizes.gutter.desktop }px` )
+    cardGutter = cardSizes.gutter.desktop
+    cardGutterLeft = 0
+    cardGutterRight = cardSizes.gutter.desktop
   }
 
-  console.log( 'slick.slideCount', slick.slideCount )
-  console.log( 'slick.options.slidesToShow', slick.options.slidesToShow )
-  console.log( 'slick.options.infinite', slick.options.infinite )
+  $( '.timeline' )
+    .css( '--card-width', `${ cardWidth }px` )
+    .css( '--card-gutter', `${ cardGutter }px` )
+  $el.find( '.timeline__card-container' )
+    .css( 'padding-left', `${ cardGutterLeft }px` )
+    .css( 'padding-right', `${ cardGutterRight }px` )
 
   let headerSizeAdjusted = headerScaler( cardWidth )
   let bodySizeAdjusted = bodyScaler( cardWidth )
