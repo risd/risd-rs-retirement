@@ -536,11 +536,11 @@
 
         $('img[data-lazy]', _.$slider).not('[src]').addClass('slick-loading');
 
+        _.buildArrows();
+
         _.$slider.trigger('buildOut', [_]);
 
         _.setupInfinite();
-
-        _.buildArrows();
 
         _.buildDots();
 
@@ -1936,8 +1936,8 @@
         _.registerBreakpoints();
 
         _.setProps();
-        _.setupInfinite();
         _.buildArrows();
+        _.setupInfinite();
         _.updateArrows();
         _.initArrowEvents();
         _.buildDots();

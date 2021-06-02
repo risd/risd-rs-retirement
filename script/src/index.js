@@ -1,3 +1,4 @@
+const debug = require( 'debug' )( 'index' )
 const $ = require( 'jquery' )
 require( './slick.js' )
 require( 'lity' )
@@ -98,9 +99,13 @@ function setParametersAndDisplay ( event, slick ) {
 
   let $el = $( this )
 
+  debug( 'setParametersAndDisplay', $el.siblings( '.timeline__header' ).children( '.timeline__heading' ).text() )
+
   /* --- set card & gutter : start --- */
 
   let buttonWidth = $( '.slick-prev' ).outerWidth()
+
+  debug( 'buttonWidth:', buttonWidth )
 
   // get the total button width. there are no buttons
   // we are on a touch device, so use `touchMargin` to
@@ -128,6 +133,8 @@ function setParametersAndDisplay ( event, slick ) {
   let cardGutterRight
   if ( ( cardListWidth < cardGridSizes.twoUpMin ) &&
        ( slick.slideCount > 1 ) ) {
+    debug( '1-up' )
+
     slick.options.centerMode = true
     slick.options.slidesToShow = 1
     slick.options.infinite = slick.slideCount > 1 ? true : false
@@ -144,6 +151,8 @@ function setParametersAndDisplay ( event, slick ) {
   else if ( ( cardListWidth >= cardGridSizes.twoUpMin ) &&
             ( cardListWidth < cardGridSizes.threeUpMin ) &&
             ( slick.slideCount > 1 ) ) {
+    debug( '2-up' )
+
     slick.options.centerMode = false
     slick.options.slidesToShow = 2
     slick.options.infinite = slick.slideCount > 2 ? true : false
@@ -160,6 +169,8 @@ function setParametersAndDisplay ( event, slick ) {
   else if ( ( cardListWidth >= cardGridSizes.threeUpMin ) &&
             ( cardListWidth < cardGridSizes.threeUpMax ) &&
             ( slick.slideCount > 1 ) ) {
+    debug( '3-up-small-gutter' )
+
     slick.options.centerMode = false
     slick.options.slidesToShow = 3
     slick.options.infinite = slick.slideCount > 3 ? true : false
@@ -170,6 +181,8 @@ function setParametersAndDisplay ( event, slick ) {
     cardGutterRight = cardSizes.gutter.small
   }
   else if ( ( cardListWidth >= cardGridSizes.threeUpMax ) ) {
+    debug( '3-up-desktop-gutter' )
+
     slick.options.centerMode = false
     slick.options.slidesToShow = 3
     slick.options.infinite = slick.slideCount > 3 ? true : false
@@ -195,6 +208,10 @@ function setParametersAndDisplay ( event, slick ) {
 
   $( '.timeline__card-body p' )
     .css( '--font-size', `${ bodySizeAdjusted }px` )
+
+  debug( 'cardListWidth:', cardListWidth )
+  debug( 'cardWidth:', cardWidth )
+  debug( 'cardGutter:', cardGutter )
 
   /* --- set card & gutter : end --- */
 
