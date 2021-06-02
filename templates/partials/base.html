@@ -31,6 +31,9 @@
       gtag('config', '{{ getSetting('analytics_id') }}');
     </script>
 
+    <!-- css custom property pollyfill for IE 11 -->
+    <script>window.MSInputMethodContext && document.documentMode && document.write('<script src="https://cdn.jsdelivr.net/gh/nuxodin/ie11CustomProperties@4.1.0/ie11CustomProperties.min.js"><\x2fscript>');</script>
+
     {% block head_extra %}{% endblock %}
   </head>
   <body {% block body_attributes %}{% endblock %}>
