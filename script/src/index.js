@@ -193,6 +193,8 @@ function setParametersAndDisplay ( event, slick ) {
     cardGutterRight = cardSizes.gutter.desktop
   }
 
+  // ensure all .timelines get the new cardWidth / cardGutter
+  // including those that aren't sliders
   $( '.timeline' )
     .css( '--card-width', `${ cardWidth }px` )
     .css( '--card-gutter', `${ cardGutter }px` )

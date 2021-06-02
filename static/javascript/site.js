@@ -12564,7 +12564,9 @@ function setParametersAndDisplay(event, slick) {
     cardGutter = cardSizes.gutter.desktop;
     cardGutterLeft = 0;
     cardGutterRight = cardSizes.gutter.desktop;
-  }
+  } // ensure all .timelines get the new cardWidth / cardGutter
+  // including those that aren't sliders
+
 
   $('.timeline').css('--card-width', "".concat(cardWidth, "px")).css('--card-gutter', "".concat(cardGutter, "px"));
   $el.find('.timeline__card-container').css('padding-left', "".concat(cardGutterLeft, "px")).css('padding-right', "".concat(cardGutterRight, "px"));
