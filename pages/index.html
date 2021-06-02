@@ -42,10 +42,21 @@
       </div>
     </section>
 
+    {% if item.intro_headline || item.intro_description %}
     <section class="intro" id="intro">
       <div class="intro__timeline-marker"></div>
-      {{ item.intro_description|safe }}
+      {% if item.intro_headline %}
+      <div class="intro__headline">
+        {{ item.intro_headline|safe }}
+      </div>
+      {% endif %}
+      {% if item.intro_description %}
+      <div class="intro__description">
+        {{ item.intro_description|safe }}
+      </div>
+      {% endif %}
     </section>
+    {% endif %}
 
     <section class="timeline">
       {% include 'templates/partials/section-timeline.swig' with {

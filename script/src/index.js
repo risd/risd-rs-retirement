@@ -212,10 +212,10 @@ function setParametersAndDisplay ( event, slick ) {
     let introScaler = headerScaler
     introScaler.range( [ 22, 28 ] )
     let introSizeAdjusted = introScaler( cardWidth )
-    $( '.intro p' ).css( '--font-size', `${ introSizeAdjusted }px` )
+    $( '.intro .intro__description p' ).css( '--font-size', `${ introSizeAdjusted }px` )
   }
   else {
-    $( '.intro p' ).css( '--font-size', '' )
+    $( '.intro .intro__description p' ).css( '--font-size', '' )
   }
 
   /* --- set intro : end --- */

@@ -11693,9 +11693,9 @@ function setParametersAndDisplay(event, slick) {
     var introScaler = headerScaler;
     introScaler.range([22, 28]);
     var introSizeAdjusted = introScaler(cardWidth);
-    $('.intro p').css('--font-size', "".concat(introSizeAdjusted, "px"));
+    $('.intro .intro__description p').css('--font-size', "".concat(introSizeAdjusted, "px"));
   } else {
-    $('.intro p').css('--font-size', '');
+    $('.intro .intro__description p').css('--font-size', '');
   }
   /* --- set intro : end --- */
 

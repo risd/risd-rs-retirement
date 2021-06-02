@@ -26,13 +26,36 @@
   color: var(--color-lightest);
 }
 
-.intro p {
+.intro .intro__headline {
+  --padding-top: 30px;
+  --padding-bottom: 65px;
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+
+  @include respond-above(small) {
+    --padding-top: 35px;
+    --padding-bottom: 85px;
+  }
+
+  @include respond-above(large) {
+    --padding-top: 40px;
+    --padding-bottom: 105px;
+  }
+}
+
+.intro .intro__headline p {
+  @extend %intro__headline;
+  text-align: center;
+  margin: 0;
+}
+
+.intro .intro__description p {
   @extend %intro__text;
   width: 90%;
   max-width: 21.56em;
   margin: 0 auto;
 }
 
-.intro p:not(:first-child) {
+.intro .intro__description p:not(:first-child) {
   margin-top: 1.65em;
 }

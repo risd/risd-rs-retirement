@@ -172,6 +172,13 @@ $intro__text: (
   large: (43px, 51.6px),
 );
 
+$intro__headline: (
+  base: (40px, 47.8px),
+  small: (55px, 65.7px),
+  medium: (70px, 83.7px),
+  large: (82px, 98px),
+);
+
 $timeline__heading: (
   base: (80px, 96px),
   small: (95px, 114px),
@@ -245,11 +252,17 @@ $footer__copyright: (
   text-transform: uppercase;
 }
 
+%intro__headline {
+  @include text-size($intro__headline);
+  @extend %serif-light;
+  font-weight: 300;
+}
+
 %intro__text {
   @include text-size($intro__text);
   @extend %serif-light;
   font-weight: 300;
-  @extend %antialiased;
+  // @extend %antialiased;
 }
 
 %timeline__heading {
