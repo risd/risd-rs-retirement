@@ -8,6 +8,7 @@
   --card-width: 266px;
   --card-gutter: 10px;
   --arrow-width: 60px;
+  --arrow-gutter: 10px;
   --marker-height: 100px;
 
   width: 100%;
@@ -30,6 +31,7 @@
 card width = 327
 gutter = 53
 arrow width = 70
+arrow gutter = 53
 70 + 53 + 327 + 53 + 327 + 53 + 327 + 53 + 70 = 1333
  */
 @media screen and (min-width: 1333px) {
@@ -37,6 +39,7 @@ arrow width = 70
     --card-width: 327px;
     --card-gutter: 53px;
     --arrow-width: 70px;
+    --arrow-gutter: 53px;
   }
 }
 
@@ -115,7 +118,7 @@ arrow width = 70
   z-index: 2;
 
   height: 100%;
-  max-width: calc( var(--arrow-width) + var(--card-gutter) );
+  max-width: calc( var(--arrow-width) + var(--arrow-gutter) );
 
   padding: 0;
 
@@ -123,11 +126,11 @@ arrow width = 70
 }
 
 .timeline .slick-prev-text {
-  padding-right: var(--card-gutter);
+  padding-right: var(--arrow-gutter);
 }
 
 .timeline .slick-next-text {
-  padding-left: var(--card-gutter);
+  padding-left: var(--arrow-gutter);
 }
 
 .slick-arrow-text {
