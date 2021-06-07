@@ -12,7 +12,7 @@ $cardListMaxWidth: 1061px;
   --border-height: 22px;
   --padding-inset: 33px;
   --text-color: var(--color-darkest);
-  --text-color-hover: var(--color-lightest);
+  --text-color-hover: var(--color-darkest);
   --card-width: 266px;
   --card-gutter: 10px;
   --arrow-width: 60px;
@@ -57,11 +57,23 @@ arrow gutter = 40
 }
 
 .timeline__heading {
-  @extend %timeline__heading;
   text-align: center;
+  margin-bottom: 50px;
+
+  @include respond-above(small) {
+    margin-bottom: 60px;
+  }
+
+  @include respond-above(medium) {
+    margin-bottom: 70px;
+  }
+}
+
+.timeline__heading p {
+  @extend %timeline__heading;
+  color: var(--color-lightest);
   margin-top: 0;
   margin-bottom: 0;
-  color: var(--color-lightest);
 }
 
 .timeline__heading--space-below-1 {
@@ -76,7 +88,14 @@ arrow gutter = 40
   margin-left: calc(50% - 1px);
   width: 1px;
   height: var(--marker-height);
-  background-color: var(--color-darkest);
+  background-color: var(--color-pop);
+}
+
+.timeline--grid,
+.timeline--no-grid,
+.timeline--slider,
+.timeline--no-slider {
+  margin-bottom: 35px;
 }
 
 
@@ -109,7 +128,6 @@ arrow gutter = 40
   justify-content: center;
   padding: 0;
   margin-top: 0;
-  margin-bottom: 0;
 }
 
 .timeline--grid {
@@ -314,6 +332,7 @@ gutter small = 10
 
 .timeline__card-header p {
   @extend %timeline__card-header;
+  color: var(--text-color);
 }
 
 .timeline__card-link:hover .timeline__card-header {
@@ -338,12 +357,9 @@ gutter small = 10
 
 .timeline__card-body p {
   @extend %timeline__card-body;
+  color: var(--text-color);
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-}
-
-.timeline__card-body-read-more {
-  text-decoration: underline;
 }
 
 .timeline__card-link:hover .timeline__card-body {
@@ -352,6 +368,9 @@ gutter small = 10
 }
 
 .timeline__card-footer {
+  --text-color: var(--color-lighter);
+  --text-color-hover: var(--color-lightest);
+
   background-color: var(--background-color);
   flex-grow: 0;
   padding-left: var(--padding-inset);
@@ -360,22 +379,45 @@ gutter small = 10
   transition-property: background-color, color;
   transition-duration: var(--hover-transition-duration);
   transition-timing-function: var(--hover-transition-timing-function);
+
+  display: flex;
 }
 
-.timeline__card-link:hover .timeline__card-footer {
+.device-has-touch .timeline__card-footer {
+  --text-color-hover: var(--color-ligther);
+}
+
+.device-has-no-touch .timeline__card-link:hover .timeline__card-footer {
   background-color: var(--background-color-hover);
+  color: var(--text-color-hover);
 }
 
 .timeline__card-footer-year {
   @extend %timeline__card-body;
-  color: var(--color-darker);
+  color: var(--text-color);
   
   transition-property: color;
   transition-duration: var(--hover-transition-duration);
   transition-timing-function: var(--hover-transition-timing-function);
+
+  flex-grow: 1;
 }
 
-.timeline__card-link:hover .timeline__card-footer-year {
+.timeline__card-footer-read-more {
+  @extend %timeline__card-body;
+  color: var(--text-color);
+  text-decoration: underline;
+  text-align: right;
+
+  transition-property: color;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+
+  flex-grow: 1;
+}
+
+.timeline__card-link:hover .timeline__card-footer-year,
+.timeline__card-link:hover .timeline__card-footer-read-more {
   color: var(--text-color-hover);
 }
 

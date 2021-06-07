@@ -117,9 +117,9 @@ function setParametersAndDisplay ( event, slick ) {
   // we are on a touch device, so use `touchMargin` to
   // allow for space on either side of the timeline for
   // cards to bleed onto the page
-  let totalButtonWidth = buttonWidth
-    ? buttonWidth * 2
-    : touchMargin()
+  let totalButtonWidth = isNaN( buttonWidth )
+    ? touchMargin()
+    : buttonWidth * 2
 
   // this represents the width that the fully showing cards will be displayed
   let cardListWidth = Math.ceil( window.innerWidth - totalButtonWidth )

@@ -9,7 +9,7 @@
 
   overflow: hidden;
 
-  background-color: var(--color-middle);
+  background-color: var(--color-lighter);
 }
 
 .hero__image {
@@ -132,7 +132,7 @@ padding left + left edge + left half of button + right half of button + right ed
   grid-column-end: 5;
   grid-row-start: 1;
   grid-row-end: 3;
-  background-color: var(--color-darkest);
+  background-color: var(--color-pop);
 
   display: flex;
   justify-content: center;

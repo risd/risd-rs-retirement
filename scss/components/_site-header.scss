@@ -60,6 +60,14 @@
 
 .site-header__logo path {
   fill: var(--color-lightest);
+
+  transition-property: fill;
+  transition-duration: var(--hover-transition-duration);
+  transition-timing-function: var(--hover-transition-timing-function);
+}
+
+.site-header__logo-link:hover .site-header__logo path {
+  fill: var(--color-pop);
 }
 
 .site-header__text--seal .site-header__logo {

@@ -18,7 +18,7 @@
   width: 1px;
   height: 120px;
   top: -60px;
-  background-color: var(--color-darkest);
+  background-color: var(--color-pop);
   z-index: 2;
 }
 
@@ -27,19 +27,18 @@
 }
 
 .intro .intro__headline {
-  --padding-top: 30px;
-  --padding-bottom: 65px;
+  --padding-top: 10px;
+  --padding-bottom: 40px;
   padding-top: var(--padding-top);
   padding-bottom: var(--padding-bottom);
 
   @include respond-above(small) {
-    --padding-top: 35px;
-    --padding-bottom: 85px;
+    --padding-top: 0px;
+    --padding-bottom: 60px;
   }
 
   @include respond-above(large) {
-    --padding-top: 40px;
-    --padding-bottom: 105px;
+    --padding-bottom: 70px;
   }
 }
 

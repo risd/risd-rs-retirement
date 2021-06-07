@@ -266,7 +266,7 @@ $footer__copyright: (
 }
 
 %timeline__heading {
-  @include text-size($timeline__heading);
+  @include text-size($intro__headline);
   @extend %serif;
   font-weight: 300;
   // @extend %antialiased;

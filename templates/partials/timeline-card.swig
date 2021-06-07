@@ -25,12 +25,12 @@
     </header>
     <div class="timeline__card-body">
       {{ card.description|removeEmptyPTag|safe }}
-      {% if card.link %}
-        <p class="timeline__card-body-read-more">Read more</p>
-      {% endif %}
     </div>
     <div class="timeline__card-footer">
       <p class="timeline__card-footer-year">{{ card.year }}</p>
+      {% if card.link %}
+      <p class="timeline__card-footer-read-more">Read more</p>
+      {% endif %}
     </div>
     <div class="timeline__card-shoe">
       <div class="timeline__card-shoe-left"></div>

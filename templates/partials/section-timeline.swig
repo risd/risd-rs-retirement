@@ -22,8 +22,7 @@
     {% endif %}
     <header class="timeline__header">
       <div class="timeline__timeline-marker"></div>
-      <h2 id="{{ title|slugify }}" class="{{ headingClass }}">{{ title }}</h2>
-      <div class="timeline__timeline-marker"></div>
+      <h2 id="{{ title|replace('&amp;', '')|striptags|slugify }}" class="{{ headingClass }}">{{ title|safe }}</h2>
     </header>
   {% endif %}
 
