@@ -56,6 +56,12 @@ $( '.timeline--slider' )
   .on( 'setPositionStart', setParametersAndDisplay )
   .slick( slickConf )
 
+$( '.timeline--grid' ).each( function () { setCardHeight( $( this ) ) } )
+
+$( window ).resize( function () {
+  $( '.timeline--grid' ).each( function () { setCardHeight( $( this ) ) } )  
+} )
+
 function additionalLeftOffsetFn ( slick ) {
   // this function will run within the context of the
   // `getLeft` function, which gets the left position
@@ -239,18 +245,7 @@ function setParametersAndDisplay ( event, slick ) {
   
   /* --- set min card height : start --- */
 
-  let minCardHeight = 0
-
-  $el.find( '.timeline__card' )
-    .css( '--min-card-height', '0px' )
-    .each( function ( index ) {
-      let $card = $( this )
-      let currentHeight = $card.outerHeight()
-      if ( currentHeight > minCardHeight ) {
-        minCardHeight = currentHeight
-      }
-    } )
-    .css( '--min-card-height', `${ minCardHeight }px` )
+  setCardHeight( $el )
 
   /* --- set min card height : end --- */
 }
@@ -302,4 +297,39 @@ function scaleLinear () {
   }
 
   return scale
+}
+
+function setCardHeight ( $timeline ) {
+  setConsistentMinHeight( {
+    $selector: $timeline.find( '.timeline__card-header' ),
+    property: '--card-header-height',
+  } )
+
+  setConsistentMinHeight( {
+    $selector: $timeline.find( '.timeline__card-body' ),
+    property: '--card-body-height',
+  } )
+}
+
+function setConsistentMinHeight ( options ) {
+  if ( ! options ||
+       ( ! options.$selector instanceof $ ) ||
+       typeof options.property !== 'string' ) {
+    throw new Error( 'Requires options : { $selector, property }' )
+  }
+
+  let minHeight = 0
+
+  options.$selector
+    .css( options.property, '0px' )
+    .each( function ( index ) {
+      let $el = $( this )
+      let currentHeight = $el.outerHeight()
+      if ( currentHeight > minHeight ) {
+        minHeight = currentHeight
+      }
+    } )
+    .css( options.property, `${ minHeight }px` )
+
+  return minHeight
 }

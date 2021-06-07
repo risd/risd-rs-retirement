@@ -12463,6 +12463,14 @@ var slickConf = {
   nextArrow: slickNextArrow()
 };
 $('.timeline--slider').on('buildOut', setParametersAndDisplay).on('setPositionStart', setParametersAndDisplay).slick(slickConf);
+$('.timeline--grid').each(function () {
+  setCardHeight($(this));
+});
+$(window).resize(function () {
+  $('.timeline--grid').each(function () {
+    setCardHeight($(this));
+  });
+});
 
 function additionalLeftOffsetFn(slick) {
   // this function will run within the context of the
@@ -12601,15 +12609,7 @@ function setParametersAndDisplay(event, slick) {
   /* --- set min card height : start --- */
 
 
-  var minCardHeight = 0;
-  $el.find('.timeline__card').css('--min-card-height', '0px').each(function (index) {
-    var $card = $(this);
-    var currentHeight = $card.outerHeight();
-
-    if (currentHeight > minCardHeight) {
-      minCardHeight = currentHeight;
-    }
-  }).css('--min-card-height', "".concat(minCardHeight, "px"));
+  setCardHeight($el);
   /* --- set min card height : end --- */
 }
 
@@ -12649,6 +12649,34 @@ function scaleLinear() {
   };
 
   return scale;
+}
+
+function setCardHeight($timeline) {
+  setConsistentMinHeight({
+    $selector: $timeline.find('.timeline__card-header'),
+    property: '--card-header-height'
+  });
+  setConsistentMinHeight({
+    $selector: $timeline.find('.timeline__card-body'),
+    property: '--card-body-height'
+  });
+}
+
+function setConsistentMinHeight(options) {
+  if (!options || !options.$selector instanceof $ || typeof options.property !== 'string') {
+    throw new Error('Requires options : { $selector, property }');
+  }
+
+  var minHeight = 0;
+  options.$selector.css(options.property, '0px').each(function (index) {
+    var $el = $(this);
+    var currentHeight = $el.outerHeight();
+
+    if (currentHeight > minHeight) {
+      minHeight = currentHeight;
+    }
+  }).css(options.property, "".concat(minHeight, "px"));
+  return minHeight;
 }
 
 },{"./slick.js":8,"debug":2,"jquery":4,"lity":5}],8:[function(require,module,exports){

@@ -1,3 +1,11 @@
+/*
+desktop card size = 327
+desktop card gutter = 40
+327 + 40 + 327 + 40 + 327 = 1061
+ */
+$cardListMaxWidth: 1061px;
+
+
 .timeline {
   --background-color: var(--color-lightest);
   --background-color-hover: var(--color-pop);
@@ -71,26 +79,59 @@ arrow gutter = 40
   background-color: var(--color-darkest);
 }
 
-// no slider initialized, there is only a single card
+
+.timeline--grid,
+.timeline--no-grid {
+  display: none;
+}
+
+.timeline--slider,
 .timeline--no-slider {
   display: flex;
+}
+
+@media screen and (min-width: $cardListMaxWidth) {
+  .timeline--grid,
+  .timeline--no-grid {
+    display: flex;
+  }
+
+  .timeline--slider,
+  .timeline--no-slider {
+    display: none;
+  }
+}
+
+// no slider initialized, there is only a single card
+.timeline--slider,
+.timeline--no-slider,
+.timeline--no-grid {
   justify-content: center;
   padding: 0;
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.timeline--no-slider .timeline__card-container {
+.timeline--grid {
+  max-width: $cardListMaxWidth;
+  padding: 0;
+  flex-wrap: wrap;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: start;
+}
+
+.timeline--grid .timeline__card-container {
+  padding-bottom: var(--card-gutter);
+}
+
+.timeline--grid .timeline__card-container:nth-child(3n) {
   padding-right: 0;
 }
 
-// there are 2 or more cards in the timeline, a slider is initialized
-.timeline--slider {
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  margin-top: 0;
-  margin-bottom: 0;
+.timeline--no-slider .timeline__card-container,
+.timeline--no-grid .timeline__card-container {
+  padding-right: 0;
 }
 
 .timeline--slider .slick-arrow {
@@ -104,14 +145,9 @@ arrow gutter = 40
   pointer-events: none;
 }
 
-/*
-card size = 327
-card gutter = 40
-327 + 40 + 327 + 40 + 327 = 1061
- */
 .device-has-no-touch .timeline--slider .slick-list {
   flex-grow: 2;
-  max-width: 1061px;
+  max-width: $cardListMaxWidth;
 }
 
 .timeline .slick-arrow {
@@ -152,11 +188,7 @@ card gutter = 40
   color: var(--color-pop);
 }
 
-/*
-(card width * 3) + (gutter * 2)
-(327 * 3) + (40 * 2) = 1061
-*/
-@media screen and (min-width: 1061px) {
+@media screen and (min-width: $cardListMaxWidth) {
   .timeline--unslicked .slick-list .slick-track .slick-slide:first-child .timeline__card-container {
     padding-left: 0;
   }
