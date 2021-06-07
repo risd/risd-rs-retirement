@@ -29,17 +29,17 @@
 
 /*
 card width = 327
-gutter = 53
+gutter = 40
 arrow width = 70
-arrow gutter = 53
-70 + 53 + 327 + 53 + 327 + 53 + 327 + 53 + 70 = 1333
+arrow gutter = 40
+70 + 40 + 327 + 40 + 327 + 40 + 327 + 40 + 70 = 1281
  */
-@media screen and (min-width: 1333px) {
+@media screen and (min-width: 1281px) {
   .timeline {
     --card-width: 327px;
-    --card-gutter: 53px;
+    --card-gutter: 40px;
     --arrow-width: 70px;
-    --arrow-gutter: 53px;
+    --arrow-gutter: 40px;
   }
 }
 
@@ -104,9 +104,14 @@ arrow gutter = 53
   pointer-events: none;
 }
 
+/*
+card size = 327
+card gutter = 40
+327 + 40 + 327 + 40 + 327 = 1061
+ */
 .device-has-no-touch .timeline--slider .slick-list {
   flex-grow: 2;
-  max-width: 1087px;
+  max-width: 1061px;
 }
 
 .timeline .slick-arrow {
@@ -149,9 +154,9 @@ arrow gutter = 53
 
 /*
 (card width * 3) + (gutter * 2)
-(327 * 3) + (53 * 2) = 1087
+(327 * 3) + (40 * 2) = 1061
 */
-@media screen and (min-width: 1087px) {
+@media screen and (min-width: 1061px) {
   .timeline--unslicked .slick-list .slick-track .slick-slide:first-child .timeline__card-container {
     padding-left: 0;
   }

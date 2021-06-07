@@ -12434,7 +12434,7 @@ var cardSizes = {
   },
   gutter: {
     small: 10,
-    desktop: 53
+    desktop: 40
   }
 };
 var cardGridSizes = {
