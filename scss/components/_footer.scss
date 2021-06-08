@@ -6,7 +6,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: calc(var(--spacing-size) * 10) 0 var(--spacing-size);
+  padding: calc(var(--spacing-size) * 10) 0 calc(var(--spacing-size) * 4);
   background-color: var(--color-darkest);
   color: var(--color-lightest);
 }
