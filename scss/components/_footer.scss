@@ -6,7 +6,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: calc(var(--spacing-size) *4) 0 var(--spacing-size);
+  padding: calc(var(--spacing-size) * 10) 0 var(--spacing-size);
   background-color: var(--color-darkest);
   color: var(--color-lightest);
 }
@@ -62,7 +62,7 @@
 
 .footer__logo--full {
   display: none;
-  width: 130px;
+  width: 207px;
 
   @include respond-above(small) {
     display: block;
