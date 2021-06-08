@@ -12446,7 +12446,7 @@ var cardGridSizes = {
 };
 
 var touchMargin = function touchMargin() {
-  return Math.max(window.innerWidth * 0.1, 60);
+  return Math.max(document.body.clientWidth * 0.1, 60);
 };
 
 var slickConf = {
@@ -12462,15 +12462,33 @@ var slickConf = {
   prevArrow: slickPrevArrow(),
   nextArrow: slickNextArrow()
 };
+cardGridOrSliderDisplay();
 $('.timeline--slider').on('buildOut', setParametersAndDisplay).on('setPositionStart', setParametersAndDisplay).slick(slickConf);
 $('.timeline--grid').each(function () {
   setCardHeight($(this));
 });
 $(window).resize(function () {
+  cardGridOrSliderDisplay();
   $('.timeline--grid').each(function () {
     setCardHeight($(this));
   });
 });
+
+function cardGridOrSliderDisplay() {
+  // this is a javascript function instead of a media query
+  // because media queries work off of window.innerWidth,
+  // which on desktops with scrollbars, includes the scroll
+  // bar. we instead want the width of the document, so
+  // we have to use document.body.clientWidth, which media
+  // queries do not use
+  if (document.body.clientWidth < cardGridSizes.threeUpMax) {
+    $('.timeline--grid, .timeline--no-grid').css('display', 'none');
+    $('.timeline--slider, .timeline--no-slider').css('display', 'flex');
+  } else {
+    $('.timeline--grid, .timeline--no-grid').css('display', 'flex');
+    $('.timeline--slider, .timeline--no-slider').css('display', 'none');
+  }
+}
 
 function additionalLeftOffsetFn(slick) {
   // this function will run within the context of the
@@ -12485,10 +12503,10 @@ function additionalLeftOffsetFn(slick) {
   if (DEVICE_HAS_TOUCH === false) return 0;
   var additionalLeftOffset = 0;
 
-  if (window.innerWidth < cardGridSizes.threeUpMax && window.innerWidth > cardGridSizes.twoUpMin) {
+  if (document.body.clientWidth < cardGridSizes.threeUpMax && document.body.clientWidth > cardGridSizes.twoUpMin) {
     additionalLeftOffset = touchMargin() / 2;
-  } else if (window.innerWidth >= cardGridSizes.threeUpMax && slick.slideCount > 3) {
-    additionalLeftOffset = (window.innerWidth - cardGridSizes.threeUpMax) / 2;
+  } else if (document.body.clientWidth >= cardGridSizes.threeUpMax && slick.slideCount > 3) {
+    additionalLeftOffset = (document.body.clientWidth - cardGridSizes.threeUpMax) / 2;
   }
 
   return additionalLeftOffset;
@@ -12520,7 +12538,7 @@ function setParametersAndDisplay(event, slick) {
 
   var totalButtonWidth = isNaN(buttonWidth) ? touchMargin() : buttonWidth * 2; // this represents the width that the fully showing cards will be displayed
 
-  var cardListWidth = Math.ceil(window.innerWidth - totalButtonWidth); // scalers for card type
+  var cardListWidth = Math.ceil(document.body.clientWidth - totalButtonWidth); // scalers for card type
 
   var headerScaler = scaleLinear().domain([cardSizes.width.desktop, cardSizes.width.desktop]).range([21, 28]);
   var bodyScaler = scaleLinear().domain([cardSizes.width.desktop, cardSizes.width.desktop]).range([18, 24]); // set depending on the number of cards visible
@@ -12595,7 +12613,7 @@ function setParametersAndDisplay(event, slick) {
 
   var smallBreakpoint = 512;
 
-  if (window.innerWidth <= smallBreakpoint) {
+  if (document.body.clientWidth <= smallBreakpoint) {
     // use one of the type scalers to adjust the intro to the same ratio
     var introScaler = headerScaler;
     introScaler.range([22, 28]);

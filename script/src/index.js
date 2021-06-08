@@ -3,7 +3,6 @@ const $ = require( 'jquery' )
 require( './slick.js' )
 require( 'lity' )
 
-
 let DEVICE_HAS_TOUCH = false
 
 if ( 'ontouchstart' in window ) {
@@ -34,7 +33,7 @@ const cardGridSizes = {
 // touch margine to use in cases where cards will bleed off the edge
 // into this margin
 const touchMargin = () => {
-  return Math.max( window.innerWidth * 0.1, 60 )
+  return Math.max( document.body.clientWidth * 0.1, 60 )
 }
 
 const slickConf = {
@@ -51,6 +50,8 @@ const slickConf = {
   nextArrow: slickNextArrow(),
 }
 
+cardGridOrSliderDisplay()
+
 $( '.timeline--slider' )
   .on( 'buildOut', setParametersAndDisplay )
   .on( 'setPositionStart', setParametersAndDisplay )
@@ -59,8 +60,27 @@ $( '.timeline--slider' )
 $( '.timeline--grid' ).each( function () { setCardHeight( $( this ) ) } )
 
 $( window ).resize( function () {
-  $( '.timeline--grid' ).each( function () { setCardHeight( $( this ) ) } )  
+  cardGridOrSliderDisplay()
+  $( '.timeline--grid' ).each( function () { setCardHeight( $( this ) ) } )
 } )
+
+function cardGridOrSliderDisplay () {
+  // this is a javascript function instead of a media query
+  // because media queries work off of window.innerWidth,
+  // which on desktops with scrollbars, includes the scroll
+  // bar. we instead want the width of the document, so
+  // we have to use document.body.clientWidth, which media
+  // queries do not use
+  
+  if ( document.body.clientWidth < cardGridSizes.threeUpMax ) {
+    $( '.timeline--grid, .timeline--no-grid' ).css( 'display', 'none' )
+    $( '.timeline--slider, .timeline--no-slider' ).css( 'display', 'flex' )
+  }
+  else {
+    $( '.timeline--grid, .timeline--no-grid' ).css( 'display', 'flex' )
+    $( '.timeline--slider, .timeline--no-slider' ).css( 'display', 'none' )
+  }
+}
 
 function additionalLeftOffsetFn ( slick ) {
   // this function will run within the context of the
@@ -77,13 +97,13 @@ function additionalLeftOffsetFn ( slick ) {
   if ( DEVICE_HAS_TOUCH === false ) return 0
 
   let additionalLeftOffset = 0
-  if ( window.innerWidth < cardGridSizes.threeUpMax &&
-       window.innerWidth > cardGridSizes.twoUpMin ) {
+  if ( document.body.clientWidth < cardGridSizes.threeUpMax &&
+       document.body.clientWidth > cardGridSizes.twoUpMin ) {
     additionalLeftOffset = touchMargin() / 2
   }
-  else if ( window.innerWidth >= cardGridSizes.threeUpMax &&
+  else if ( document.body.clientWidth >= cardGridSizes.threeUpMax &&
             slick.slideCount > 3  ) {
-    additionalLeftOffset = ( ( window.innerWidth - cardGridSizes.threeUpMax ) / 2 )
+    additionalLeftOffset = ( ( document.body.clientWidth - cardGridSizes.threeUpMax ) / 2 )
   }
   return additionalLeftOffset
 }
@@ -122,7 +142,7 @@ function setParametersAndDisplay ( event, slick ) {
     : buttonWidth * 2
 
   // this represents the width that the fully showing cards will be displayed
-  let cardListWidth = Math.ceil( window.innerWidth - totalButtonWidth )
+  let cardListWidth = Math.ceil( document.body.clientWidth - totalButtonWidth )
 
   // scalers for card type
   let headerScaler = scaleLinear()
@@ -230,7 +250,7 @@ function setParametersAndDisplay ( event, slick ) {
   // ensures that type is scaled to the same percent between the intro's
   // base & small type sizes ([22, 28])
   let smallBreakpoint = 512
-  if ( window.innerWidth <= smallBreakpoint ) {
+  if ( document.body.clientWidth <= smallBreakpoint ) {
     // use one of the type scalers to adjust the intro to the same ratio
     let introScaler = headerScaler
     introScaler.range( [ 22, 28 ] )

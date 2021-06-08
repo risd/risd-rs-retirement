@@ -110,6 +110,11 @@ arrow gutter = 40
   display: flex;
 }
 
+// these valuse are overwritten in `cardGridOrSliderDisplay`
+// of the javascript, since media queries use window.innerWidth
+// which includes scrollbars. we want to use the document width
+// so we lean on document.body.clientWidth to display the
+// correct layout
 @media screen and (min-width: $cardListMaxWidth) {
   .timeline--grid,
   .timeline--no-grid {
@@ -205,12 +210,6 @@ arrow gutter = 40
 
 .slick-arrow:hover .slick-arrow-text {
   color: var(--color-pop);
-}
-
-@media screen and (min-width: $cardListMaxWidth) {
-  .timeline--unslicked .slick-list .slick-track .slick-slide:first-child .timeline__card-container {
-    padding-left: 0;
-  }
 }
 
 .timeline__card-container {
