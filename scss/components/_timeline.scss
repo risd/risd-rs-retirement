@@ -409,6 +409,7 @@ gutter small = 10
   color: var(--text-color);
   text-decoration: underline;
   text-align: right;
+  text-transform: lowercase;
 
   transition-property: color;
   transition-duration: var(--hover-transition-duration);
