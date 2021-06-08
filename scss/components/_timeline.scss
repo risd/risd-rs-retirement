@@ -95,7 +95,8 @@ arrow gutter = 40
 .timeline--no-grid,
 .timeline--slider,
 .timeline--no-slider {
-  margin-bottom: 35px;
+  padding-bottom: 35px;
+  margin-bottom: 0;
 }
 
 
@@ -121,12 +122,12 @@ arrow gutter = 40
   }
 }
 
-// no slider initialized, there is only a single card
 .timeline--slider,
 .timeline--no-slider,
 .timeline--no-grid {
   justify-content: center;
-  padding: 0;
+  padding-left: 0;
+  padding-right: 0;
   margin-top: 0;
 }
 

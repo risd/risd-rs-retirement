@@ -9,50 +9,6 @@
       {% include "templates/partials/logos-icons/seal-simplified.html" %}
     </div>
 
-    <div class="footer__text">
-      <div class="footer__item">
-        {{ cms.homepage.footer_address|safe }}
-        <p>
-          {% for number in cms.homepage.footer_phone_numbers %}
-            <a href="tel:{{ number.phone_number|replace(' ', '', 'g') }}">{{ number.phone_number }}</a>
-          {% endfor %}
-        </p>
-      </div>
-      <div class="footer__item">
-        {% for link in cms.homepage.footer_links %}
-          <h4 class="footer__title"><a href="{{ link.link }}" target="_blank" rel="noopener" data-aria-label="{{ link.title }}" >{{ link.title }}</a></h4>
-        {% endfor %}
-      </div>
-    </div>
-
-    {% set social_media_accounts = cms.homepage.footer_social_media_accounts %}
-
-    {% set possible_domain = ['facebook', 'tumblr', 'twitter', 'instagram'] %}
-
-    {% for account in social_media_accounts %}
-      {% if loop.first %}
-      <div class="footer__social">
-      {% endif %}
-
-      {% for domain in possible_domain %}
-        {% set account_url = account.url|lower %}
-        {% set account_title = account.title|lower %}
-        {% set d_index = account_url.indexOf(domain) %}
-        {% set t_index = account_title.indexOf(domain) %}
-        {% if d_index > -1 || t_index > -1 %}
-          {% set file_path = "templates/partials/logos-icons/" + domain + ".html" %}
-          <a class="footer__social-link" href="{{account.url}}" target="_blank" rel="noopener">
-            {% include file_path %}
-          </a>
-          {% set rendered_account = true %}
-        {% endif %}
-      {% endfor %}
-
-      {% if loop.last %}
-      </div>
-      {% endif %}
-    {% endfor %}
-
   </div>
   <div class="footer__copyright">
     &copy; Rhode Island School of Design {{ currentYear }}
