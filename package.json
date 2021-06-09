@@ -24,7 +24,7 @@
     "start": "npm run develop",
     "develop": "grunt --force",
     "build": "grunt build",
-    "deploy": "rm-wh deploy",
+    "deploy": "npm run test && rm-wh deploy",
     "build-page": "grunt build-page",
     "build-pages": "grunt build-pages",
     "build-template": "grunt build-template",
