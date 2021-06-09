@@ -240,7 +240,7 @@ $footer__copyright: (
 
 %intro__headline {
   @include text-size($intro__headline);
-  @extend %serif-light;
+  @extend %serif;
   font-weight: 300;
 }
 
