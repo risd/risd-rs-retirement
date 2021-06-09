@@ -96,13 +96,6 @@ This definition includes redundant repitition of values, so it can be defined mo
 -------------------------------------------------------- */
 
 @font-face {
-  font-family: "Modern Pictograms";
-  src: url("../fonts/modernpictogramspro_234.eot"),
-    url("../fonts/modernpictogramspro_234.ttf"),
-    url("../fonts/modernpictogramspro_234.woff");
-}
-
-@font-face {
   font-family: 'Canela Light Web';
   src: url("../fonts/Canela-Light-Web.woff2") format("woff2"),
        url("../fonts/Canela-Light-Web.woff") format("woff");
@@ -136,14 +129,6 @@ This definition includes redundant repitition of values, so it can be defined mo
   font-weight:  400;
   font-style:   italic;
   font-stretch: normal;
-}
-
-@mixin pictogram-after($character, $width: 1em, $height: 1em) {
-  font-family: "Modern Pictograms";
-  display: inline-block;
-  width: $width;
-  height: $height;
-  content: $character;
 }
 
 $base: (
@@ -292,21 +277,6 @@ $footer__copyright: (
   @extend %serif;
   // @extend %antialiased;
   font-weight: 300;
-}
-
-%footer__text {
-  @include text-size($footer__text);
-  @extend %sans-serif-alt;
-  // @extend %antialiased;
-}
-
-%footer__link-text {
-  @include text-size($footer__text);
-  @extend %sans-serif-alt;
-  // @extend %antialiased;
-  font-weight: 700;
-  font-style: normal;
-  text-transform: uppercase;
 }
 
 %footer__copyright {
