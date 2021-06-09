@@ -1,6 +1,6 @@
 {
   "name": "@risd/risd-rs-retirement",
-  "version": "2.5.7",
+  "version": "1.0.0",
   "description": "Grunt site generator for risd/webhook",
   "repository": {
     "type": "git",
@@ -24,11 +24,12 @@
     "start": "npm run develop",
     "develop": "grunt --force",
     "build": "grunt build",
-    "deploy": "rm-wh deploy",
+    "deploy": "npm run test && rm-wh deploy",
     "build-page": "grunt build-page",
     "build-pages": "grunt build-pages",
     "build-template": "grunt build-template",
-    "conf": "rm-wh conf rs-retirement"
+    "conf": "rm-wh conf rs-retirement",
+    "test": "tape test/*"
   },
   "homepage": "https://github.com/risd/webhook-generate",
   "dependencies": {
@@ -41,6 +42,7 @@
     "cheerio": "^1.0.0-rc.2",
     "colors": "^0.6.2",
     "connect-header": "^0.0.5",
+    "debug": "^4.3.1",
     "firebase": "^5.8.2",
     "glob": "^7.1.3",
     "grunt": "^0.4.5",
@@ -58,6 +60,7 @@
     "grunt-usemin": "^2.6.2",
     "imagesloaded": "^3.1.8",
     "jquery": "^3.6.0",
+    "lity": "^2.4.1",
     "lodash": "^2.4.2",
     "marked": "^0.3.1",
     "mississippi": "^1.3.0",
@@ -83,6 +86,7 @@
   },
   "devDependencies": {
     "grunt-cli": "^1.2.0",
-    "rm-webhook": "^2.0.5"
+    "rm-webhook": "^2.0.5",
+    "tape": "^5.2.2"
   }
 }

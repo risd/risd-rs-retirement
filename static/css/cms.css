@@ -1,0 +1,5 @@
+@charset "UTF-8";
+figure[data-type=quote] cite:before {
+  content: "—"; }
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNtcy5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsaUJBQWlCO0FBQ2pCO0VBQ0UsYUFBYSxFQUFFIiwiZmlsZSI6ImNtcy5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAY2hhcnNldCBcIlVURi04XCI7XG5maWd1cmVbZGF0YS10eXBlPXF1b3RlXSBjaXRlOmJlZm9yZSB7XG4gIGNvbnRlbnQ6IFwi4oCUXCI7IH1cbiJdfQ== */

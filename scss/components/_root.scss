@@ -1,0 +1,15 @@
+:root {
+  --hover-transition-duration: 0.28s;
+  --hover-transition-timing-function: ease-in-out;
+}
+
+html, body {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  @include text-size($base);
+}
+
+* {
+  box-sizing: border-box;
+}

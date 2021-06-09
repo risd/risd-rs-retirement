@@ -1,0 +1,289 @@
+/* --------------------------------------------------------
+
+Remove the unit of a length
+@param {Number} $number - Number to remove unit from
+@return {Number} - Unitless number
+
+-------------------------------------------------------- */
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return $number / ($number * 0 + 1);
+  }
+
+  @return $number;
+}
+
+
+/* --------------------------------------------------------
+Mixin for font-size and line-height definition
+  Usage Example: @include text-size(large);
+
+Font size can take on the following values:
+  small, regular, medium, large, xlarge, xxlarge
+
+If the mixin is called and values are not entered, it will default to regular font-size
+-------------------------------------------------------- */
+
+@mixin text-size($fs-map: $regular, $fs-breakpoints: $breakpoints) {
+  @each $fs-breakpoint, $keyNumber in $fs-map {
+
+    @if map-has-key($fs-breakpoints, $fs-breakpoint) {
+    } @else {
+      @warn "Breakpoints have not been defined correctly";
+    }
+
+    // @debug $fs-breakpoint;
+    // @debug $keyNumber;
+
+    $fontSize: nth($keyNumber, 1);
+    $leading: nth($keyNumber, 2);
+    $leading-unitless: calc(#{strip-unit($leading)} / #{strip-unit($fontSize)});
+
+    // @debug $fontSize;
+    // @debug $leading;
+    // @debug $leading-unitless;
+
+    @include respond-above($fs-breakpoint) {
+      --font-size: #{ $fontSize };
+      font-size: var(--font-size);
+      line-height: $leading-unitless;
+    };
+  }
+}
+
+
+/* --------------------------------------------------------
+
+Variable Map Lists for the text-size mixin
+
+A specific text-size in this mixin is defined with a font-size and a leading.
+
+For example,
+  small: (64px, 72px)
+  where small is the media query width defined in the $breakpoints map-list in _responsive.scss,
+  64px is the font-size
+  72px is the line-height (which will be converted to a unitless value for the browser in the mixin)
+
+
+The definition of each font-size/leading pair can be different for each media query width.
+This is an example of a font size with different definitions for each media query width:
+  $medium: (
+    base: (12px, 18px),
+    small: (14px, 20px),
+    medium: (16px, 24px),
+    large: (18px, 28px),
+    huge: (20px, 32px)
+  ) ;
+This is generally an unusual situation because it would involve a pretty complicated typography system.
+
+
+A more common example would be something like this:
+  $xlarge: (
+    base: (52px, 60px),
+    small: (64px, 72px),
+    medium: (64px, 72px),
+    large: (72px, 80px),
+    huge: (72px, 80px)
+  ) ;
+
+This definition includes redundant repitition of values, so it can be defined more simply like this:
+  $xlarge: (
+    base: (52px, 60px),
+    small: (64px, 72px),
+    large: (72px, 80px)
+  ) ;
+
+-------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Canela Light Web';
+  src: url("../fonts/Canela-Light-Web.woff2") format("woff2"),
+       url("../fonts/Canela-Light-Web.woff") format("woff");
+  font-weight:  300;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Canela Text Web';
+  src: url('../fonts/CanelaText-Light-Web.woff2') format('woff2'),
+       url('../fonts/CanelaText-Light-Web.woff') format('woff');
+  font-weight:  300;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Canela Text Web';
+  src: url('../fonts/CanelaText-Regular-Web.woff2') format('woff2'),
+       url('../fonts/CanelaText-Regular-Web.woff') format('woff');
+  font-weight:  400;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Canela Text Web';
+  src: url('../fonts/CanelaText-RegularItalic-Web.woff2') format('woff2'),
+       url('../fonts/CanelaText-RegularItalic-Web.woff') format('woff');
+  font-weight:  400;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+$base: (
+  base: (28px, 20px),
+);
+
+$site-header__text: (
+  base: (21px, 25.2px),
+);
+
+$hero__text: (
+  base: (62px, 53px),
+  small: (86px, 74px),
+  medium: (140px, 120px),
+  large: (192px, 164px),
+);
+
+$hero__footer-button-text: (
+  base: (16px, 26px),
+);
+
+$intro__text: (
+  base: (22px, 26.4px),
+  small: (28px, 33.6px),
+  medium: (32px, 38.4px),
+  large: (43px, 51.6px),
+);
+
+$intro__headline: (
+  base: (40px, 47.8px),
+  small: (55px, 65.7px),
+  medium: (70px, 83.7px),
+  large: (82px, 98px),
+);
+
+$timeline__heading: (
+  base: (80px, 96px),
+  small: (95px, 114px),
+  medium: (111.11px, 133.33px),
+);
+
+$timeline__card-header: (
+  base: (21px, 27px),
+);
+
+$timeline__card-body: (
+  base: (18px, 24px),
+);
+
+$timeline__slick-arrow: (
+  base: (50px, 60px),
+  small: (55px, 66px),
+  medium: (80px, 96px),
+  large: (111.11px, 133.33px),
+);
+
+$footer__text: (
+  base: (12px, 18px),
+);
+
+$footer__copyright: (
+  base: (10px, 12px),
+  small: (12px, 14.4px),
+);
+
+%sans-serif {
+  font-family: "Arial", sans-serif;
+}
+
+%sans-serif-alt {
+  font-family: "Gotham A", "Gotham B", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+%serif {
+  font-family: "Canela Text Web", "Georgia", "Times New Roman", "Times", serif;
+}
+
+%serif-light {
+  font-family: "Canela Light Web", "Georgia", "Times New Roman", "Times", serif;
+}
+
+%antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+%site-header__text {
+  @include text-size($site-header__text);
+  @extend %sans-serif-alt;
+  // @extend %antialiased;
+}
+
+%hero__text {
+  @include text-size($hero__text);
+  @extend %serif;
+  font-weight: 300;
+  letter-spacing: -4px;
+  // @extend %antialiased;
+}
+
+%hero__footer-button-text {
+  @include text-size($hero__footer-button-text);
+  @extend %sans-serif;
+  // @extend %antialiased;
+  text-transform: uppercase;
+}
+
+%intro__headline {
+  @include text-size($intro__headline);
+  @extend %serif-light;
+  font-weight: 300;
+}
+
+%intro__text {
+  @include text-size($intro__text);
+  @extend %serif-light;
+  font-weight: 300;
+  // @extend %antialiased;
+}
+
+%timeline__heading {
+  @include text-size($intro__headline);
+  @extend %serif;
+  font-weight: 300;
+  // @extend %antialiased;
+}
+
+%timeline__card-header {
+  @include text-size($timeline__card-header);
+  @extend %serif;
+  font-weight: 400;
+  // @extend %antialiased;
+}
+
+%timeline__card-body {
+  @include text-size($timeline__card-body);
+  @extend %sans-serif;
+  font-weight: 400;
+  // @extend %antialiased;
+}
+
+%timeline__slick-arrow {
+  @include text-size($timeline__slick-arrow);
+  @extend %serif;
+  // @extend %antialiased;
+  font-weight: 300;
+}
+
+%footer__copyright {
+  @include text-size($footer__copyright);
+  @extend %sans-serif-alt;
+  text-transform: uppercase;
+  // @extend %antialiased;
+  font-weight: 400;
+  font-style: normal;
+}

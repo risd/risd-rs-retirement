@@ -1,7 +1,71 @@
 {% extends "templates/partials/base.html" %}
 
 {% block content %}
+
+  {% set item = cms.homepage %}
+
   <main class="page">
-    <h1>Rosanne Sommerson</h1>
+    <section class="hero">
+      {% if item.hero_image %}
+        <div class="hero__image" style="background-image: url('{{ item.hero_image|imageSize(1200) }}');" ></div>
+      {% endif %}
+      {% if item.hero_mobile_background_loop_video && item.hero_mobile_background_loop_video.original_url %}
+        {% include 'templates/partials/background-video.swig' with {
+          video: item.hero_mobile_background_loop_video,
+          classString: 'hero__background-video hero__background-video--mobile',
+        } %}
+      {% endif %}
+      {% if item.hero_desktop_background_loop_video && item.hero_desktop_background_loop_video.original_url %}
+        {% include 'templates/partials/background-video.swig' with {
+          video: item.hero_desktop_background_loop_video,
+          classString: 'hero__background-video hero__background-video--desktop',
+        } %}
+      {% endif %}
+      
+      <div class="hero__footer">
+        <div class="hero__footer-container">
+          <div class="hero__footer-hat-left"></div>
+          <div class="hero__footer-hat-center"></div>
+          <div class="hero__footer-hat-right"></div>
+          <div class="hero__footer-body"></div>
+          {% if item.hero_video && item.hero_video.original_url %}
+            <div class="hero__footer-button">
+              <a href="{{ item.hero_video.original_url }}" data-lity class="hero__footer-button-link">
+                <p class="hero__footer-button-text">Play Video</p>
+              </a>
+            </div>
+          {% endif %}
+          <div class="hero__text-container">
+            <h1 class="hero__text">Rosanne<br />Somerson</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {% if item.intro_headline || item.intro_description %}
+    <section class="intro" id="intro">
+      <div class="intro__timeline-marker"></div>
+      {% if item.intro_headline %}
+      <div class="intro__headline">
+        {{ item.intro_headline|safe }}
+      </div>
+      {% endif %}
+      {% if item.intro_description %}
+      <div class="intro__description">
+        {{ item.intro_description|preventWidows|safe }}
+      </div>
+      {% endif %}
+    </section>
+    {% endif %}
+
+    {% include 'templates/partials/section-timeline.swig' with {
+      title: item.timeline__section_1__title,
+      cards: item.timeline__section_1,
+    } only %}
+
+    {% include 'templates/partials/section-timeline.swig' with {
+      title: item.timeline__section_2__title,
+      cards: item.timeline__section_2,
+    } only %}
   </main>
 {% endblock %}

@@ -1,0 +1,16 @@
+{% set currentYear = date(Date.now(), "YYYY") %}
+
+<footer class="site__footer">
+  
+  <div class="footer__container">
+
+    <div class="footer__logo">
+      {% include "templates/partials/logos-icons/seal.html" %}
+      {% include "templates/partials/logos-icons/seal-simplified.html" %}
+    </div>
+
+  </div>
+  <div class="footer__copyright">
+    &copy; Rhode Island School of Design {{ currentYear }}
+  </div>
+</footer>

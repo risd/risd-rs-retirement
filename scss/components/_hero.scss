@@ -1,0 +1,186 @@
+.hero {
+  --hero-width: 100vw;
+  --hero-height: 100vh;
+
+  width: var(--hero-width);
+  height: var(--hero-height);
+
+  position: relative;
+
+  overflow: hidden;
+
+  background-color: var(--color-lighter);
+}
+
+.hero__image {
+  width: var(--hero-width);
+  height: var(--hero-height);
+
+  background-position: center;
+  background-size: cover;
+}
+
+.hero__background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--hero-width);
+  min-height: var(--hero-height);
+  background-position: center;
+  background-size: cover;
+  display: none;
+}
+
+.hero__background-video--mobile {
+  display: block;
+  @include respond-above(small) {
+    display: none;
+  }
+}
+
+.hero__background-video--desktop {
+  display: none;
+  @include respond-above(small) {
+    display: block;
+  }
+}
+
+.hero__footer {
+  --max-width: 1145px;
+  --padding-inset: 20px;
+  --height: 148px;
+  --height-hat: 30px;
+  
+  width: 100%;
+  height: var(--height);
+  
+  margin: 0 auto;
+  
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+
+  @include respond-above(small) {
+    --height: 176px;
+    --height-hat: 44px;
+  }
+}
+
+.hero__footer-container {
+  height: var(--height);
+  width: calc( 100% - ( var(--padding-inset) * 2 ) );
+  max-width: var(--max-width);
+
+  display: grid;
+  grid-template-columns: var(--height-hat) auto 80px 80px auto var(--height-hat);
+  grid-template-rows: var(--height-hat) var(--height-hat) 88px; /* 44 + 44 + 88 = 176 */
+}
+
+/*
+min width that fits the entire footer at full size
+padding left + left edge + left half of button + right half of button + right edge + padding right + 20px padding
+28 + 44 + 142 + 142 + 44 + 28 + 20 = 448
+ */
+@media screen and (min-width: 448px) {
+  .hero__footer-container {
+    grid-template-columns: var(--height-hat) auto 142px 142px auto var(--height-hat);
+  }
+}
+
+.hero__footer-hat-left {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  width: 0;
+  height: 0;
+  border-bottom: var(--height-hat) solid var(--color-background);
+  border-left: var(--height-hat) solid transparent;
+}
+
+.hero__footer-hat-center {
+  grid-column-start: 2;
+  grid-column-end: -2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: var(--color-background);
+}
+
+.hero__footer-hat-right {
+  grid-column-start: -2;
+  grid-column-end: -1;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  width: 0;
+  height: 0;
+  border-bottom: var(--height-hat) solid var(--color-background);
+  border-right: var(--height-hat) solid transparent;
+}
+
+.hero__footer-body {
+  grid-column-start: 1;
+  grid-column-end: -1;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  background-color: var(--color-background);
+}
+
+.hero__footer-button {
+  grid-column-start: 3;
+  grid-column-end: 5;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  background-color: var(--color-pop);
+
+  display: flex;
+  justify-content: center;
+
+  @extend %hero__footer-button-text;
+}
+
+.hero__footer-button-link {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  text-decoration: none;
+}
+
+.hero__footer-button-text {
+  align-self: center;
+  color: var(--color-lightest);
+}
+
+.hero__text-container {
+  --bottom: 108%;
+  position: absolute;
+  bottom: var(--bottom);
+  left: 0;
+  right: 0;
+  text-align: center;
+
+  @include respond-above(small) {
+    --bottom: 105%;
+  }
+
+  @include respond-above(medium) {
+    --bottom: 100%;
+  }
+}
+
+.hero__text {
+  color: var(--color-lightest);
+  @extend %hero__text;
+  margin: 0.25em;
+}
+
+// .hero__timeline-marker {
+//   position: absolute;
+//   left: calc(50% - 1px);
+//   width: 1px;
+//   height: 120px;
+//   bottom: -60px;
+//   background-color: var(--color-darkest);
+//   z-index: 2;
+// }

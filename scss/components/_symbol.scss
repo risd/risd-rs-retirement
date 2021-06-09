@@ -1,0 +1,24 @@
+.symbol {
+  --stroke-color: var(--color-pop);
+  --inset-padding: 130px;
+  
+  display: flex;
+  justify-content: center;
+
+  padding-top: var(--inset-padding);
+  padding-bottom: var(--inset-padding);
+}
+
+.symbol__end {
+  width: 81px;
+  height: 243px;
+}
+
+.symbol__end-path {
+  stroke: var(--stroke-color);
+  fill: none;
+}
+
+.symbol__end-path--right {
+  transform: translate(26px, 0px);
+}

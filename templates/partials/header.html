@@ -1,4 +1,14 @@
-{# Simple search form, remove from search index #}
-<form action="/search-results/" method="get" data-search-index="false">
- <input type="text" name="q" placeholder="Search" id="tipue_search_input" />
-</form>
+<header class="site-header">
+  <div class="site-header__text-container">
+    <h1 class="site-header__text">
+      <span class="screen-reader-only">Rhode Island School of Design</span>
+      <span class="site-header__text--seal">{% include 'templates/partials/logos-icons/site-header__logo.html' %}</span>
+      <span class="site-header__text--explicit">{% include 'templates/partials/risd-wordmark/risd-wordmark-explicit.svg' %}</span>
+    </h1>
+  </div>
+  <div class="site-header__logo-container">
+    <a href="https://www.risd.edu/" class="site-header__logo-link" target="_blank" rel="noopener">
+      {% include 'templates/partials/logos-icons/site-header__logo.html' %}
+    </a>
+  </div>
+</header>
