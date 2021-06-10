@@ -1,6 +1,6 @@
 {
   "name": "@risd/risd-rs-retirement",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Grunt site generator for risd/webhook",
   "repository": {
     "type": "git",

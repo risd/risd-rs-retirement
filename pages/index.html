@@ -30,7 +30,7 @@
           <div class="hero__footer-body"></div>
           {% if item.hero_video && item.hero_video.original_url %}
             <div class="hero__footer-button">
-              <a href="{{ item.hero_video.original_url }}" data-lity class="hero__footer-button-link">
+              <a href="{{ item.hero_video.original_url }}" data-lity class="hero__footer-button-link" onclick="videoFunction()">
                 <p class="hero__footer-button-text">Play Video</p>
               </a>
             </div>

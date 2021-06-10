@@ -15,6 +15,9 @@
     <meta name="description" content="{% block description %}{{ site_description }}{% endblock %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <meta property="og:title" content="{{ site_title }}">
+    <meta property="og:image" content="{{ cms.homepage.hero_image|imageSize(1200) }}">
+
     <link rel="shortcut icon" href="/static/images/favicon.png">
     <link rel="apple-touch-icon" href="/static/images/touch-icon.png">
 
@@ -29,6 +32,13 @@
       gtag('js', new Date());
 
       gtag('config', '{{ getSetting('analytics_id') }}');
+    </script>
+
+    <!-- Google Analytics Events -->
+    <script>
+      function videoFunction() {
+        gtag('event','video_click');
+      }
     </script>
 
     <!-- css custom property pollyfill for IE 11 -->
