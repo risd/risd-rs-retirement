@@ -7,6 +7,7 @@
   {# Grab the title and description from the CMS general settings. #}
   {% set site_title = getSetting('site_name')%}
   {% set site_description = getSetting('site_description')%}
+  {% set social_image = cms.homepage.hero_image|imageSize(1200) %}
 
   <head>
     <meta charset="utf-8">
@@ -16,7 +17,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <meta property="og:title" content="{{ site_title }}">
-    <meta property="og:image" content="{{ cms.homepage.hero_image|imageSize(1200) }}">
+    <meta property="og:image" content="{{ social_image }}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="{{ getSetting( 'site_url' ) }}">
+    <meta name="twitter:title" content="{{ site_title }}">
+    <meta name="twitter:description" content="{{ site_description }}">
+    <meta name="twitter:image" content="{{ social_image }}">
 
     <link rel="shortcut icon" href="/static/images/favicon.png">
     <link rel="apple-touch-icon" href="/static/images/touch-icon.png">
