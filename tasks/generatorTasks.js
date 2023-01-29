@@ -33,14 +33,10 @@ module.exports = function(grunt) {
     }
   };
 
-  var npmBin = grunt.option('npmbin');
-  var nodeBin = grunt.option('nodebin');
-  var gruntBin = grunt.option('gruntbin');
-  var token = grunt.option('token');
-  var email = grunt.option('email');
-  var npmCache = grunt.option('npmcache');
+  var npmBin = grunt.option('npmbin')
+  var npmCache = grunt.option('npmcache')
 
-  var generator = require('../libs/generator').generator(grunt.config, { npm: npmBin, node: nodeBin, grunt: gruntBin, token: token, email: email, npmCache: npmCache }, grunt.log, grunt.file, root);
+  var generator = require('../libs/generator').generator(grunt.config, { npm: npmBin, npmCache: npmCache }, grunt.log, grunt.file);
 
   grunt.registerTask('scaffolding', 'Generate scaffolding for a new object', function(name) {
     var done = this.async();
@@ -51,9 +47,9 @@ module.exports = function(grunt) {
     var result = generator.makeScaffolding(name, done, force);
   });
 
-  grunt.registerTask('watch', 'Watch for changes in templates and regenerate site', function() {
+  grunt.registerTask('wh-watch', 'Watch for changes in templates and regenerate site', function() {
     generator.startLiveReload();
-    grunt.task.run('simple-watch');
+    grunt.task.run('watch')
   });
 
   grunt.registerTask('webListener', 'Listens for commands from CMS through websocket', function() {
@@ -84,9 +80,18 @@ module.exports = function(grunt) {
     generator.cleanFiles(done);
   });
 
-  grunt.registerTask('build-order', 'List the current build order for the site', function () {
-    var done = this.async();
-    generator.buildOrder( done )
+  grunt.registerTask('build-order', 'List the current build order for the site', async function () {
+    const done = this.async()
+    try {
+      const { filePath } = await generator.buildOrder()  
+      console.log('Wrote default build order to:', filePath)
+    }
+    catch (error) {
+      console.log(error)
+    }
+    finally {
+      done()
+    }
   })
 
   // Build individual page
@@ -159,7 +164,7 @@ module.exports = function(grunt) {
     }
 
     var options = {
-      file: grunt.option('inFile'),
+      inFile: grunt.option('inFile'),
       emitter: grunt.option('emitter') || false,
       data: grunt.option('data') || undefined,
       settings: grunt.option('settings') || undefined,
@@ -294,12 +299,13 @@ module.exports = function(grunt) {
     })
   });
 
-  grunt.registerTask('download-data', 'Downloads the site data to the common cached path. `./.build/data.json`.', function () {
+  grunt.registerTask('download-data', 'Downloads the site data to the common cached path. `./.build/data.json`.', async function () {
     var done = this.async();
     var options = {
       file: grunt.option('toFile') || undefined,
     }
-    generator.downloadData( options, done );
+    await generator.downloadData(options)
+    done()
   });
 
   // Change this to optionally prompt instead of requiring a sitename
@@ -340,14 +346,22 @@ module.exports = function(grunt) {
 
   // Check if initialized properly before running all these tasks
   grunt.registerTask('default',  'Clean, Build, Start Local Server, and Watch', function() {
-    grunt.task.run('configureProxies:wh-server')
-    grunt.task.run('connect:wh-server');
-    if ( grunt.option( 'skipBuild' ) ) {
+    if (grunt.option('skipBuild')) {
       grunt.task.run('build-page-cms')
     } else {
-      grunt.task.run('build');  
+      grunt.task.run('browserify')
+      grunt.task.run('sass')
+      grunt.task.run('postcss')
+      grunt.task.run('build')
     }
-    grunt.task.run('concurrent:wh-concurrent');
+
+    if (grunt.option('noWatch')) {
+      grunt.log.write('Will not start development server.')
+    }
+    else {
+      grunt.task.run('connect:wh-server')
+      grunt.task.run('concurrent:wh-concurrent')  
+    }
   });
 
 };
