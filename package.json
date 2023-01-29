@@ -36,6 +36,7 @@
   "dependencies": {
     "jquery": "^3.6.0",
     "lity": "^2.4.1",
+    "rm-webhook": "^3.0.6",
     "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
@@ -50,7 +51,6 @@
     "debug": "^4.3.1",
     "firebase": "^9.6.6",
     "fs-extra": "^10.0.0",
-    "grunt-cli": "^1.2.0",
     "glob": "^7.1.3",
     "grunt": "^1.4.1",
     "grunt-browserify": "^6.0.0",
@@ -72,7 +72,6 @@
     "nodejs-websocket": "^1.7.2",
     "proxy-middleware": "^0.5.0",
     "request": "^2.88.0",
-    "rm-webhook": "^3.0.1",
     "sass": "^1.48.0",
     "tape": "^5.4.1",
     "tiny-lr": "^2.0.0",

@@ -80,9 +80,18 @@ module.exports = function(grunt) {
     generator.cleanFiles(done);
   });
 
-  grunt.registerTask('build-order', 'List the current build order for the site', function () {
-    var done = this.async();
-    generator.buildOrder( done )
+  grunt.registerTask('build-order', 'List the current build order for the site', async function () {
+    const done = this.async()
+    try {
+      const { filePath } = await generator.buildOrder()  
+      console.log('Wrote default build order to:', filePath)
+    }
+    catch (error) {
+      console.log(error)
+    }
+    finally {
+      done()
+    }
   })
 
   // Build individual page
@@ -290,12 +299,13 @@ module.exports = function(grunt) {
     })
   });
 
-  grunt.registerTask('download-data', 'Downloads the site data to the common cached path. `./.build/data.json`.', function () {
+  grunt.registerTask('download-data', 'Downloads the site data to the common cached path. `./.build/data.json`.', async function () {
     var done = this.async();
     var options = {
       file: grunt.option('toFile') || undefined,
     }
-    generator.downloadData( options, done );
+    await generator.downloadData(options)
+    done()
   });
 
   // Change this to optionally prompt instead of requiring a sitename

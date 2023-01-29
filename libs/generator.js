@@ -126,7 +126,7 @@ var BUILD_DOCUMENT_WRITTEN = function ( file ) {
   return `build:document-written:${ file }`
 }
 
-const pglob = async (pattern, options) => {
+const pglob = (pattern, options) => {
   return new Promise((resolve, reject) => {
     glob(pattern, options, (error, matches) => {
       if (error) return reject(error)
@@ -379,17 +379,14 @@ module.exports.generator = function (config, options, logger, fileParser) {
    * @param  {object}   options
    * @param  {object}   options.file?     Specificy which file to write to. Optional.
    * @param  {object}   options.emitter?  Specificy whether to emit progress to process.stout
-   * @param  {Function} done
    */
-  this.downloadData = async function ( options, done ) {
-    if ( typeof done === 'undefined' ) done = options;
+  this.downloadData = async function ( options ) {
     if ( !options ) options = {};
     if ( !options.file ) options.file = DATA_CACHE_PATH;
 
 
     const { data } = await getData()
-    writeDataCache( { file: options.file, data: self.cachedData } )
-    done()
+    await writeDataCache( { file: options.file, data: self.cachedData } )
   }
 
   var searchEntryStream = null;
@@ -482,79 +479,6 @@ module.exports.generator = function (config, options, logger, fileParser) {
     body = '';
   };
 
-  function defaultBuildOrder ( callback ) {
-    var excludeExtensions = filterExtensions([ '' ])
-
-    var opts = { files: [] };
-
-    return miss.pipe(
-      miss.from.obj( [ opts, null ] ),
-      getTemplates(),
-      getPages(),
-      sink(),
-      function onComplete ( error ) {
-        if ( error ) callback( error )
-      } )
-
-    function getTemplates () {
-      return miss.through.obj( function ( opts, enc, next ) {
-        wrench.readdirRecursive('templates', function ( error, templateFiles ) {
-          if ( error ) return next( error )
-
-          if ( Array.isArray( templateFiles ) ) {
-            var includeTemplateFiles = templateFiles
-              .filter(removePartials)
-              .filter(excludeExtensions)
-              .sort()
-              .map(prefixFile('templates'))
-
-            opts.files = opts.files.concat( includeTemplateFiles );
-          }
-          else return next( null, opts )
-        })
-      } )
-    }
-
-    function getPages () {
-      return miss.through.obj( function ( opts, enc, next ) {
-        wrench.readdirRecursive('pages', function ( error, pageFiles ) {
-          if ( error ) return next( error )
-
-          if ( Array.isArray( pageFiles ) ) {
-            var includePageFiles = pageFiles
-              .filter(excludeExtensions)
-              .sort()
-              .map(prefixFile('pages'))
-
-            opts.files = opts.files.concat( includePageFiles );
-          }
-          else return next( null, opts )
-        })
-      } )
-    }
-
-    function sink () {
-      return miss.through.obj( function ( opts, enc, next ) {
-        callback( null, opts.files )
-        next();
-      } )
-    }
-
-    function removePartials ( file ) {
-      return file.indexOf( 'partials' ) === -1;
-    }
-    function filterExtensions ( extensions ) {
-      return function filterer ( file ) {
-        return extensions.filter( function ( extension ) { return path.extname( file ) === extension } ).length === 0;
-      }
-    }
-    function prefixFile ( prefix ) {
-      return function prefixer ( file ) {
-        return [ prefix, file ].join( '/' )
-      }
-    }
-  }
-
   /**
    * Build Order
    * Creates a `.build-order` directory if it does not exists.
@@ -564,74 +488,34 @@ module.exports.generator = function (config, options, logger, fileParser) {
    *
    * @param  {Function} callback Callback is executed with an array of the files
    */
-  this.buildOrder = function ( callback ) {
-    var opts = {
-      folder: '.build-order',
-      defaultFile: undefined,
-      orderedFile: undefined,
-    };
+  this.buildOrder = async function () {
+    const folder = path.join(process.cwd(), '.build-order')
+    await mkdirp(folder)
+    
+    var excludeExtensions = filterExtensions([ '' ])
+    const allTemplateFiles = await pglob('templates/**/*', { nodir: true })
+    const templateFiles = allTemplateFiles
+      .filter(removePartials)
+      .filter(excludeExtensions)
+      .sort()
+    const allPageFiles = await pglob('pages/**/*', { nodir: true })
+    const pagesFiles = allPageFiles
+      .filter(excludeExtensions)
+      .sort()
 
-    return miss.pipe(
-      miss.from.obj([ opts, null ]),
-      makeFolder(),
-      writeDefault(),
-      touchOrdered(),
-      sink(),
-      function onComplete ( error ) {
-        if ( error ) callback( error )
-        else callback();
-      })
+    const filesString = templateFiles.concat(pagesFiles).join('\n')
+    const filePath = path.join(folder, 'default')
 
-    function makeFolder () {
-      return miss.through.obj( function ( opts, enc, next ) {
-        mkdirp( opts.folder, function ( error ) {
-          if ( error ) return next( error )
+    await fsp.writeFile(filePath, filesString)
+    return { filePath }
 
-          next( null, opts )
-        } )
-      } )
+    function removePartials ( file ) {
+      return file.indexOf( 'partials' ) === -1;
     }
-
-    function writeDefault () {
-      var fileName = 'default';
-
-      return miss.through.obj( function ( opts, enc, next ) {
-        defaultBuildOrder( function ( error, files ) {
-          if ( error ) return next( error )
-
-          var file =  [ opts.folder, fileName ].join( '/' )
-          var content = files.join( '\n' ) + '\n';
-          fs.writeFile( file, content, function ( error ) {
-            if ( error ) return next( error )
-
-            opts.defaultFile = file;
-            next( null, opts )
-          } )
-        } )
-      } )
-    }
-
-    function touchOrdered () {
-      var fileName = 'ordered';
-      return miss.through.obj( function ( opts, enc, next ) {
-        console.log( 'touch' )
-        var file =  [ opts.folder, fileName ].join( '/' )
-
-        console.log( file )
-        touch( file, function ( error ) {
-          console.log( error )
-          if ( error ) return next( error )
-
-          opts.defaultFile = file;
-          next( null, opts )
-        } )
-      } )
-    }
-    function sink () {
-      return miss.through.obj( function ( opts, enc, next ) {
-        callback();
-        next();
-      } )
+    function filterExtensions ( extensions ) {
+      return function filterer ( file ) {
+        return extensions.filter( function ( extension ) { return path.extname( file ) === extension } ).length === 0;
+      }
     }
   }
 
@@ -651,6 +535,7 @@ module.exports.generator = function (config, options, logger, fileParser) {
       fs.writeFile( options.file, options.content, (error) => {
         if (error) return reject(error)
         if ( options.emitter ) console.log( BUILD_DOCUMENT_WRITTEN( options.file ) )
+        if (typeof process.send === 'function') process.send(BUILD_DOCUMENT_WRITTEN( options.file ))
         resolve()
       })
     })
@@ -1015,7 +900,7 @@ module.exports.generator = function (config, options, logger, fileParser) {
     if ( opts.data ) setDataFrom( opts.data )
 
     const { data } = await getData()
-    const files = await pglob(queryFiles)
+    const files = await pglob(queryFiles, { nodir: true })
 
     const writers = files.map(async function(file) {
       if(await isDirectory(file)) {
@@ -1124,6 +1009,7 @@ module.exports.generator = function (config, options, logger, fileParser) {
 
     async function processFile ( file ) {
       debug('render-template:process-file')
+      debug(file)
       // Here we try and abstract out the content type name from directory structure
       var baseName = path.basename(file, '.html');
       var newPath = path.dirname(file).replace('templates', './.build').split('/').slice(0,3).join('/');
@@ -1338,10 +1224,10 @@ module.exports.generator = function (config, options, logger, fileParser) {
     logger.ok('Rendering Templates');
     generatedSlugs = {};
 
-    var queryFiles = opts.templates || 'templates/**/*.html';
+    var queryFiles = opts.templates || 'templates/**/*';
     queryFiles = (queryFiles.indexOf('templates') === 0)
       ? queryFiles
-      : [ 'templates', queryFiles ].join('/');
+      : path.join('templates', queryFiles);
 
     var concurrency = opts.concurrency || 1;
 
@@ -1349,7 +1235,7 @@ module.exports.generator = function (config, options, logger, fileParser) {
     if ( opts.data ) setDataFrom( opts.data )
 
     const { data, typeInfo } = await getData()
-    const files = await pglob(queryFiles)
+    const files = await pglob(queryFiles, { nodir: true })
 
     var filesToBuild = files
       .filter(onlyHtmlFiles)
@@ -1388,7 +1274,7 @@ module.exports.generator = function (config, options, logger, fileParser) {
     })
 
     function onlyHtmlFiles (file) {
-      return (path.extname(file) === '.html');
+      return (path && path.extname(file) === '.html');
     }
 
     function notAPartial (file) {
@@ -1424,7 +1310,7 @@ module.exports.generator = function (config, options, logger, fileParser) {
     function fileToBuildTask ( file ) {
       return function buildTask ( step ) {
         self.renderTemplate(
-          { file: file, data: data, emitter: opts.emitter },
+          { inFile: file, data: data, emitter: opts.emitter },
           function onComplete () {
             step();
           } )
@@ -1501,13 +1387,14 @@ module.exports.generator = function (config, options, logger, fileParser) {
         debug('copy-static:copy:error')
         debug(error)
       }
-      if ( opts.emitter ) {
+      if (opts.emitter || typeof process.send === 'function') {
         try {
-          const buildStaticFiles = await pglob('**/*', { cwd: staticDirectory })  
+          const buildStaticFiles = await pglob('**/*', { cwd: staticDirectory, nodir: true })  
           debug('copy-statc:build-static-files')
           buildStaticFiles.forEach( function ( builtFile ) {
             var builtFilePath = path.join( staticDirectory, builtFile );
-            console.log( BUILD_DOCUMENT_WRITTEN( `./${ builtFilePath }` ) )
+            if (opts.emitter) console.log( BUILD_DOCUMENT_WRITTEN(`./${ builtFilePath }`) )
+            if (typeof process.send === 'function') process.send(BUILD_DOCUMENT_WRITTEN(`./${ builtFilePath }`))
           } )
         } catch (error) {
           debug('copy-static:emit-built-files:error')
@@ -1532,7 +1419,7 @@ module.exports.generator = function (config, options, logger, fileParser) {
     self.changedStaticFiles = [];
 
     if(await fileExists('.build/static')) {
-      var files = await pglob('**/*', { cwd: '.build/static' })
+      var files = await pglob('**/*', { cwd: '.build/static', nodir: true })
 
       const hashers = files.map(function(file) {
         return new Promise(async (resolve, reject) => {
@@ -1892,37 +1779,37 @@ module.exports.generator = function (config, options, logger, fileParser) {
     }
   };
 
-  this.checkScaffoldingMD5 = function(name, callback) {
+  this.checkScaffoldingMD5 = async function(name, callback) {
     self.cachedData = null;
-    getData(function(data, typeInfo) {
-      var directory = 'templates/' + name + '/';
-      var individual = directory + 'individual.html';
-      var list = directory + 'list.html';
-      var oneOff = 'pages/' + name + '.html';
+    const { data, typeInfo } = await getData()
 
-      var individualMD5 = null;
-      var listMD5 = null;
-      var oneOffMD5 = null;
+    var directory = path.join('templates', name)
+    var individual = path.join(directory, 'individual.html')
+    var list = path.join(directory, 'list.html')
+    var oneOff = path.join('pages', `${name}.html`)
 
-      if(typeInfo[name].oneOff) {
-        if(fs.existsSync(oneOff)) {
-          var oneOffContent = fs.readFileSync(oneOff);
-          oneOffMD5 = md5(oneOffContent);
-        }
-      } else {
-        if(fs.existsSync(individual)) {
-          var indContent = fs.readFileSync(individual);
-          individualMD5 = md5(indContent);
-        }
+    var individualMD5 = null;
+    var listMD5 = null;
+    var oneOffMD5 = null;
 
-        if(fs.existsSync(list)) {
-          var listContent = fs.readFileSync(list);
-          listMD5 = md5(listContent);
-        }
+    if(typeInfo && typeInfo[name]?.oneOff) {
+      if(fs.existsSync(oneOff)) {
+        var oneOffContent = fs.readFileSync(oneOff);
+        oneOffMD5 = md5(oneOffContent);
+      }
+    } else {
+      if(fs.existsSync(individual)) {
+        var indContent = fs.readFileSync(individual);
+        individualMD5 = md5(indContent);
       }
 
-      callback(individualMD5, listMD5, oneOffMD5);
-    });
+      if(fs.existsSync(list)) {
+        var listContent = fs.readFileSync(list);
+        listMD5 = md5(listContent);
+      }
+    }
+
+    callback(individualMD5, listMD5, oneOffMD5);
   }
 
   /**
@@ -1931,28 +1818,27 @@ module.exports.generator = function (config, options, logger, fileParser) {
    * @param  {Function}   done     Callback called when scaffolding generation is done
    * @param  {Boolean}   force    If true, forcibly overwrites old scaffolding
    */
-  this.makeScaffolding = function(name, done, force) {
+  this.makeScaffolding = async function(name, done, force) {
     logger.ok('Creating Scaffolding for ' + name + '\n');
-    var directory = 'templates/' + name + '/';
+    const directory = path.join('templates', name)
+    const list = path.join(directory, 'list.html')
+    const individual = path.join(directory, 'individual.html')
+    const oneOff = path.join('pages', `${name}.html`)
 
-    var list = directory + 'list.html';
-    var individual = directory +  'individual.html';
-    var oneOff = 'pages/' + name + '.html';
-
-    var individualTemplate = fs.readFileSync('./libs/scaffolding_individual.html');
-    var listTemplate = fs.readFileSync('./libs/scaffolding_list.html');
-    var oneOffTemplate = fs.readFileSync('./libs/scaffolding_oneoff.html');
+    var individualTemplate = fs.readFileSync(path.join('libs', 'scaffolding_individual.html'))
+    var listTemplate = fs.readFileSync(path.join('libs', 'scaffolding_list.html'))
+    var oneOffTemplate = fs.readFileSync(path.join('libs', 'scaffolding_oneoff.html'))
 
     var widgetFilesRaw = [];
 
-    if(fs.existsSync('./libs/widgets')) {
-      widgetFilesRaw = wrench.readdirSyncRecursive('./libs/widgets');
+    if(fs.existsSync(path.join('libs', 'widgets'))) {
+      widgetFilesRaw = fs.readdirSync(path.join('libs', 'widgets'))
     }
 
     var widgetFiles = [];
 
     widgetFilesRaw.forEach(function(item) {
-      widgetFiles[(path.dirname(item) + '/' + path.basename(item, '.html')).replace('./', '')] = true;
+      widgetFiles[item] = true;
     });
 
     var renderWidget = function(controlType, fieldName, controlInfo, overridePrefix) {
@@ -1986,54 +1872,57 @@ module.exports.generator = function (config, options, logger, fileParser) {
     };
 
     self.cachedData = null;
-    getData(function(data, typeInfo) {
-      var controls = typeInfo[name] ? typeInfo[name].controls : [];
-      var controlsObj = {};
+    const { data, typeInfo } = await getData()
+    var controls = typeInfo
+      ? typeInfo[name]
+        ? typeInfo[name].controls
+        : []
+      : []
+    var controlsObj = {};
 
-      _.each(controls, function(item) {
-        controlsObj[item.name] = item;
-      });
+    _.each(controls, function(item) {
+      controlsObj[item.name] = item;
+    });
 
-      var individualMD5 = null;
-      var listMD5 = null;
-      var oneOffMD5 = null;
+    var individualMD5 = null;
+    var listMD5 = null;
+    var oneOffMD5 = null;
 
-      if(typeInfo[name].oneOff) {
-        if(!force && fs.existsSync(oneOff)) {
-          if(done) done(null, null, null);
-          logger.error('Scaffolding for ' + name + ' already exists, use --force to overwrite');
-          return false;
-        }
-
-        var oneOffFile = _.template(oneOffTemplate)({ widgetFiles: widgetFiles, typeName: name, typeInfo: typeInfo[name] || {}, controls: controlsObj, 'renderWidget' : renderWidget });
-        oneOffFile = oneOffFile.replace(/^\s*\n/gm, '');
-
-        oneOffMD5 = md5(oneOffFile);
-        fs.writeFileSync(oneOff, oneOffFile);
-      } else {
-
-        if(!force && fs.existsSync(directory)) {
-          if(done) done(null, null, null);
-          logger.error('Scaffolding for ' + name + ' already exists, use --force to overwrite');
-          return false;
-        }
-
-        mkdirp.sync(directory);
-
-        var template = _.template(individualTemplate)({ widgetFiles: widgetFiles, typeName: name, typeInfo: typeInfo[name] || {}, controls: controlsObj, 'renderWidget' : renderWidget });
-        template = template.replace(/^\s*\n/gm, '');
-
-        individualMD5 = md5(template);
-        fs.writeFileSync(individual, template);
-
-        var lTemplate = _.template(listTemplate)({ typeName: name });
-
-        listMD5 = md5(lTemplate);
-        fs.writeFileSync(list, lTemplate);
+    if(typeInfo[name].oneOff) {
+      if(!force && fs.existsSync(oneOff)) {
+        if(done) done(null, null, null);
+        logger.error('Scaffolding for ' + name + ' already exists, use --force to overwrite');
+        return false;
       }
 
-      if(done) done(individualMD5, listMD5, oneOffMD5);
-    });
+      var oneOffFile = _.template(oneOffTemplate)({ widgetFiles: widgetFiles, typeName: name, typeInfo: typeInfo[name] || {}, controls: controlsObj, 'renderWidget' : renderWidget });
+      oneOffFile = oneOffFile.replace(/^\s*\n/gm, '');
+
+      oneOffMD5 = md5(oneOffFile);
+      fs.writeFileSync(oneOff, oneOffFile);
+    } else {
+
+      if(!force && fs.existsSync(directory)) {
+        if(done) done(null, null, null);
+        logger.error('Scaffolding for ' + name + ' already exists, use --force to overwrite');
+        return false;
+      }
+
+      mkdirp.sync(directory);
+
+      var template = _.template(individualTemplate)({ widgetFiles: widgetFiles, typeName: name, typeInfo: typeInfo[name] || {}, controls: controlsObj, 'renderWidget' : renderWidget });
+      template = template.replace(/^\s*\n/gm, '');
+
+      individualMD5 = md5(template);
+      fs.writeFileSync(individual, template);
+
+      var lTemplate = _.template(listTemplate)({ typeName: name });
+
+      listMD5 = md5(lTemplate);
+      fs.writeFileSync(list, lTemplate);
+    }
+
+    if(done) done(individualMD5, listMD5, oneOffMD5);
 
     return true;
   };
@@ -2048,7 +1937,7 @@ module.exports.generator = function (config, options, logger, fileParser) {
     var fileList = 'true';
 
     if(self.staticHashs !== false && fs.existsSync('.build/static')) {
-      var newFiles = await pglob('**/*', { cwd: '.build/static' })
+      var newFiles = await pglob('**/*', { cwd: '.build/static', nodir: true })
 
       newFiles.forEach(function(file) {
         var file = '.build/static/' + file;
@@ -2322,120 +2211,6 @@ module.exports.generator = function (config, options, logger, fileParser) {
       return `${ siteName.split( ',1' )[ 0 ] } ${base}`
     }
   };
-
-  /**
-   * Sets up asset generation (automatic versioning) for pushing to production
-   * @param  {Object}    grunt  Grunt object from generatorTasks
-   */
-  this.assets = function(grunt, done) {
-
-    removeDirectory('.whdist', function() {
-
-      mkdirp.sync('.whdist');
-
-      var files = wrench.readdirSyncRecursive('pages');
-
-      files.forEach(function(file) {
-        var originalFile = 'pages/' + file;
-        var destFile = '.whdist/pages/' + file;
-
-        if(!fs.lstatSync(originalFile).isDirectory())
-        {
-          var content = fs.readFileSync(originalFile);
-
-          if(path.extname(originalFile) === '.html') {
-            content = content.toString();
-            content = content.replace('\r\n', '\n').replace('\r', '\n');
-          }
-
-          mkdirp.sync(path.dirname(destFile));
-          fs.writeFileSync(destFile, content);
-        }
-      });
-
-      files = wrench.readdirSyncRecursive('templates');
-
-      files.forEach(function(file) {
-        var originalFile = 'templates/' + file;
-        var destFile = '.whdist/templates/' + file;
-
-        if(!fs.lstatSync(originalFile).isDirectory())
-        {
-          var content = fs.readFileSync(originalFile);
-
-          if(path.extname(originalFile) === '.html') {
-            content = content.toString();
-            content = content.replace('\r\n', '\n').replace('\r', '\n');
-          }
-
-          mkdirp.sync(path.dirname(destFile));
-          fs.writeFileSync(destFile, content);
-        }
-      });
-
-      files = wrench.readdirSyncRecursive('static');
-
-      files.forEach(function(file) {
-        var originalFile = 'static/' + file;
-        var destFile = '.whdist/static/' + file;
-
-        if(!fs.lstatSync(originalFile).isDirectory())
-        {
-          var content = fs.readFileSync(originalFile);
-
-          if(path.extname(originalFile) === '.html') {
-            content = content.toString();
-            content = content.replace('\r\n', '\n').replace('\r', '\n');
-          }
-
-          mkdirp.sync(path.dirname(destFile));
-          fs.writeFileSync(destFile, content);
-        }
-      });
-
-      grunt.task.run('assetsMiddle');
-
-      done();
-    });
-
-  }
-
-  /**
-   * Run asset versioning software if configs exist for them
-   * @param  {Object}    grunt  Grunt object from generatorTasks
-   */
-  this.assetsMiddle = function(grunt) {
-    grunt.option('force', false);
-
-    if(!_.isEmpty(grunt.config.get('concat')))
-    {
-      grunt.task.run('concat');
-    }
-
-    grunt.task.run('rev');
-    grunt.task.run('assetsAfter');
-  }
-
-  /**
-   * Finish asset versioning
-   * @param  {Object}    grunt  Grunt object from generatorTasks
-   */
-  this.assetsAfter = function(grunt, done) {
-    removeDirectory('.tmp', function() {
-      var files = wrench.readdirSyncRecursive('static');
-
-      files.forEach(function(file) {
-        var filePath = 'static/' + file;
-        var distPath = '.whdist/static/' + file;
-        if(!fs.lstatSync(filePath).isDirectory() && !fs.existsSync(distPath)) {
-          var fileData = fs.readFileSync(filePath);
-          fs.writeFileSync(distPath, fileData);
-        }
-      });
-
-      done();
-    });
-  }
 
   /**
    * Enables strict mode, exceptions cause full crash, normally for production (so bad generators do not ruin sites)

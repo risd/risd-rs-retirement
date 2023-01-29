@@ -144,3 +144,15 @@ test('build', async (t) => {
   }
   t.end()
 })
+
+
+test('build-order', async (t) => {
+  try {
+    await pspawn('grunt', ['build-order'])
+    t.ok('build-order:success')
+  } catch (error) {
+    console.error(error)
+    t.fail('build-order:failed')
+  }
+  t.end()
+})
